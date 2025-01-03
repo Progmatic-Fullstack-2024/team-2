@@ -19,7 +19,7 @@
   "rules": {
     "no-console": "off",
     "import/extensions": "off",
-    "prettier/prettier": "error",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "import/prefer-default-export": "warn"
   }
 }
