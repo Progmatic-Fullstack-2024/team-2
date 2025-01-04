@@ -12,9 +12,10 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 
-app.use("/", (req, res) => {
-  res.status(404).send("No Endpoint");
-});
 app.use(errorHandler);
+
+app.use("/", (req, res) => {
+	res.status(404).send("No Endpoint");
+});
 
 export default app;
