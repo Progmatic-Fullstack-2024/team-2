@@ -1,3 +1,5 @@
 import multer from "multer";
 
-export const formData = multer();
+const formData = multer();
+
+export default formData;
