@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+
 import authService from "../services/auth-service.js";
 
 async function registration(req,res) {
@@ -17,4 +17,18 @@ async function registration(req,res) {
     }
 }
 
-export default {registration};
+
+
+
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    await userValidationSchemaForLogin.validate({ email, password });
+    const token = await authService.login({ email, password });
+    res.json(token);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default {registration, login };
