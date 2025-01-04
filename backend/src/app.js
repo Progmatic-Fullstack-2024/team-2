@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
-import authRoutes from "./routes/auth-routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import { VITE_API_URL } from "./constants/constants.js";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: VITE_API_URL }));
+
 app.use(express.json());
 
 app.use("/auth", authRoutes);
