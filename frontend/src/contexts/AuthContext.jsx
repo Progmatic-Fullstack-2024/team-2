@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return */
+
 import { jwtDecode } from 'jwt-decode';
 import { createContext, useState, useEffect } from 'react';
 
