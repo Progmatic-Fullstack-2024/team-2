@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
-import userValidationSchemaForLogin from '../schema/userValidationSchema';
+import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
 
 export default function LoginForm() {
   const { login } = useContext(AuthContext);
@@ -28,7 +28,7 @@ export default function LoginForm() {
       <h2 className="font-bold text-xk text-gray-800 text-xl mb-6">Bejelentkezés</h2>
       <Formik
         initialValues={initialValues}
-        validationSchema={userValidationSchemaForLogin.userValidationSchemaForLogin}
+        validationSchema={userValidationSchemaForLogin}
         onSubmit={handleLogin}
       >
         <Form>

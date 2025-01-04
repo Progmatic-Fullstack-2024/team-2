@@ -3,12 +3,18 @@ import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
-import userValidationSchemaForRegistration from '../schema/userValidationSchema';
+import { userValidationSchemaForRegistration } from '../schema/userValidationSchema';
 
 export default function RegistrationForm() {
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
-  const initialValues = { firstName:'', lastName: '', email: '', password: '', confirmPassword: '' };
+  const initialValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  };
 
   const handleRegister = async (values) => {
     if (values.password !== values.confirmPassword) {
@@ -16,7 +22,7 @@ export default function RegistrationForm() {
       alert('A jelszavak nem egyeznek!');
       return;
     }
-    
+
     try {
       const result = await register(values);
 
