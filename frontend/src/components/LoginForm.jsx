@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
-import userValidationSchemaForLogin from '../schema/userValidationSchema';
+import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
 
 export default function LoginForm() {
   const { login } = useContext(AuthContext);

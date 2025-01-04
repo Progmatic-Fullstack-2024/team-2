@@ -4,20 +4,24 @@ import prisma from "../models/prisma-client.js";
 import { JWT_SECRET } from "../constants/constants.js";
 import HttpError from "../utils/HttpError.js";
 
-async function userCreate(lastName, firstName, email, password, phone) {
+const registration = async ({
+  lastName,
+  firstName,
+  email,
+  password,
+  phone,
+  role = "user",
+}) => {
+  const emailExists = await prisma.user.findUnique({ where: { email } });
+  if (emailExists) throw new HttpError("Email already exists!", 403);
+
   const hashedPassword = await bcrypt.hash(password, 5);
   const newUser = await prisma.user.create({
-    data: {
-      lastName,
-      firstName,
-      email,
-      phone,
-      password: hashedPassword,
-      role: "user",
-    },
+    data: { lastName, firstName, email, password: hashedPassword, phone, role },
   });
+
   return newUser;
-}
+};
 
 const login = async ({ email, password }) => {
   const user = await prisma.user.findUnique({ where: { email } });
@@ -39,4 +43,4 @@ const login = async ({ email, password }) => {
   return token;
 };
 
-export default { userCreate, login };
+export default { registration, login };

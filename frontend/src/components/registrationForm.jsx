@@ -3,12 +3,18 @@ import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
-import userValidationSchemaForRegistration from '../schema/userValidationSchema';
+import { userValidationSchemaForRegistration } from '../schema/userValidationSchema';
 
 export default function RegistrationForm() {
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
-  const initialValues = { email: '', password: '', confirmPassword: '' };
+  const initialValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  };
 
   const handleRegister = async (values) => {
     if (values.password !== values.confirmPassword) {
@@ -16,7 +22,7 @@ export default function RegistrationForm() {
       alert('A jelszavak nem egyeznek!');
       return;
     }
-    
+
     try {
       const result = await register(values);
 
@@ -42,6 +48,24 @@ export default function RegistrationForm() {
         onSubmit={handleRegister}
       >
         <Form>
+          <div className="mb-4">
+            <Field
+              type="text"
+              name="lastName"
+              placeholder="Vezetéknév"
+              className="w-full border p-2 rounded my-1 text-gray-800"
+            />
+            <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
+          </div>
+          <div className="mb-4">
+            <Field
+              type="text"
+              name="firstName"
+              placeholder="Keresztnév"
+              className="w-full border p-2 rounded my-1 text-gray-800"
+            />
+            <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
+          </div>
           <div className="mb-4">
             <Field
               type="email"

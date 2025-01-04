@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-const userValidationSchemaForLogin = yup.object({
+export const userValidationSchemaForLogin = yup.object({
   email: yup.string().email('Valós emailt adj meg!').required('Email megadása kötelező!'),
   password: yup
     .string()
@@ -8,7 +8,9 @@ const userValidationSchemaForLogin = yup.object({
     .required('A jelszó megadása kötelező!'),
 });
 
-const userValidationSchemaForRegistration = yup.object({
+export const userValidationSchemaForRegistration = yup.object({
+  firstName: yup.string().required('Írj nevet'),
+  lastName: yup.string().required('Írj nevet'),
   email: yup.string().email('Valós emailt adj meg!').required('Email megadása kötelező!'),
   password: yup
     .string()
@@ -19,5 +21,3 @@ const userValidationSchemaForRegistration = yup.object({
     .oneOf([yup.ref('password')], 'A jelszavak nem egyeznek!')
     .required('A jelszó megerősítése kötelező!'),
 });
-
-export default { userValidationSchemaForLogin, userValidationSchemaForRegistration };
