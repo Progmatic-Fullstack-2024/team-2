@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import { jwtDecode } from 'jwt-decode';
 import { createContext, useState, useEffect } from 'react';
 
@@ -40,6 +39,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', token);
       const decodedToken = jwtDecode(token);
       setUser(decodedToken);
+      return { ok: true, message: 'Minden szupi!' };
     } catch (error) {
       console.log(error);
       return { ok: false, message: error };
