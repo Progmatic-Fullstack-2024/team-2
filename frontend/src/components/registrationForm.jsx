@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
-import { userValidationSchemaForRegistration } from '../schema/registrationValidationSchema';
+import userValidationSchemaForRegistration from '../schema/userValidationSchema';
 
 export default function RegistrationForm() {
   const { register } = useContext(AuthContext);
