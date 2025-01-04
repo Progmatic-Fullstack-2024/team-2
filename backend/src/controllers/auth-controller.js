@@ -1,5 +1,6 @@
 
 import authService from "../services/auth-service.js";
+import { userValidationSchemaForLogin } from "../validations/userValidationSchema.js";
 
 async function registration(req,res) {
     const{firstName,lastName,email,password,phone}=req.body;
