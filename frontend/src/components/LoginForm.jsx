@@ -28,7 +28,7 @@ export default function LoginForm() {
       <h2 className="font-bold text-xk text-gray-800 text-xl mb-6">Bejelentkezés</h2>
       <Formik
         initialValues={initialValues}
-        validationSchema={userValidationSchemaForLogin}
+        validationSchema={userValidationSchemaForLogin.userValidationSchemaForLogin}
         onSubmit={handleLogin}
       >
         <Form>
