@@ -1,24 +1,23 @@
 import authService from "../services/auth.service.js";
 import { userValidationSchemaForLogin } from "../validations/userValidationSchema.js";
 
-async function registration(req, res) {
-  const { firstName, lastName, email, password, phone } = req.body;
-  if (firstName && lastName && email && password) {
-    const newUser = await authService.userCreate(
+const registration = async (req, res, next) => {
+  const { firstName, lastName, email, password, phone, role } = req.body;
+
+  try {
+    const newUser = await authService.registration({
       lastName,
       firstName,
       email,
       password,
       phone,
-    );
-    if (newUser) {
-      res.status(201).send("user recorded succesfully");
-      console.log(newUser);
-    } else res.status(500).send("server error");
-  } else {
-    res.status(401).send("Data is incomplete");
+      role,
+    });
+    res.status(200).json(newUser);
+  } catch (error) {
+    next(error);
   }
-}
+};
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
