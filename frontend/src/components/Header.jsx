@@ -29,14 +29,13 @@ export default function Header() {
       </div>
       <nav className="flex gap-4 items-center">
         {user ? (
-          <>
-            <button
-              className="rounded-md px-3 py-2 hover:bg-red-800 transform transition duration-300 hover:scale-110"
-              onClick={handleLogout}
-            >
-              Kijelentkezés
-            </button>
-          </>
+          <button
+            type="submit"
+            className="rounded-md px-3 py-2 hover:bg-red-800 transform transition duration-300 hover:scale-110"
+            onClick={handleLogout}
+          >
+            Kijelentkezés
+          </button>
         ) : (
           <Link
             to="/login"
