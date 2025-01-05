@@ -2,9 +2,9 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import AuthResult from './AuthResult';
 import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
-import AuthResult from './AuthResult';
 
 export default function LoginForm() {
   const { login } = useContext(AuthContext);
