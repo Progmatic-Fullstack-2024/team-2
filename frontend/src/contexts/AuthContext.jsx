@@ -1,8 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
-import { createContext, useState, useEffect, useRef } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
-import authService from '../services/auth.service';
-import { boolean } from 'yup';
+import authService from '../services/auth.service.js';
 
 const AuthContext = createContext();
 
@@ -37,7 +36,6 @@ export function AuthProvider({ children }) {
       addAuthMsg('Sikeres regisztráció!', true);
       return { ok: true, message: 'Sikeres regisztráció!' };
     } catch (error) {
-      console.log(error);
       addAuthMsg(error.error, false);
       return { ok: false, message: error };
     }
@@ -53,8 +51,6 @@ export function AuthProvider({ children }) {
       return { ok: true, message: 'Minden szupi!' };
     } catch (error) {
       addAuthMsg(error.error, false);
-      console.log('error : ', error);
-      console.log('error : ', error.error);
       return { ok: false, message: error };
     }
   };

@@ -18,8 +18,8 @@ export default function RegistrationForm() {
   };
   const [showAuthResult, setShowAuthResult] = useState(false);
   const handleRegister = async (values) => {
-    const result = await register(values);
     setShowAuthResult(true);
+    const result = await register(values);
   };
 
   return (

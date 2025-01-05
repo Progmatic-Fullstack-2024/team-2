@@ -12,12 +12,8 @@ export default function LoginForm() {
   const [showAuthResult, setShowAuthResult] = useState(false);
 
   const handleLogin = async (values) => {
-    try {
-      const result = await login(values);
-    } catch (error) {
-      console.log('error  LoginForm  ', error);
-    }
     setShowAuthResult(true);
+    const result = await login(values);
   };
 
   return (
