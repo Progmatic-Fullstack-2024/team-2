@@ -25,10 +25,10 @@ const registration = async ({
 
 const login = async ({ email, password }) => {
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) throw new HttpError("Invalid email or password", 403);
+  if (!user) throw new HttpError("Invalid email or password!", 403);
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) throw new HttpError("Invalid email or password", 403);
+  if (!isPasswordValid) throw new HttpError("Invalid email or password!", 403);
 
   const payload = {
     id: user.id,
