@@ -1,13 +1,21 @@
 import { jwtDecode } from 'jwt-decode';
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useRef } from 'react';
 
 import authService from '../services/auth.service';
+import { boolean } from 'yup';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authMsg, setAuthMsg] = useState({ msg: '', success: false });
+  const addAuthMsg = (msg, success) => {
+    if (typeof msg != 'string' || typeof success != 'boolean')
+      return console.log('Invalid authMsg...', msg, success);
+    setAuthMsg({ msg, success });
+  };
+  const clearAuthMsg = () => setAuthMsg({ msg: '', success: false });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -26,9 +34,11 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     try {
       await authService.register(userData);
+      addAuthMsg('Sikeres regisztráció!', true);
       return { ok: true, message: 'Sikeres regisztráció!' };
     } catch (error) {
       console.log(error);
+      addAuthMsg(error.error, false);
       return { ok: false, message: error };
     }
   };
@@ -39,19 +49,23 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', token);
       const decodedToken = jwtDecode(token);
       setUser(decodedToken);
+      addAuthMsg('Minden szupi!', true);
       return { ok: true, message: 'Minden szupi!' };
     } catch (error) {
-      console.log(error);
+      addAuthMsg(error.error, false);
+      console.log('error : ', error);
+      console.log('error : ', error.error);
       return { ok: false, message: error };
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    addAuthMsg('Sikeresen kijelentkeztél!', true);
     setUser(null);
   };
 
-  const value = { user, login, register, logout };
+  const value = { user, login, register, logout, authMsg, clearAuthMsg };
 
   return <AuthContext.Provider value={value}>{!isLoading && children}</AuthContext.Provider>;
 }

@@ -16,7 +16,8 @@ const login = async (credentials) => {
     const response = await axiosInstance.post('/auth/login', credentials);
     return response.data; // Sikeres válasz
   } catch (error) {
-    throw error.response ? error.response.data : error; // Hiba esetén
+    throw error.response;
+    // throw error.response ? error.response.data : error; // Hiba esetén
   }
 };
 
