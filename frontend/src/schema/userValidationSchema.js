@@ -9,8 +9,8 @@ export const userValidationSchemaForLogin = yup.object({
 });
 
 export const userValidationSchemaForRegistration = yup.object({
-  firstName: yup.string().required('Add meg avezetékneved!'),
-  lastName: yup.string().required('Add meg a keresztnevedet!'),
+  firstName: yup.string().required('A keresztnév megadása kötelező!'),
+  lastName: yup.string().required('A vezetéknév megadása kötelező!'),
   email: yup.string().email('Valós emailt adj meg!').required('Email megadása kötelező!'),
   phone: yup
     .string()
