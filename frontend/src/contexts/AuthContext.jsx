@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   const addAuthMsg = (msg, success) => {
     if (typeof msg !== 'string' || typeof success !== 'boolean')
       return console.log('Invalid authMsg...', msg, success);
-    setAuthMsg({ msg, success });
+    setAuthMsg({ msg: msg, success: success });
   };
   const clearAuthMsg = () => setAuthMsg({ msg: '', success: false });
 
@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const value = { user, login, register, logout, authMsg, clearAuthMsg };
+  const value = { user, login, register, logout, authMsg, clearAuthMsg, addAuthMsg };
 
   return <AuthContext.Provider value={value}>{!isLoading && children}</AuthContext.Provider>;
 }
