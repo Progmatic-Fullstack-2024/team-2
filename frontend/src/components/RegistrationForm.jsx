@@ -12,6 +12,7 @@ export default function RegistrationForm() {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: '',
   };
@@ -36,7 +37,7 @@ export default function RegistrationForm() {
               <Field
                 type="text"
                 name="lastName"
-                placeholder="Vezetéknév"
+                placeholder="Vezetéknév (kötelező mező)"
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
@@ -45,7 +46,7 @@ export default function RegistrationForm() {
               <Field
                 type="text"
                 name="firstName"
-                placeholder="Keresztnév"
+                placeholder="Keresztnév (kötelező mező)"
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
@@ -54,16 +55,25 @@ export default function RegistrationForm() {
               <Field
                 type="email"
                 name="email"
-                placeholder="Email cím"
+                placeholder="Email cím (kötelező mező)"
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
             </div>
             <div className="mb-4">
               <Field
+                type="text"
+                name="phone"
+                placeholder="Telefonszám (opcionális)"
+                className="w-full border p-2 rounded my-1 text-gray-800"
+              />
+              <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
+            </div>
+            <div className="mb-4">
+              <Field
                 type="password"
                 name="password"
-                placeholder="Jelszó"
+                placeholder="Jelszó (kötelező mező)"
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
@@ -72,7 +82,7 @@ export default function RegistrationForm() {
               <Field
                 type="password"
                 name="confirmPassword"
-                placeholder="Jelszó megerősítése"
+                placeholder="Jelszó megerősítése (kötelező mező)"
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage

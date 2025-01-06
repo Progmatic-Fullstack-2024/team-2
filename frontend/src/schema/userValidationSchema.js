@@ -9,9 +9,16 @@ export const userValidationSchemaForLogin = yup.object({
 });
 
 export const userValidationSchemaForRegistration = yup.object({
-  firstName: yup.string().required('Írj nevet'),
-  lastName: yup.string().required('Írj nevet'),
+  firstName: yup.string().required('Add meg avezetékneved!'),
+  lastName: yup.string().required('Add meg a keresztnevedet!'),
   email: yup.string().email('Valós emailt adj meg!').required('Email megadása kötelező!'),
+  phone: yup
+    .string()
+    .matches(
+      /^\+?[0-9]{10,15}$/,
+      'Adj meg egy érvényes telefonszámot (10-15 számjegy, opcionális + előjellel)!'
+    )
+    .notRequired(), 
   password: yup
     .string()
     .min(6, 'A jelszónak minimum 6 karakternek kell lennie')
