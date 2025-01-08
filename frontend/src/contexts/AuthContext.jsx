@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
       setAuthMsg({msg: 'Sikeres regisztráció!', success: true});
       return { ok: true, message: 'Sikeres regisztráció!' };
     } catch (error) {
-      setAuthMsg({msg: error.error, success: false});
+      setAuthMsg({msg: 'Ez az email cím már regisztrálva van!', success: false});
       return { ok: false, message: error };
     }
   };
@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
       setAuthMsg({msg: 'Minden szupi!', success: true});
       return { ok: true, message: 'Minden szupi!' };
     } catch (error) {
-      setAuthMsg({msg: error.error, success: false});
+      setAuthMsg({msg: 'Érvénytelen email vagy jelszó!', success: false});
       return { ok: false, message: error };
     }
   };

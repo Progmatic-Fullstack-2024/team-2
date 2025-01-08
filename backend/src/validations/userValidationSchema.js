@@ -3,12 +3,12 @@ import * as yup from "yup";
 const userValidationSchemaForLogin = yup.object({
   email: yup
     .string()
-    .email("Valós emailt adj meg!")
-    .required("Email megadása kötelező!"),
+    .email("Valid email address is required!")
+    .required("Email is mandatory!"),
   password: yup
     .string()
-    .min(6, "A jelszónak minimum 6 karakternek kell lennie")
-    .required("A jelszó megadása kötelező!"),
+    .min(6, "Password must be at least 6 characters!")
+    .required("Password is mandatory!"),
 });
 
 export default userValidationSchemaForLogin;
