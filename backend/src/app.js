@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { errorHandler } from "./middlewares/error-handler.middleware.js";
+import errorHandler from "./middlewares/error-handler.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import { FRONTEND_URL } from "./constants/constants.js";
 
