@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   const addAuthMsg = (msg, success) => {
     if (typeof msg !== 'string' || typeof success !== 'boolean')
       return console.log('Invalid authMsg...', msg, success);
-    setAuthMsg({ msg: msg, success: success });
+    setAuthMsg({ msg, success });
   };
   const clearAuthMsg = () => setAuthMsg({ msg: '', success: false });
 
