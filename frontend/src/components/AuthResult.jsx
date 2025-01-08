@@ -1,19 +1,19 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
 
 export default function AuthResult({ params }) {
   const { showAuthResult, setShowAuthResult, navigateTo } = params;
-  const { authMsg, clearAuthMsg, addAuthMsg } = useContext(AuthContext);
+  const { authMsg, clearAuthMsg } = useContext(AuthContext);
   const navigate = useNavigate();
   if (!showAuthResult) return null;
 
-  const handleClick = (success = true) => {
+  function handleClick(success = true) {
     setShowAuthResult(false);
     clearAuthMsg();
-    if (navigateTo && success) return navigate(navigateTo);
-  };
+    if (navigateTo && success) navigate(navigateTo);
+  }
 
   return (
     <div className="position: fixed backdrop-blur-sm bg-black/30 w-full h-full flex items-center justify-center z-50">
@@ -25,6 +25,7 @@ export default function AuthResult({ params }) {
               <button
                 className="bg-green-800 text-white rounded p-3 pl-7 pr-7 hover:scale-105 hover:bg-green-700 active:scale-95 active:bg-green-600 justify-self-end"
                 onClick={() => handleClick(true)}
+                type='button'
               >
                 Tovább
               </button>
@@ -32,6 +33,7 @@ export default function AuthResult({ params }) {
               <button
                 className="bg-red-800 text-white rounded p-3 pl-7 pr-7 hover:scale-105 hover:bg-red-700 active:scale-95 active:bg-red-600 justify-self-end"
                 onClick={() => handleClick(false)}
+                type='button'
               >
                 Vissza
               </button>
@@ -46,6 +48,7 @@ export default function AuthResult({ params }) {
             <button
               className="bg-red-800 text-white rounded p-3 pl-7 pr-7 hover:scale-105 hover:bg-red-700 active:scale-95 active:bg-red-600 justify-self-end"
               onClick={() => handleClick(false)}
+              type='button'
             >
               Vissza
             </button>

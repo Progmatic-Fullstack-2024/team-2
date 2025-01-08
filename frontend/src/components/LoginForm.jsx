@@ -7,13 +7,14 @@ import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
 
 export default function LoginForm() {
-  const { login } = useContext(AuthContext);
+  const { login, clearAuthMsg } = useContext(AuthContext);
   const initialValues = { email: '', password: '' };
   const [showAuthResult, setShowAuthResult] = useState(false);
 
   const handleLogin = async (values) => {
+    clearAuthMsg();
     setShowAuthResult(true);
-    const result = await login(values);
+    await login(values);
   };
 
   return (
