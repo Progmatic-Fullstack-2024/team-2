@@ -9,11 +9,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [authMsg, setAuthMsg] = useState({ msg: '', success: false });
-  const addAuthMsg = (msg, success) => {
-    if (typeof msg !== 'string' || typeof success !== 'boolean')
-      return console.log('Invalid authMsg...', msg, success);
-    setAuthMsg({ msg, success });
-  };
+
   const clearAuthMsg = () => setAuthMsg({ msg: '', success: false });
 
   useEffect(() => {
@@ -24,7 +20,7 @@ export function AuthProvider({ children }) {
         const decodedToken = jwtDecode(token);
         setUser(decodedToken);
       } catch (error) {
-        console.log('Érvénytelen token', error);
+        setUser(undefined);
       }
     }
     setIsLoading(false);
@@ -33,10 +29,10 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     try {
       await authService.register(userData);
-      addAuthMsg('Sikeres regisztráció!', true);
+      setAuthMsg({msg: 'Sikeres regisztráció!', success: true});
       return { ok: true, message: 'Sikeres regisztráció!' };
     } catch (error) {
-      addAuthMsg(error.error, false);
+      setAuthMsg({msg: error.error, success: false});
       return { ok: false, message: error };
     }
   };
@@ -47,21 +43,21 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', token);
       const decodedToken = jwtDecode(token);
       setUser(decodedToken);
-      addAuthMsg('Minden szupi!', true);
+      setAuthMsg({msg: 'Minden szupi!', success: true});
       return { ok: true, message: 'Minden szupi!' };
     } catch (error) {
-      addAuthMsg(error.error, false);
+      setAuthMsg({msg: error.error, success: false});
       return { ok: false, message: error };
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    addAuthMsg('Sikeresen kijelentkeztél!', true);
+    setAuthMsg({msg: 'Sikeresen kijelentkeztél!', success: true});
     setUser(null);
   };
 
-  const value = { user, login, register, logout, authMsg, clearAuthMsg, addAuthMsg };
+  const value = { user, login, register, logout, authMsg, clearAuthMsg };
 
   return <AuthContext.Provider value={value}>{!isLoading && children}</AuthContext.Provider>;
 }
