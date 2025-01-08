@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { errorHandler } from "./middlewares/error-handler.middleware2.js";
-import authRoutes from "./routes/auth.routes2.js";
-import { FRONTEND_URL } from "./constants/constants2.js";
+import { errorHandler } from "./middlewares/error-handler.middleware.js";
+import authRoutes from "./routes/auth.routes.js";
+import { FRONTEND_URL } from "./constants/constants.js";
 
 const app = express();
 

@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../models/prisma-client2.js";
-import { JWT_SECRET } from "../constants/constants2.js";
-import HttpError from "../utils/HttpError2.js";
+import prisma from "../models/prisma-client.js";
+import { JWT_SECRET } from "../constants/constants.js";
+import HttpError from "../utils/HttpError.js";
 
 const registration = async ({
   lastName,
