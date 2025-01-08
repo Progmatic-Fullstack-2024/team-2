@@ -1,6 +1,6 @@
 import * as yup from "yup";
-// eslint-disable-next-line import/prefer-default-export
-export const userValidationSchemaForLogin = yup.object({
+
+const userValidationSchemaForLogin = yup.object({
   email: yup
     .string()
     .email("Valós emailt adj meg!")
@@ -10,3 +10,5 @@ export const userValidationSchemaForLogin = yup.object({
     .min(6, "A jelszónak minimum 6 karakternek kell lennie")
     .required("A jelszó megadása kötelező!"),
 });
+
+export default userValidationSchemaForLogin;

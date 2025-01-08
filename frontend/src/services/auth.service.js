@@ -1,26 +1,25 @@
 import axiosInstance from './axiosInstance';
 
-// Regisztrációs API hívás
+// Registration aPI call
 const register = async (userData) => {
   try {
     const response = await axiosInstance.post('/auth/registration', userData);
-    return response.data; // Sikeres válasz
+    return response.data; // Successful answer
   } catch (error) {
-    throw error.response ? error.response.data : error; // Hiba esetén
+    throw error.response ? error.response.data : error; // In case of error
   }
 };
 
-// Bejelentkezési API hívás
+// Login API call
 const login = async (credentials) => {
   try {
     const response = await axiosInstance.post('/auth/login', credentials);
-    return response.data; // Sikeres válasz
+    return response.data; // Successful answer
   } catch (error) {
-    throw error.response ? error.response.data : error; // Hiba esetén
+    throw error.response ? error.response.data : error; // In case of error
   }
 };
 
-// Exportálás a használathoz
 export default {
   register,
   login,

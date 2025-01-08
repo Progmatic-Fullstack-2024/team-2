@@ -15,13 +15,6 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-600 bg-opacity-15 text-white py-4 px-24 flex justify-between">
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">
-        {/* <div className="text-yellow-500 drop-shadow-[0_0_10px_rgba(255,223,0,0.8)] hover:text-yellow-500 transform transition duration-700 hover:scale-110">
-          Kedvelések:
-          <div className="flex justify-center items-center text-2xl text-yellow-500 font-bold drop-shadow-[0_0_10px_rgba(255,223,0,0.8)]">
-            {`${user.totalLikes}`}
-          </div>
-        </div> */}
-
         <h1 className="cursor-default">THEATRON_001</h1>
         {user && (
           <div className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default">{`${user.firstName}!`}</div>

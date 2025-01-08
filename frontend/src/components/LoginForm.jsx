@@ -57,7 +57,6 @@ export default function LoginForm() {
           </Form>
         </Formik>
         <div className="flex justify-center">
-          {/* Ez egy teljesen opcinális rész, amit átemeltem egy régi kódomból, tök hasznos, de ehhez majd kell a reg rész is! */}
           Nem vagy regisztrálva?
           <Link
             to="/register"
