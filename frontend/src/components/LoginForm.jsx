@@ -20,7 +20,7 @@ export default function LoginForm() {
   return (
     <>
       <AuthResult params={{ showAuthResult, setShowAuthResult, navigateTo: '/signedIn' }} />
-      <div className="w-1/2 mx-aut my-40 bg-white p-5 rounded-md bg-opacity-50">
+      <div className="w-1/2 mx-aut my-40 bg-white p-5 rounded-md bg-opacity-50 ">
         <h2 className="font-bold text-xk text-gray-800 text-xl mb-6">Bejelentkezés</h2>
         <Formik
           initialValues={initialValues}
