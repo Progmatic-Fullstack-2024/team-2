@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import AuthResult from './AuthResult';
 import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
-
 import DefaultButton from './misc/DefaultButton';
 
 export default function LoginForm() {

@@ -10,11 +10,11 @@ export default function AuthResult({ params }) {
   const navigate = useNavigate();
   if (!showAuthResult) return null;
 
-  function handleClick(success) {
+  const handleClick = (success) => {
     setShowAuthResult(false);
     clearAuthMsg();
     if (navigateTo && success) navigate(navigateTo);
-  }
+  };
 
   return (
     <div className="position: fixed backdrop-blur-sm bg-black/30 w-full h-full flex items-center justify-center z-50">
@@ -23,7 +23,7 @@ export default function AuthResult({ params }) {
           <>
             <h1 className="text-xl">{`${authMsg.msg}`}</h1>
             {authMsg.success ? (
-              <DefaultButton text="Tovább" onClick={handleClick} onClickParams={true} />
+              <DefaultButton text="Tovább" onClick={handleClick} onClickParams />
             ) : (
               <DefaultButton
                 color="c-secondary-dark"

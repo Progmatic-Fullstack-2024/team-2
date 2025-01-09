@@ -15,7 +15,7 @@ export default function DefaultButton({
     <button
       className={className}
       onClick={() => (onClick ? onClick(onClickParams) : undefined)}
-      type={type}
+      type={type === 'submit' ? 'submit' : 'button'}
     >
       {text}
     </button>

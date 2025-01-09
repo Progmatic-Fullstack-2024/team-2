@@ -29,10 +29,10 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     try {
       await authService.register(userData);
-      setAuthMsg({msg: 'Sikeres regisztráció!', success: true});
+      setAuthMsg({ msg: 'Sikeres regisztráció!', success: true });
       return { ok: true, message: 'Sikeres regisztráció!' };
     } catch (error) {
-      setAuthMsg({msg: 'Ez az email cím már regisztrálva van!', success: false});
+      setAuthMsg({ msg: 'Ez az email cím már regisztrálva van!', success: false });
       return { ok: false, message: error };
     }
   };
@@ -43,17 +43,17 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', token);
       const decodedToken = jwtDecode(token);
       setUser(decodedToken);
-      setAuthMsg({msg: 'Minden szupi!', success: true});
+      setAuthMsg({ msg: 'Minden szupi!', success: true });
       return { ok: true, message: 'Minden szupi!' };
     } catch (error) {
-      setAuthMsg({msg: 'Érvénytelen email vagy jelszó!', success: false});
+      setAuthMsg({ msg: 'Érvénytelen email vagy jelszó!', success: false });
       return { ok: false, message: error };
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    setAuthMsg({msg: 'Sikeresen kijelentkeztél!', success: true});
+    setAuthMsg({ msg: 'Sikeresen kijelentkeztél!', success: true });
     setUser(null);
   };
 
