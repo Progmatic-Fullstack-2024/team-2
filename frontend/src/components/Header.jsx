@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
+import DefaultButton from './misc/DefaultButton';
 
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
@@ -13,29 +14,19 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-gray-600 bg-opacity-15 text-white py-4 px-24 flex justify-between">
+    <header className="fixed top-0 left-0 w-full bg-c-primary  text-white py-4 px-24 flex justify-between">
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">
-        <h1 className="cursor-default">THEATRON_001</h1>
+        <img src="../../public/theater-masks.svg" />
+
         {user && (
-          <div className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default">{`${user.firstName}!`}</div>
+          <div className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default">{`${user.firstName}`}</div>
         )}
       </div>
       <nav className="flex gap-4 items-center">
         {user ? (
-          <button
-            type="submit"
-            className="rounded-md px-3 py-2 hover:bg-red-800 transform transition duration-300 hover:scale-110"
-            onClick={handleLogout}
-          >
-            Kijelentkezés
-          </button>
+          <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
         ) : (
-          <Link
-            to="/login"
-            className="rounded-md px-3 py-2 hover:bg-green-800 transform transition duration-300 hover:scale-110"
-          >
-            Bejelentkezés
-          </Link>
+          <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />
         )}
       </nav>
     </header>

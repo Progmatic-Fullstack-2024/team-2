@@ -6,11 +6,10 @@ export default function DefaultButton({
   onClick,
   onClickParams,
   type = 'button',
-  height,
-  width,
+  height = 'auto',
+  width = 'auto',
 }) {
-  const className = `bg-${color} text-${fontSize} text-${textColor} font-bold rounded p-3 pl-7 pr-7 hover:bg-${color}-light active:scale-95 active:bg-${color}-dark`;
-  console.log(className);
+  const className = `w-${width} h-${height} bg-${color} text-${fontSize} text-${textColor} font-bold rounded p-3 pl-7 pr-7 hover:bg-${color}-light active:scale-95 active:bg-${color}-dark`;
 
   return (
     <button

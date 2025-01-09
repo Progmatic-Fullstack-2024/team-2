@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import AuthResult from './AuthResult';
 import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForRegistration } from '../schema/userValidationSchema';
+import DefaultButton from './misc/DefaultButton';
 
 export default function RegistrationForm() {
   const { register } = useContext(AuthContext);
@@ -25,7 +26,7 @@ export default function RegistrationForm() {
   return (
     <>
       <AuthResult params={{ showAuthResult, setShowAuthResult, navigateTo: '/login' }} />
-      <div className="w-1/2 mx-auto my-40 bg-white p-5 rounded-md bg-opacity-50">
+      <div className="w-1/3 mx-auto my-40 bg-c-secondary-light p-12 rounded-md">
         <h2 className="font-bold text-gray-800 text-xl mb-6">Regisztráció</h2>
         <Formik
           initialValues={initialValues}
@@ -92,16 +93,11 @@ export default function RegistrationForm() {
               />
             </div>
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="bg-blue-900 my-5 py-5 px-4 w-3/4 rounded-md text-white text-lg font-bold transform transition duration-700 hover:scale-110 hover:bg-blue-950"
-              >
-                Regisztráció
-              </button>
+              <DefaultButton text="Regisztráció" type="submit" />
             </div>
           </Form>
         </Formik>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-5">
           Már regisztráltál?
           <Link
             to="/login"

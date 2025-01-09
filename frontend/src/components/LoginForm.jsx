@@ -22,7 +22,7 @@ export default function LoginForm() {
   return (
     <>
       <AuthResult params={{ showAuthResult, setShowAuthResult, navigateTo: '/signedIn' }} />
-      <div className="w-1/2 mx-aut my-40 bg-white p-5 rounded-md bg-opacity-50 ">
+      <div className="mx-aut p-12 my-40 bg-c-secondary-light rounded-md">
         <h2 className="font-bold text-xk text-gray-800 text-xl mb-6">Bejelentkezés</h2>
         <Formik
           initialValues={initialValues}
@@ -43,22 +43,17 @@ export default function LoginForm() {
               <Field
                 type="password"
                 name="password"
-                placeholder="jelszó"
+                placeholder="Jelszó"
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
             </div>
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="bg-c-primary my-5 py-5 px-4 w-3/4 rounded-md text-white text-lg font-bold hover:bg-c-primary-light active:bg-c-primary-dark"
-              >
-                Bejelentkezés
-              </button>
+              <DefaultButton color="c-primary" type="submit" text="Bejelentkezés" />
             </div>
           </Form>
         </Formik>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-5">
           Nem vagy regisztrálva?
           <Link
             to="/register"
@@ -66,7 +61,6 @@ export default function LoginForm() {
           >
             Regisztrálj
           </Link>
-          <DefaultButton color="secondary" text="teszt" />
         </div>
       </div>
     </>

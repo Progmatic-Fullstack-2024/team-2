@@ -8,9 +8,10 @@ export const COLORS = {
     PRIMARY_DARK: 'hsl(0, 72%, 45%)',
     PRIMARY_LIGHT: 'hsl(0, 72%, 56%)',
     SECONDARY: 'hsl(44, 70%, 71%)',
-    SECONDARY_DARK: 'hsl(44, 70%, 66%)',
-    SECONDARY_LIGHT: 'hsl(44, 70%, 76%)',
+    SECONDARY_DARK: 'hsl(44, 70%, 40%)',
+    SECONDARY_LIGHT: 'hsl(44, 70%, 80%)',
     ACCENT: 'hsl(23, 99%, 65%)',
+    ACCENT_LIGHT: 'hsl(23, 99%, 90%)',
   },
   NIGHT: {
     TEXT: 'hsl(0, 0%, 100%)',

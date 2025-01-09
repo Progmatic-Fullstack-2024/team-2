@@ -14,11 +14,11 @@ export default {
         'c-primary': COLORS.DAY.PRIMARY,
         'c-primary-dark': COLORS.DAY.PRIMARY_DARK,
         'c-primary-light': COLORS.DAY.PRIMARY_LIGHT,
-        secondary: COLORS.DAY.SECONDARY,
-        'secondary-dark': COLORS.DAY.SECONDARY_DARK,
-        'secondary-light': COLORS.DAY.SECONDARY_LIGHT,
+        'c-secondary': COLORS.DAY.SECONDARY,
+        'c-secondary-dark': COLORS.DAY.SECONDARY_DARK,
+        'c-secondary-light': COLORS.DAY.SECONDARY_LIGHT,
         'c-accent': COLORS.DAY.ACCENT,
-
+        'c-accent-light': COLORS.DAY.ACCENT_LIGHT,
         // NIGHT mode
         'text-night': COLORS.NIGHT.TEXT,
         'background-night': COLORS.NIGHT.BACKGROUND,
@@ -46,15 +46,10 @@ export default {
   },
   safelist: [
     {
-      pattern: /secondary/,
+      pattern: /^(bg|text)-c-(primary|secondary|accent)(|-light|-dark)$/,
+      variants: ['hover', 'active'],
     },
-    {
-      pattern: /secondary-light/,
-    },
-
-    // {
-    //   pattern: /c-./,
-    // },
+    { pattern: /^(w|h)-\d+/ },
   ],
   plugins: [],
 };

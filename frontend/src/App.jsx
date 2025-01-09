@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div>
+        <div className="bg-c-background">
           <Header />
           <Routes>
             <Route path="/" element={<LoginPage />} />

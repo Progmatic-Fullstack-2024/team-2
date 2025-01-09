@@ -18,7 +18,7 @@ export default function AuthResult({ params }) {
 
   return (
     <div className="position: fixed backdrop-blur-sm bg-black/30 w-full h-full flex items-center justify-center z-50">
-      <div className=" bg-c-background/70 p-5 rounded-md w-80 h-40 flex flex-col items-center justify-center gap-10">
+      <div className=" bg-c-accent-light/60 p-5 rounded-md w-80 h-56 flex flex-col items-center justify-center gap-10 ">
         {authMsg.msg ? (
           <>
             <h1 className="text-xl">{`${authMsg.msg}`}</h1>
@@ -26,7 +26,7 @@ export default function AuthResult({ params }) {
               <DefaultButton text="Tovább" onClick={handleClick} onClickParams={true} />
             ) : (
               <DefaultButton
-                color="c-secondary"
+                color="c-secondary-dark"
                 text="Vissza"
                 onClick={handleClick}
                 onClickParams={false}
