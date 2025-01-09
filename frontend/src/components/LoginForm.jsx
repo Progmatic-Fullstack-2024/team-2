@@ -6,6 +6,8 @@ import AuthResult from './AuthResult';
 import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
 
+import DefaultButton from './misc/DefaultButton';
+
 export default function LoginForm() {
   const { login, clearAuthMsg } = useContext(AuthContext);
   const initialValues = { email: '', password: '' };
@@ -49,7 +51,7 @@ export default function LoginForm() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="bg-blue-900 my-5 py-5 px-4 w-3/4 rounded-md text-white text-lg font-bold transform transition duration-700 hover:scale-110 hover:bg-blue-950"
+                className="bg-c-primary my-5 py-5 px-4 w-3/4 rounded-md text-white text-lg font-bold hover:bg-c-primary-light active:bg-c-primary-dark"
               >
                 Bejelentkezés
               </button>
@@ -64,6 +66,7 @@ export default function LoginForm() {
           >
             Regisztrálj
           </Link>
+          <DefaultButton color="secondary" text="teszt" />
         </div>
       </div>
     </>

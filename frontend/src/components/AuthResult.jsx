@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
+import DefaultButton from './misc/DefaultButton';
 
 export default function AuthResult({ params }) {
   const { showAuthResult, setShowAuthResult, navigateTo } = params;
@@ -9,7 +10,7 @@ export default function AuthResult({ params }) {
   const navigate = useNavigate();
   if (!showAuthResult) return null;
 
-  function handleClick(success = true) {
+  function handleClick(success) {
     setShowAuthResult(false);
     clearAuthMsg();
     if (navigateTo && success) navigate(navigateTo);
@@ -17,26 +18,19 @@ export default function AuthResult({ params }) {
 
   return (
     <div className="position: fixed backdrop-blur-sm bg-black/30 w-full h-full flex items-center justify-center z-50">
-      <div className=" bg-white/70 p-5 rounded-md w-80 h-40 flex flex-col items-center justify-center gap-10">
+      <div className=" bg-c-background/70 p-5 rounded-md w-80 h-40 flex flex-col items-center justify-center gap-10">
         {authMsg.msg ? (
           <>
             <h1 className="text-xl">{`${authMsg.msg}`}</h1>
             {authMsg.success ? (
-              <button
-                className="bg-green-800 text-white rounded p-3 pl-7 pr-7 hover:scale-105 hover:bg-green-700 active:scale-95 active:bg-green-600 justify-self-end"
-                onClick={() => handleClick(true)}
-                type='button'
-              >
-                Tovább
-              </button>
+              <DefaultButton text="Tovább" onClick={handleClick} onClickParams={true} />
             ) : (
-              <button
-                className="bg-red-800 text-white rounded p-3 pl-7 pr-7 hover:scale-105 hover:bg-red-700 active:scale-95 active:bg-red-600 justify-self-end"
-                onClick={() => handleClick(false)}
-                type='button'
-              >
-                Vissza
-              </button>
+              <DefaultButton
+                color="c-secondary"
+                text="Vissza"
+                onClick={handleClick}
+                onClickParams={false}
+              />
             )}
           </>
         ) : (
@@ -45,13 +39,7 @@ export default function AuthResult({ params }) {
               className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-black"
               role="status"
             />
-            <button
-              className="bg-red-800 text-white rounded p-3 pl-7 pr-7 hover:scale-105 hover:bg-red-700 active:scale-95 active:bg-red-600 justify-self-end"
-              onClick={() => handleClick(false)}
-              type='button'
-            >
-              Vissza
-            </button>
+            <DefaultButton text="Loading..." />
           </>
         )}
       </div>
