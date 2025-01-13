@@ -1,13 +1,22 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React from 'react';
 
 import DefaultButton from './misc/DefaultButton';
-import  performanceValidationSchema  from '../schema/performanceValidationSchema'; 
+import performanceValidationSchema from '../schema/performanceValidationSchema';
 
 export default function NewPerformanceForm({ lecture, onSubmit }) {
   const initialValues = lecture || {
     title: '',
     description: '',
     image: null,
+  };
+
+  const handleSubmit = ({ setFieldValue, resetForm }) => {
+    alert('Előadás hozzáadva!');
+
+    resetForm();
+
+    setFieldValue('image', null);
   };
 
   return (
@@ -18,52 +27,55 @@ export default function NewPerformanceForm({ lecture, onSubmit }) {
       <Formik
         initialValues={initialValues}
         validationSchema={performanceValidationSchema}
-        onSubmit={onSubmit}
+        onSubmit={onSubmit || handleSubmit}
       >
-        <Form>
-          <div className="mb-4">
-            <label htmlFor="title" className="text-gray-800 font-bold">
-              Előadás neve <span className="text-red-500">*</span>
-            </label>
-            <Field
-              type="text"
-              name="title"
-              placeholder="Add meg az előadás nevét"
-              className="w-full border p-2 rounded my-1 text-gray-800"
-            />
-            <ErrorMessage name="title" component="div" className="text-red-500 text-sm" />
-          </div>
+        {({ setFieldValue }) => (
+          <Form>
+            <div className="mb-4">
+              <label htmlFor="title" className="text-gray-800 font-bold">
+                Előadás neve <span className="text-red-500">*</span>
+              </label>
+              <Field
+                type="text"
+                name="title"
+                placeholder="Add meg az előadás nevét"
+                className="w-full border p-2 rounded my-1 text-gray-800"
+              />
+              <ErrorMessage name="title" component="div" className="text-red-500 text-sm" />
+            </div>
 
-          <div className="mb-4">
-            <label htmlFor="description" className="text-gray-800 font-bold">
-              Leírás <span className="text-red-500">*</span>
-            </label>
-            <Field
-              as="textarea"
-              name="description"
-              placeholder="Add meg az előadás leírását"
-              className="w-full border p-2 rounded my-1 text-gray-800"
-            />
-            <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
-          </div>
+            <div className="mb-4">
+              <label htmlFor="description" className="text-gray-800 font-bold">
+                Leírás <span className="text-red-500">*</span>
+              </label>
+              <Field
+                as="textarea"
+                name="description"
+                placeholder="Add meg az előadás leírását"
+                className="w-full border p-2 rounded my-1 text-gray-800"
+              />
+              <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
+            </div>
 
-          <div className="mb-4">
-            <label htmlFor="image" className="text-gray-800 font-bold">
-              Kép feltöltése
-            </label>
-            <Field
-              type="file"
-              name="image"
-              accept="image/*"
-              className="w-full border p-2 rounded my-1 text-gray-800"
-            />
-            <ErrorMessage name="image" component="div" className="text-red-500 text-sm" />
-          </div>
+            <div className="mb-4">
+              <label htmlFor="image" className="text-gray-800 font-bold">
+                Kép feltöltése
+              </label>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                className="w-full border p-2 rounded my-1 text-gray-800"
+                onChange={(event) => setFieldValue('image', event.currentTarget.files[0])}
+              />
+              <ErrorMessage name="image" component="div" className="text-red-500 text-sm" />
+            </div>
 
-          <div className="flex justify-center">
-            <DefaultButton text={lecture ? 'Mentés' : 'Előadás hozzáadása'} type="submit" />
-          </div>
-        </Form>
+            <div className="flex justify-center">
+              <DefaultButton text={lecture ? 'Mentés' : 'Előadás hozzáadása'} type="submit" />
+            </div>
+          </Form>
+        )}
       </Formik>
     </div>
   );

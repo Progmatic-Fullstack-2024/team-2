@@ -7,6 +7,15 @@ const performanceValidationSchema = Yup.object({
   description: Yup.string().required('Leírás szükséges.'),
   image: Yup.mixed()
     .required('Kép szükséges.')
-    .test('fileSize', 'A fájl túl nagy', (value) => value && value.size <= 1048576), // max 1MB
+    .test(
+      'fileSize',
+      'A fájl túl nagy (max. 1MB)',
+      (value) => (value ? value.size <= 1048576 : false), 
+    )
+    .test(
+      'fileType',
+      'Csak képek tölthetők fel (jpg, png, jpeg)',
+      (value) => (value ? ['image/jpeg', 'image/png', 'image/jpg'].includes(value.type) : false), 
+    ),
 });
 export default performanceValidationSchema;
