@@ -26,7 +26,7 @@ model Performance {
   creatorId    String
   posterURL    String?
   imagesURL    String[] @default([])
-  performanceDate DateTime?
+  performanceDate DateTime[]  @default([])
   description  String
   price        Int
 }
@@ -34,6 +34,7 @@ model Performance {
 model Creator {
   id           String         @id @default(cuid())
   name         String
+  imageURL     String?
   performances Performance[]
 }
 
@@ -41,7 +42,9 @@ model Theater {
   id           String         @id @default(cuid())
   name         String
   address      String
-  email        String
-  phone        String
+  email        String?
+  imageURL     String?
+  phone        String?
+  seats        Int
   performances Performance[]    
 }
