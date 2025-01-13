@@ -43,8 +43,8 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', token);
       const decodedToken = jwtDecode(token);
       setUser(decodedToken);
-      setAuthMsg({ msg: 'Minden szupi!', success: true });
-      return { ok: true, message: 'Minden szupi!' };
+      setAuthMsg({ msg: 'Sikeres bejelentkezés!', success: true });
+      return { ok: true, message: 'Sikeres bejelentkezés!' };
     } catch (error) {
       setAuthMsg({ msg: 'Érvénytelen email vagy jelszó!', success: false });
       return { ok: false, message: error };
