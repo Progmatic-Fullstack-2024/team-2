@@ -4,6 +4,7 @@ import Header from './components/Header';
 import { AuthProvider } from './contexts/AuthContext';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
+import NewPerformancePage from './pages/NewPerformancePage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
 
@@ -19,6 +20,7 @@ function App() {
             <Route path="register" element={<RegistrationPage />} />
             <Route path="/signedIn" element={<SignedInPage />} />
             <Route path="userlist" element={<ListUsers />} />
+            <Route path="/new-performance" element={<NewPerformancePage />} />
           </Routes>
         </div>
       </AuthProvider>
