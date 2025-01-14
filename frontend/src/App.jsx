@@ -2,11 +2,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header';
 import { AuthProvider } from './contexts/AuthContext';
+import ComingSoonPage from './pages/ComingSoonPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
 import NewPerformancePage from './pages/NewPerformancePage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
+
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
             <Route path="/signedIn" element={<SignedInPage />} />
             <Route path="userlist" element={<ListUsers />} />
             <Route path="/new-performance" element={<NewPerformancePage />} />
+            <Route path="comingsoon" element={<ComingSoonPage />} />
+           
           </Routes>
         </div>
       </AuthProvider>

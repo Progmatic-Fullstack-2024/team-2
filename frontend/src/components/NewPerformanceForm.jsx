@@ -1,33 +1,42 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 
+import AuthResult from './AuthResult';
 import DefaultButton from './misc/DefaultButton';
-import performanceValidationSchema from '../schema/performanceValidationSchema';
+import { performanceValidationSchema } from '../schema/userValidationSchema';
 
-export default function NewPerformanceForm({ lecture, onSubmit }) {
+export default function NewPerformanceForm({ lecture}) {
   const initialValues = lecture || {
     title: '',
     description: '',
     image: null,
   };
 
-  const handleSubmit = ({ setFieldValue, resetForm }) => {
-    alert('Előadás hozzáadva!');
+  const [showAuthResult, setShowAuthResult] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
+  const handleSubmit = ({ resetForm, setFieldValue }) => {
+    setSuccessMessage('Az előadás sikeresen hozzáadva!');
+    setShowAuthResult(true);
     resetForm();
-
     setFieldValue('image', null);
+    setUploadedImage(null);
+    Navigate('/comingsoon')
   };
 
   return (
-    <div className="w-1/3 mx-auto my-40 bg-c-secondary-light p-12 rounded-md">
+    < >
+      <AuthResult params={{ showAuthResult, setShowAuthResult, navigateTo: '/comingsoon', successMessage, }}/>
+      <div className="mx-aut p-12 my-40 bg-c-secondary-light rounded-md">
       <h2 className="font-bold text-gray-800 text-xl mb-6">
         {lecture ? 'Előadás módosítása' : 'Új előadás'}
       </h2>
       <Formik
         initialValues={initialValues}
         validationSchema={performanceValidationSchema}
-        onSubmit={onSubmit || handleSubmit}
+        onSubmit={handleSubmit}
       >
         {({ setFieldValue }) => (
           <Form>
@@ -59,15 +68,46 @@ export default function NewPerformanceForm({ lecture, onSubmit }) {
 
             <div className="mb-4">
               <label htmlFor="image" className="text-gray-800 font-bold">
-                Kép feltöltése
+                Kép feltöltése <span className="text-red-500">*</span>
               </label>
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                className="w-full border p-2 rounded my-1 text-gray-800"
-                onChange={(event) => setFieldValue('image', event.currentTarget.files[0])}
-              />
+              <div className="flex flex-col items-center border p-4 rounded my-1">
+                {uploadedImage && (
+                  <div className="relative mb-4">
+                    <img
+                      src={URL.createObjectURL(uploadedImage)}
+                      alt="Előnézet"
+                      className="max-h-40 object-contain rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFieldValue('image', null);
+                        setUploadedImage(null);
+                      }}
+                      className="absolute top-2 right-2 bg-red-500 text-white text-sm px-2 py-1 rounded"
+                    >
+                      Törlés
+                    </button>
+                  </div>
+                )}
+                <DefaultButton
+                  text="Fájl kiválasztása"
+                  onClick={() => document.getElementById('fileInput').click()}
+                  type="button"
+                />
+                <input
+                  id="fileInput"
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.currentTarget.files[0];
+                    setFieldValue('image', file);
+                    setUploadedImage(file);
+                  }}
+                />
+              </div>
               <ErrorMessage name="image" component="div" className="text-red-500 text-sm" />
             </div>
 
@@ -77,6 +117,7 @@ export default function NewPerformanceForm({ lecture, onSubmit }) {
           </Form>
         )}
       </Formik>
-    </div>
+      </div>
+    </>
   );
 }
