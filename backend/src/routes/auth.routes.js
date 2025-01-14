@@ -19,5 +19,15 @@ router.post(
   upload.array("files", 10),
   performanceController.createPerformance,
 );
+router.delete(
+  "/performance/:performanceId",
+  isAdmin,
+  performanceController.destroyPerformance,
+);
+router.patch(
+  "/performance/:performanceId",
+  isAdmin,
+  performanceController.updatePerformance,
+);
 
 export default router;

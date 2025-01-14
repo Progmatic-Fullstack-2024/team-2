@@ -48,7 +48,7 @@ export const deleteFiles = async (urls) => {
         return deletedImage;
       }
       return null;
-    })
+    }),
   );
   return results.filter((result) => result !== null);
 };
