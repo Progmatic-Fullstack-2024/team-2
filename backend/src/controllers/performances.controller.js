@@ -4,18 +4,18 @@ import HttpError from "../utils/HttpError.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const createPerformance = async (req, res, next) => {
-  const { title, theater, description, price, performanceDate, creators } =
+  const { title, theaterId, description, price, performanceDate, creatorsId } =
     req.body;
-  const poster = req.files[0] || null;
-  const images = req.files.slice(1) || [];
+  const poster = req.files ? req.files[0] : null;
+  const images = req.files ? req.files.slice(1) : [];
   try {
     await performanceValidationSchemaForCreate.validate({
       title,
-      theater,
+      theaterId,
       description,
       price,
       performanceDate,
-      creators,
+      creatorsId,
     });
 
     const posterUrl = await createFiles([poster]); // Handle single poster upload
@@ -23,10 +23,10 @@ const createPerformance = async (req, res, next) => {
     const newPerformance = await performancesService.create(
       {
         title,
-        theater,
+        theaterId,
         description,
         performanceDate,
-        creators,
+        creatorsId,
         price: Number(price),
       },
       posterUrl[0], // Single poster URL

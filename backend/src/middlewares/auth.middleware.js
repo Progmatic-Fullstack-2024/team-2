@@ -24,7 +24,8 @@ export const isAuthenticated = (req, res, next) => {
 };
 
 export const isAdmin = (req, res, next) => {
-  if (req.user.role === "Admin") {
+  console.log(req.user);
+  if (req.user && req.user.role === "Admin") {
     next();
   } else {
     next(new HttpError("Admin role required", 403));
