@@ -7,6 +7,15 @@ export default {
 
   theme: {
     extend: {
+      width: {
+        1200: '1200px',
+      },
+      height: {
+        600: '600px',
+      },
+      brightness: {
+        65: 0.65,
+      },
       colors: {
         // DAY mode
         'c-text': COLORS.DAY.TEXT,
@@ -48,6 +57,9 @@ export default {
     {
       pattern: /^(bg|text)-c-(primary|secondary|accent)(|-light|-dark)$/,
       variants: ['hover', 'active'],
+    },
+    {
+      pattern: /(blue|red)-(100|200|300|400|500|600|700|800|900)$/,
     },
     { pattern: /^(w|h)-\d+/ },
   ],

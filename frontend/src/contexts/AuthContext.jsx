@@ -8,9 +8,15 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [authMsg, setAuthMsg] = useState({ msg: '', success: false });
+  const [authMsg, setAuthMsg] = useState({ show: false, msg: '', success: false });
 
-  const clearAuthMsg = () => setAuthMsg({ msg: '', success: false });
+  const showAuthMsg = (show) => {
+    setAuthMsg(
+      show
+        ? { show: true, msg: authMsg.msg, success: authMsg.success }
+        : { show: false, msg: '', success: false },
+    );
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -29,10 +35,10 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     try {
       await authService.register(userData);
-      setAuthMsg({ msg: 'Sikeres regisztráció!', success: true });
+      setAuthMsg({ show: true, msg: 'Sikeres regisztráció!', success: true });
       return { ok: true, message: 'Sikeres regisztráció!' };
     } catch (error) {
-      setAuthMsg({ msg: 'Ez az email cím már regisztrálva van!', success: false });
+      setAuthMsg({ show: true, msg: 'Ez az email cím már regisztrálva van!', success: false });
       return { ok: false, message: error };
     }
   };
@@ -43,21 +49,20 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', token);
       const decodedToken = jwtDecode(token);
       setUser(decodedToken);
-      setAuthMsg({ msg: 'Minden szupi!', success: true });
-      return { ok: true, message: 'Minden szupi!' };
+      setAuthMsg({ show: true, msg: 'Sikeresen bejelentkeztél!', success: true });
+      return { ok: true, message: 'Sikeresen bejelentkeztél!' };
     } catch (error) {
-      setAuthMsg({ msg: 'Érvénytelen email vagy jelszó!', success: false });
+      setAuthMsg({ show: true, msg: 'Érvénytelen email vagy jelszó!', success: false });
       return { ok: false, message: error };
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    setAuthMsg({ msg: 'Sikeresen kijelentkeztél!', success: true });
     setUser(null);
   };
 
-  const value = { user, login, register, logout, authMsg, clearAuthMsg };
+  const value = { user, login, register, logout, authMsg, showAuthMsg };
 
   return <AuthContext.Provider value={value}>{!isLoading && children}</AuthContext.Provider>;
 }
