@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
+import ListUsers from './pages/ListUsers';
 
 function App() {
   return (
