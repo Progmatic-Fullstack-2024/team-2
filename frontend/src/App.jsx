@@ -19,10 +19,11 @@ function App() {
           <div className="w-full ">
             <Routes>
               <Route path="/" element={<LoginPage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="register" element={<RegistrationPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegistrationPage />} />
               <Route path="/signedIn" element={<SignedInPage />} />
               <Route path="/performances" element={<PerformancesPage />} />
+              <Route path="/userlist" element={<ListUsers />} />
             </Routes>
           </div>
         </main>

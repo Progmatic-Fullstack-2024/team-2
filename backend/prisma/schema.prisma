@@ -14,5 +14,37 @@ model User {
   email        String         @unique()
   phone        String?
   password     String
-  role         String
+  role         String   
 }
+
+model Performance {
+  id           String         @id @default(cuid())
+  title        String
+  theater      Theater        @relation(fields: [theaterId], references: [id]) 
+  theaterId    String
+  creators     Creator[]        @relation("Performance_Creator")
+  posterURL    String?
+  imagesURL    String[] @default([])
+  performanceDate DateTime[]  @default([])
+  description  String
+  price        Int
+}
+
+model Creator {
+  id           String         @id @default(cuid())
+  name         String
+  imageURL     String?
+  performances Performance[] @relation("Performance_Creator")
+}
+
+model Theater {
+  id           String         @id @default(cuid())
+  name         String
+  address      String
+  email        String?
+  imageURL     String?
+  phone        String?
+  seats        Int
+  performances Performance[]    
+}
+
