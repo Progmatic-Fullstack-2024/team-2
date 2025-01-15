@@ -4,8 +4,7 @@ import HttpError from "../utils/HttpError.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const createPerformance = async (req, res, next) => {
-  const { title, theaterId, description, price, performanceDate, creatorsId } =
-    req.body;
+  const { title, theaterId, description, price, performanceDate } = req.body;
   const poster = req.files ? req.files[0] : null;
   const images = req.files ? req.files.slice(1) : [];
   try {
@@ -15,7 +14,6 @@ const createPerformance = async (req, res, next) => {
       description,
       price,
       performanceDate,
-      creatorsId,
     });
 
     const posterUrl = await createFiles([poster]); // Handle single poster upload
@@ -26,7 +24,6 @@ const createPerformance = async (req, res, next) => {
         theaterId,
         description,
         performanceDate,
-        creatorsId,
         price: Number(price),
       },
       posterUrl[0], // Single poster URL
