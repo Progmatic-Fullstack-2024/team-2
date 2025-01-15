@@ -1,5 +1,5 @@
 import { createFiles } from "../services/file.service.js";
-import performanceService from "../services/performance.service.js";
+import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
@@ -20,7 +20,7 @@ const createPerformance = async (req, res, next) => {
 
     const posterUrl = await createFiles([poster]); // Handle single poster upload
     const imageUrls = await createFiles(images); // Handle multiple image uploads
-    const newPerformance = await performanceService.create(
+    const newPerformance = await performancesService.create(
       {
         title,
         theater,
@@ -53,7 +53,7 @@ const updatePerformance = async (req, res, next) => {
   const imageUrls = await createFiles(images); // Handle multiple image uploads
 
   try {
-    const updatedPerformance = await performanceService.update(
+    const updatedPerformance = await performancesService.update(
       performanceId,
       {
         title,
@@ -80,7 +80,7 @@ const updatePerformance = async (req, res, next) => {
 const destroyPerformance = async (req, res, next) => {
   const { performanceId } = req.params;
   try {
-    const deletedPerformance = await performanceService.destroy(performanceId);
+    const deletedPerformance = await performancesService.destroy(performanceId);
     res.status(200).json({ deletedPerformance });
   } catch (error) {
     next(
