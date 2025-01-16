@@ -23,9 +23,18 @@ const getPerformanceByID = async (req, res, next) => {
 
 const createPerformance = async (req, res, next) => {
 	const { title, theaterId, description, price, performanceDate } = req.body;
-	const poster = req.files ? req.files[0] : null;
-	const images = req.files ? req.files.slice(1) : [];
+	// const poster = req.files ? req.files[0] : null;
+	// const images = req.files ? req.files.slice(1) : [];
+
+	const poster = req.files.poster ? req.files.poster[0] : null;
+	const images = req.files && req.files.files ? req.files.files : [];
+
+	console.log("Headers:", req.headers);
+	console.log("Body:", req.body);
+	console.log("Files:", req.files);
+
 	try {
+		console.log(req.body);
 		await performanceValidationSchemaForCreate.validate({
 			title,
 			theaterId,
@@ -34,20 +43,27 @@ const createPerformance = async (req, res, next) => {
 			performanceDate,
 		});
 
-		const posterUrl = await createFiles([poster]); // Handle single poster upload
-		const imageUrls = await createFiles(images); // Handle multiple image uploads
+		// const posterUrl = await createFiles([poster]); // Handle single poster upload
+		// const imageUrls = await createFiles(images); // Handle multiple image uploads
+
+		// console.log(posterUrl);
+
+		const parsedPerformanceDate = [new Date(performanceDate)];
 		const newPerformance = await performancesService.create(
 			{
 				title,
 				theaterId,
 				description,
-				performanceDate,
+				performanceDate: parsedPerformanceDate,
 				price: Number(price),
 			},
-			posterUrl[0], // Single poster URL
-			imageUrls // Multiple image URLs
+			// posterUrl[0], // Single poster URL
+			// imageUrls, // Multiple image URLs
+			poster,
+			images
 		);
 		res.status(201).json(newPerformance);
+		console.log(newPerformance);
 	} catch (error) {
 		next(new HttpError(error.message || "Failed to create performance", error.statusCode || 500));
 	}

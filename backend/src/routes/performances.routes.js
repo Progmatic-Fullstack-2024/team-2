@@ -8,7 +8,14 @@ const router = express.Router();
 router.get("/", performancesController.listPerformances);
 router.get("/:performanceId", performancesController.listPerformances);
 
-router.post("/", isAdmin, upload.array("files", 10), performancesController.createPerformance);
+router.post(
+	"/",
+	upload.fields([
+		{ name: "poster", maxCount: 1 },
+		{ name: "files", maxCount: 10 },
+	]),
+	performancesController.createPerformance
+);
 router.delete("/:performanceId", isAdmin, performancesController.destroyPerformance);
 router.patch(
 	"/:performanceId",
@@ -16,5 +23,3 @@ router.patch(
 	upload.array("files", 10),
 	performancesController.updatePerformance
 );
-
-export default router;
