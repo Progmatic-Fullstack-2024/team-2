@@ -3,12 +3,21 @@ import { upload } from "../middlewares/multer.middleware.js";
 import { isAdmin } from "../middlewares/auth.middleware.js";
 import performancesController from "../controllers/performances.controller.js";
 
+
 const router = express.Router();
 
+// router.post(
+//   "/",
+//   isAdmin,
+//   upload.array("files", 10),
+//   performancesController.createPerformance,
+// );
 router.post(
   "/",
-  isAdmin,
-  upload.array("files", 10),
+  upload.fields([
+    { name: "poster", maxCount: 1 },
+    { name: "files", maxCount: 10 },
+  ]),
   performancesController.createPerformance,
 );
 router.delete(

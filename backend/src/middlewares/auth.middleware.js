@@ -24,7 +24,6 @@ export const isAuthenticated = (req, res, next) => {
 };
 
 export const isAdmin = (req, res, next) => {
-  console.log(req.user);
   if (req.user && req.user.role === "Admin") {
     next();
   } else {

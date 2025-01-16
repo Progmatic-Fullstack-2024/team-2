@@ -2,7 +2,7 @@ import express, { json } from "express";
 import cors from "cors";
 import errorHandler from "./middlewares/error-handler.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
-import performancesRoutes from "./routes/performances.route.js";
+import performancesRoutes from "./routes/performances.routes.js";
 import { FRONTEND_URL } from "./constants/constants.js";
 import { authenticate } from "./middlewares/auth.middleware.js";
 
