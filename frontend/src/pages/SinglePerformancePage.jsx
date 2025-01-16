@@ -21,6 +21,11 @@ export default function DetailsPage() {
           location: 'Színház1',
           actors: ['Actor1', 'Actor2'],
           date: '2025-02-10',
+          gallery: [
+            'https://picsum.photos/id/1015/200/300',
+            'https://picsum.photos/id/1016/200/300',
+            'https://picsum.photos/id/1018/200/300',
+          ],
         },
         {
           id: 2,
@@ -30,6 +35,11 @@ export default function DetailsPage() {
           location: 'Színház2',
           actors: ['Actor3', 'Actor4'],
           date: '2025-03-15',
+          gallery: [
+            'https://picsum.photos/id/1020/200/300',
+            'https://picsum.photos/id/1021/200/300',
+            'https://picsum.photos/id/1022/200/300',
+          ],
         },
         {
           id: 3,
@@ -39,6 +49,11 @@ export default function DetailsPage() {
           location: 'Színház3',
           actors: ['Actor5', 'Actor6'],
           date: '2025-04-01',
+          gallery: [
+            'https://picsum.photos/id/1024/200/300',
+            'https://picsum.photos/id/1025/200/300',
+            'https://picsum.photos/id/1026/200/300',
+          ],
         },
       ];
       const foundPerformance = performances.find((p) => p.id === parseInt(performanceId, 10));
@@ -71,6 +86,22 @@ export default function DetailsPage() {
           />
           <div className="p-5">
             <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
+
+            {/* Képgaléria */}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-4">Képgaléria</h2>
+              <div className="grid grid-cols-3 gap-4">
+                {performance.gallery.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Galéria kép ${index + 1}`}
+                    className="w-full h-40 object-cover rounded-lg shadow-md"
+                  />
+                ))}
+              </div>
+            </div>
+
             <p className="text-lg mb-2">Helyszín: {performance.location}</p>
             <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
             <p className="text-lg mb-2">Időpont: {performance.date}</p>
