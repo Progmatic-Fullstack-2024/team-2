@@ -1,4 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -8,6 +9,9 @@ import { performanceValidationSchema } from '../schema/userValidationSchema';
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
 
+  const [posterPreview, setPosterPreview] = useState(null);
+  const [imagesPreview, setImagesPreview] = useState([]);
+
   const initialValues = lecture || {
     title: '',
     theaterId: '',
@@ -15,7 +19,7 @@ export default function NewPerformanceForm({ lecture }) {
     description: '',
     performanceDate: [],
     price: '',
-    posterURL: '',
+    posterURL: null,
     imagesURL: [],
   };
 
@@ -25,7 +29,8 @@ export default function NewPerformanceForm({ lecture }) {
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
     formData.append('price', values.price);
-    formData.append('performanceDate', values.performanceDate);
+    values.performanceDate.forEach((date) => formData.append('performanceDate[]', date));
+    values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
 
     if (values.posterURL) {
       formData.append('files', values.posterURL);
@@ -48,10 +53,39 @@ export default function NewPerformanceForm({ lecture }) {
       if (!response.ok) throw new Error('Hiba történt az előadás létrehozásakor.');
 
       resetForm();
+      setPosterPreview(null);
+      setImagesPreview([]);
       navigate('/comingsoon');
     } catch (error) {
       toast.error(`Hiba történt az előadás létrehozásakor: ${error.message}`);
     }
+  };
+
+  const handlePosterChange = (event, setFieldValue) => {
+    const file = event.target.files[0];
+    setFieldValue('posterURL', file);
+    setPosterPreview(URL.createObjectURL(file));
+  };
+
+  const removePoster = (setFieldValue) => {
+    setFieldValue('posterURL', null);
+    setPosterPreview(null);
+  };
+
+  const handleImagesChange = (event, setFieldValue, images) => {
+    const files = Array.from(event.target.files);
+    setFieldValue('imagesURL', [...images, ...files]);
+    setImagesPreview((prev) => [...prev, ...files.map((file) => URL.createObjectURL(file))]);
+  };
+
+  const removeImage = (index, setFieldValue, images) => {
+    const updatedImages = [...images];
+    updatedImages.splice(index, 1);
+    setFieldValue('imagesURL', updatedImages);
+
+    const updatedPreviews = [...imagesPreview];
+    updatedPreviews.splice(index, 1);
+    setImagesPreview(updatedPreviews);
   };
 
   return (
@@ -101,7 +135,7 @@ export default function NewPerformanceForm({ lecture }) {
                   <Field
                     type="text"
                     name={`creatorId[${index}]`}
-                    placeholder="Add meg az alkotó azomosítóját"
+                    placeholder="Add meg az alkotó azonosítóját"
                     className="w-full border p-2 rounded text-gray-800"
                   />
                   <button
@@ -183,61 +217,87 @@ export default function NewPerformanceForm({ lecture }) {
               <Field
                 type="number"
                 name="price"
-                placeholder="Add meg az előadás árát (HUF)"
+                placeholder="Add meg az előadás árát"
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
             </div>
+
             <div className="mb-4">
-              <label htmlFor="posterURL" className="text-gray-800 font-bold">
-                Poszter URL
+              <label htmlFor="posterURL" className="text-gray-800 font-bold block mb-2">
+                Poszter
               </label>
-              <Field
-                type="text"
-                name="posterURL"
-                placeholder="Add meg a poszter URL-jét"
-                className="w-full border p-2 rounded my-1 text-gray-800"
+              <DefaultButton
+                text="Fájl kiválasztása"
+                type="button"
+                onClick={() => document.getElementById('posterURL').click()}
               />
+              <input
+                type="file"
+                id="posterURL"
+                accept="image/*"
+                onChange={(e) => handlePosterChange(e, setFieldValue)}
+                className="hidden"
+              />
+              {posterPreview && (
+                <div className="my-2 relative">
+                  <img
+                    src={posterPreview}
+                    alt="Poster preview"
+                    className="w-24 h-24 object-cover rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removePoster(setFieldValue)}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
               <ErrorMessage name="posterURL" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="mb-4">
-              <label htmlFor="imagesURL" className="text-gray-800 font-bold">
-                Képek URL-jei
+              <label htmlFor="imagesURL" className="text-gray-800 font-bold block mb-2">
+                További képek
               </label>
-              <div className="flex flex-col gap-2">
-                {values.imagesURL.map((url, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Field
-                      type="text"
-                      name={`imagesURL[${index}]`}
-                      placeholder="Kép URL"
-                      className="w-full border p-2 rounded"
+              <DefaultButton
+                text="Fájlok kiválasztása"
+                type="button"
+                onClick={() => document.getElementById('imagesURL').click()}
+              />
+              <input
+                type="file"
+                id="imagesURL"
+                accept="image/*"
+                multiple
+                onChange={(e) => handleImagesChange(e, setFieldValue, values.imagesURL)}
+                className="hidden"
+              />
+              <div className="flex flex-wrap gap-2 mt-2">
+                {imagesPreview.map((src, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={src}
+                      alt={`Preview ${index}`}
+                      className="w-24 h-24 object-cover rounded"
                     />
                     <button
                       type="button"
-                      onClick={() => {
-                        const updatedImages = [...values.imagesURL];
-                        updatedImages.splice(index, 1);
-                        setFieldValue('imagesURL', updatedImages);
-                      }}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      onClick={() => removeImage(index, setFieldValue, values.imagesURL)}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
                     >
-                      Törlés
+                      &times;
                     </button>
                   </div>
                 ))}
-                <DefaultButton
-                  text="Új kép hozzáadása"
-                  type="button"
-                  onClick={() => setFieldValue('imagesURL', [...values.imagesURL, ''])}
-                />
               </div>
-              <ErrorMessage name="imagesURL" component="div" className="text-red-500 text-sm" />
             </div>
 
-            <div className="flex justify-center">
-              <DefaultButton text={lecture ? 'Mentés' : 'Előadás hozzáadása'} type="submit" />
+            <div className="flex justify-between gap-10">
+              <DefaultButton text="Előadás hozzáadása" type="submit" />
+              <DefaultButton text="Mégsem" type="button" onClick={() => navigate('/comingsoon')} />
             </div>
           </Form>
         )}
