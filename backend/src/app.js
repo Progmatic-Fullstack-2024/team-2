@@ -19,7 +19,7 @@ app.use("/api/performances", performancesRoutes);
 app.use(errorHandler);
 
 app.use("/", (req, res) => {
-  res.status(404).send("No Endpoint");
+	res.status(404).send("No Endpoint");
 });
 
 export default app;

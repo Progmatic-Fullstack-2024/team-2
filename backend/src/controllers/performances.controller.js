@@ -3,6 +3,24 @@ import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
+const listPerformances = async (req, res, next) => {
+	console.log("list");
+	try {
+		const performances = await performancesService.list();
+		res.status(200).send(performances);
+	} catch (error) {
+		next(error);
+	}
+};
+const getPerformanceByID = async (req, res, next) => {
+	try {
+		const performance = await performancesService.getById();
+		res.status(200).send(performance);
+	} catch (error) {
+		next(error);
+	}
+};
+
 const createPerformance = async (req, res, next) => {
   const { title, theaterId, description, price, performanceDate } = req.body;
 
@@ -43,13 +61,12 @@ const createPerformance = async (req, res, next) => {
 };
 
 const updatePerformance = async (req, res, next) => {
-  const { performanceId } = req.params;
-  const { title, theater, description, price, performanceDate, creators } =
-    req.body;
-  const poster = req.files[0] || null;
-  const images = req.files.slice(1) || [];
-  const posterUrl = await createFiles([poster]); // Handle single poster upload
-  const imageUrls = await createFiles(images); // Handle multiple image uploads
+	const { performanceId } = req.params;
+	const { title, theater, description, price, performanceDate, creators } = req.body;
+	const poster = req.files[0] || null;
+	const images = req.files.slice(1) || [];
+	const posterUrl = await createFiles([poster]); // Handle single poster upload
+	const imageUrls = await createFiles(images); // Handle multiple image uploads
 
   try {
     const updatedPerformance = await performancesService.update(
@@ -92,7 +109,9 @@ const destroyPerformance = async (req, res, next) => {
 };
 
 export default {
-  createPerformance,
-  updatePerformance,
-  destroyPerformance,
+	createPerformance,
+	updatePerformance,
+	destroyPerformance,
+	listPerformances,
+	getPerformanceByID,
 };
