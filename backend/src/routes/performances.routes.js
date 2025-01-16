@@ -23,3 +23,5 @@ router.patch(
 	upload.array("files", 10),
 	performancesController.updatePerformance
 );
+
+export default router;
