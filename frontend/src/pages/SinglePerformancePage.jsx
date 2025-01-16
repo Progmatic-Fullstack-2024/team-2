@@ -9,10 +9,9 @@ export default function DetailsPage() {
   const navigate = useNavigate();
   const [performance, setPerformance] = useState(null);
 
-  // Szimulált API hívás
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
-      // Később cseréld ki API-hívásra
+      // Később ide jöhet az API hívás
       const performances = [
         {
           id: 1,
@@ -78,7 +77,14 @@ export default function DetailsPage() {
             <p className="text-lg mb-2">Közreműködők: {performance.actors.join(', ')}</p>
             <p className="text-lg mb-2">Leírás</p>
             <p className="text-lg mb-2">Kritikák</p>
-            <DefaultButton onClick={() => navigate('/performances')} text="Vissza" />
+            <div className="flex justify-around">
+              <div>
+                <DefaultButton onClick={() => navigate('/performances')} text="Vissza" />
+              </div>
+              <div>
+                <DefaultButton text="Foglalás" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
