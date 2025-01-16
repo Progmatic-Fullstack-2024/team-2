@@ -84,10 +84,7 @@ export default function DetailsPage() {
 
   return (
     <>
-      <ImageTitle
-        title="Az adott előadás címe!"
-        description="Keress könnyedén és gyorsan az előadások között, hogy megtaláld a számodra legalkalmasabbat!"
-      />
+      <ImageTitle title={performance.title} />
       <div className="min-h-screen flex flex-col items-center justify-center p-10">
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
           <img
