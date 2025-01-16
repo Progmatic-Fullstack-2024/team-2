@@ -2,7 +2,7 @@ import express, { json } from "express";
 import cors from "cors";
 import errorHandler from "./middlewares/error-handler.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
-import performancesRoutes from "./routes/performances.route.js";
+import performancesRoutes from "./routes/performances.routes.js";
 import { FRONTEND_URL } from "./constants/constants.js";
 import { authenticate } from "./middlewares/auth.middleware.js";
 
@@ -19,7 +19,7 @@ app.use("/api/performances", performancesRoutes);
 app.use(errorHandler);
 
 app.use("/", (req, res) => {
-  res.status(404).send("No Endpoint");
+	res.status(404).send("No Endpoint");
 });
 
 export default app;
