@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
 import DefaultButton from '../misc/DefaultButton';
@@ -8,6 +9,13 @@ export default function PerformanceCard({ data }) {
   const gradientClassBot = `bottom-0 bg-gradient-to-b from-transparent to-black/80 to-50% absolute h-2/3 w-full tablet:rounded-b-lg `;
 
   const [imageReady, setImageReady] = useState(false);
+
+  // BAZSI RÉSZE:
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate(`/performances/${data.id}`);
+  };
 
   async function fetchImageAndCache(url) {
     const res = await fetch(url);
@@ -42,7 +50,7 @@ export default function PerformanceCard({ data }) {
         <span>Helyszín : </span>
         <span>Közeműködők : </span>
         <span className="mb-3">Időpont : </span>
-        <DefaultButton text="Érdekel..." />
+        <DefaultButton onClick={handleNavigate} text="Érdekel..." />
       </div>
     </div>
   );
