@@ -1,5 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useRef } from 'react';
 
 import authService from '../services/auth.service.js';
 
@@ -7,8 +7,9 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);
-  const [authMsg, setAuthMsg] = useState({ show: false, msg: '', success: false });
+  let [authMsg, setAuthMsg] = useState({ show: false, msg: '', success: false });
 
   const showAuthMsg = (show) => {
     setAuthMsg(

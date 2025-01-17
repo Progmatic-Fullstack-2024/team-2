@@ -1,46 +1,37 @@
+import { useEffect, useRef, useState } from 'react';
 import ImageTitle from '../components/misc/ImageTitle';
 import PerformancesList from '../components/performances/PerformancesList';
+import performancesService from '../services/performances.service';
+import PerformancesSidebar from '../components/performances/PerformancesSidebar';
 
 export default function PerformancesPage() {
+  const [performances, setPerformances] = useState();
+  const rendered = useRef(false); // stops unnecessary rerender of performances state
+
+  useEffect(() => {
+    if (!rendered.current) {
+      rendered.current = true;
+      localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
+      getPeformances();
+    }
+  }, []);
+
+  const getPeformances = async () => {
+    const data = await performancesService.list();
+    setPerformances(data);
+  };
+
   return (
     <>
       <ImageTitle
         title="Előadások"
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
-      <div className="min-h-screen w-full flex flex-col items-center tablet:px-5 laptop:px-20">
-        <PerformancesList
-          performances={[
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 200 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 2500 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 250 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 2500 },
-            { title: 'Perf64564 4 4ormance1', imgUrl: 'https://picsum.photos/307/402', price: 100 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 500 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 250 },
-            {
-              title: 'Perfo r454646456  4man454ce1',
-              imgUrl: 'https://picsum.photos/307/402',
-              price: 2500,
-            },
-            { title: 'Perfo4rmance1', imgUrl: 'https://picsum.photos/307/402', price: 250 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 2500 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 200 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 20 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 2500 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 200 },
-            {
-              title: 'Performandsad   dsadasd  asdace1',
-              imgUrl: 'https://picsum.photos/307/402',
-              price: 200,
-            },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 500 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 250 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 200 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 500 },
-            { title: 'Performance1', imgUrl: 'https://picsum.photos/307/402', price: 250 },
-          ]}
-        />
+      <div className="flex flex-row">
+        <PerformancesSidebar />
+        <div className="min-h-screen w-full flex flex-col items-center tablet:px-5 laptop:px-20">
+          {performances ? <PerformancesList performances={performances} /> : null}
+        </div>
       </div>
     </>
   );
