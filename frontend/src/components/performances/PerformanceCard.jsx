@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
@@ -9,6 +11,13 @@ export default function PerformanceCard({ data }) {
 
   const rendered = useRef(false); // stops unnecessary rerender of imageReady state
   const [imageReady, setImageReady] = useState(false);
+
+  // BAZSI RÉSZE:
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate(`/performances/${data.id}`);
+  };
 
   async function fetchImageAndCache(url) {
     try {
@@ -49,6 +58,11 @@ export default function PerformanceCard({ data }) {
       <div className={gradientClassBot} />
       <h1 className="z-10 mx-5 mt-3 text-2xl font-semibold">{data.title}</h1>
       <div className="z-10 mx-5 mb-5 flex flex-col bot-0 ">
+        <span className="self-end text-2xl font-bold">{data.price} Ft/fő</span>
+        <span>Helyszín : </span>
+        <span>Közeműködők : </span>
+        <span className="mb-3">Időpont : </span>
+        <DefaultButton onClick={handleNavigate} text="Érdekel..." />
         <span className="self-end text-3xl text-c-secondary-light font-bold mb-2">
           {data.price} <span className="text-white text-xl">Ft/fő</span>
         </span>

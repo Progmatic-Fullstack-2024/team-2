@@ -5,11 +5,12 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
+import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
-import ListUsers from './pages/ListUsers';
+import SinglePerformancePage from './pages/SinglePerformancePage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/signedIn" element={<SignedInPage />} />
               <Route path="/performances" element={<PerformancesPage />} />
+              <Route path="/performances/:id" element={<SinglePerformancePage />} />
               <Route path="/userlist" element={<ListUsers />} />
             </Routes>
           </div>
