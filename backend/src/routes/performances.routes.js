@@ -9,19 +9,26 @@ router.get("/", performancesController.listPerformances);
 router.get("/:performanceId", performancesController.listPerformances);
 
 router.post(
-	"/",
-	upload.fields([
-		{ name: "poster", maxCount: 1 },
-		{ name: "files", maxCount: 10 },
-	]),
-	performancesController.createPerformance
+  "/",
+  upload.fields([
+    { name: "poster", maxCount: 1 },
+    { name: "files", maxCount: 10 },
+  ]),
+  performancesController.createPerformance,
 );
-router.delete("/:performanceId", isAdmin, performancesController.destroyPerformance);
+router.delete(
+  "/:performanceId",
+  isAdmin,
+  performancesController.destroyPerformance,
+);
 router.patch(
-	"/:performanceId",
-	isAdmin,
-	upload.array("files", 10),
-	performancesController.updatePerformance
+  "/:performanceId",
+  isAdmin,
+  upload.fields([
+    { name: "poster", maxCount: 1 },
+    { name: "files", maxCount: 10 },
+  ]),
+  performancesController.updatePerformance,
 );
 
 export default router;

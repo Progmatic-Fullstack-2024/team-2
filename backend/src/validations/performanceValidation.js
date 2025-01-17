@@ -6,6 +6,9 @@ const performanceValidationSchemaForCreate = yup.object({
   description: yup.string().required("Description is mandatory!"),
   price: yup.number().required("Price is mandatory!"),
   performanceDate: yup.date().typeError("Please provide a valid date!"),
+  creatorsId: yup
+    .array()
+    .of(yup.string().required("Creator must be specified!")),
 });
 
 export default performanceValidationSchemaForCreate;
