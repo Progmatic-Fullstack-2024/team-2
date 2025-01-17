@@ -5,8 +5,8 @@ import performancesController from "../controllers/performances.controller.js";
 
 const router = express.Router();
 
+router.get("/:performanceId", performancesController.getPerformanceByID);
 router.get("/", performancesController.listPerformances);
-router.get("/:performanceId", performancesController.listPerformances);
 
 router.post(
 	"/",

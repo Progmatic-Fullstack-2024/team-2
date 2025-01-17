@@ -63,4 +63,4 @@ const destroy = async (performanceId) => {
 	}
 };
 
-export default { create, update, destroy, list };
+export default { create, update, destroy, list, getById };
