@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
 import DefaultButton from '../misc/DefaultButton';
@@ -37,6 +37,7 @@ export default function PerformanceCard({ data }) {
   }, []);
 
   if (imageReady === false) return <PerformanceCardEmpty />;
+
   return (
     <div
       className="flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary "
@@ -46,7 +47,7 @@ export default function PerformanceCard({ data }) {
     >
       <div
         id="top-gradient"
-        className={`bg-gradient-to-b from-black/80  to-transparent to-70% absolute h-1/3 w-full  tablet:rounded-t-2xl`}
+        className="bg-gradient-to-b from-black/80  to-transparent to-70% absolute h-1/3 w-full  tablet:rounded-t-2xl"
       />
       <div
         id="bot-gradient"

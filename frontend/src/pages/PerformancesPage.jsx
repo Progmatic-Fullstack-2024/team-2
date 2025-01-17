@@ -1,25 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+// Components
 import ImageTitle from '../components/misc/ImageTitle';
 import PerformancesList from '../components/performances/PerformancesList';
+import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
-import PerformancesSidebar from '../components/performances/PerformancesSidebar';
 
 export default function PerformancesPage() {
   const [performances, setPerformances] = useState();
+  const [searchParams] = useSearchParams();
   const rendered = useRef(false); // stops unnecessary rerender of performances state
+
+  const getPeformances = async (params) => {
+    const data = await performancesService.list(params);
+    setPerformances(data);
+  };
 
   useEffect(() => {
     if (!rendered.current) {
       rendered.current = true;
       localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
-      getPeformances();
+      getPeformances(searchParams);
     }
   }, []);
 
-  const getPeformances = async () => {
-    const data = await performancesService.list();
-    setPerformances(data);
-  };
+  useEffect(() => {
+    getPeformances(searchParams);
+  }, [searchParams]);
 
   return (
     <>
@@ -27,11 +35,10 @@ export default function PerformancesPage() {
         title="Előadások"
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
-      <div className="flex flex-row">
-        <PerformancesSidebar />
-        <div className="min-h-screen w-full flex flex-col items-center tablet:px-5 laptop:px-20">
-          {performances ? <PerformancesList performances={performances} /> : null}
-        </div>
+
+      <div className="min-h-screen w-full max-w-screen-desktop flex flex-col items-center mx-auto ">
+        <PerformancesSearch />
+        {performances ? <PerformancesList performances={performances} /> : null}
       </div>
     </>
   );

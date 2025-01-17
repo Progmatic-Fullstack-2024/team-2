@@ -9,9 +9,9 @@ const getById = async (performanceId) => {
   }
 };
 
-const list = async () => {
+const list = async (params) => {
   try {
-    const response = await axiosInstance.get('/api/performances');
+    const response = await axiosInstance.get(`/api/performances`, { params });
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
