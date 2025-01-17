@@ -96,9 +96,9 @@ const updatePerformance = async (req, res, next) => {
       images,
       creatorsIds,
     );
-    res.status(200).json({ updatedPerformance });
+    return res.status(200).json({ updatedPerformance });
   } catch (error) {
-    next(
+    return next(
       new HttpError(
         error.message || "Failed to update performance",
         error.statusCode || 500,
