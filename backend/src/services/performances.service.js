@@ -100,11 +100,6 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   try {
     const performanceToUpdate = await getById(performanceId);
     const originalImagesUrl = performanceToUpdate.imagesURL;
-    console.log(originalImagesUrl.length);
-    console.log(imageUrl.length);
-    console.log(typeof(originalImagesUrl) + " " + originalImagesUrl);
-    console.log(typeof(imageUrl) + " " + imageUrl);
-    console.log(originalImagesUrl.includes(imageUrl));
     if (!originalImagesUrl.includes(imageUrl[0])) {
       throw new HttpError("Image URL not found in performance", 400);
     }
@@ -112,7 +107,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
     const updatedImagesUrl = originalImagesUrl.filter(
       (url) => url !== imageUrl[0]
     );
-    console.log(updatedImagesUrl);
+   
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
       data: { imagesURL: updatedImagesUrl },
