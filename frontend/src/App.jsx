@@ -16,20 +16,22 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="bg-c-background">
-          <Header />
-          <Routes>
+      <Header />
+        <main className="bg-c-background">
+          <div className="w-full ">
+            <Routes>
             <Route path="/" element={<LoginPage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegistrationPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
             <Route path="/signedIn" element={<SignedInPage />} />
-            <Route path="userlist" element={<ListUsers />} />
+            <Route path="/userlist" element={<ListUsers />} />
             <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
-            <Route path="comingsoon" element={<ComingSoonPage />} />
-           
+            <Route path="/comingsoon" element={<ComingSoonPage />} />
           </Routes>
-        </div>
+          </div>
+          </main>
+          <Footer />
       </AuthProvider>
     </Router>
   );

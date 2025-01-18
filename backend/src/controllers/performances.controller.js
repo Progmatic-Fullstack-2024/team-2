@@ -31,8 +31,7 @@ const createPerformance = async (req, res, next) => {
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
-  const poster = req.files.poster ? req.files.poster[0] : null;
-  const images = req.files && req.files.files ? req.files.files : [];
+  
 
   try {
     await performanceValidationSchemaForCreate.validate({

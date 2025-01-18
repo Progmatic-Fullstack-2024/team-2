@@ -8,11 +8,6 @@ const getById = async (performanceId) => {
   });
   if (!performance) throw new HttpError("Performance not found", 404);
   return performance;
-  const performance = await prisma.performance.findUnique({
-    where: { id: performanceId },
-  });
-  if (!performance) throw new HttpError("Performance not found", 404);
-  return performance;
 };
 
 const getByName = async (title) => {
