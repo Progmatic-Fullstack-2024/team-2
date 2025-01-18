@@ -95,7 +95,7 @@ export default function RegistrationForm() {
               <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
             </div>
             <div className="mb-4">
-            <label htmlFor="confirmPassword" className="text-gray-800 font-bold">
+              <label htmlFor="confirmPassword" className="text-gray-800 font-bold">
                 Jelszó megerősítése<span className="text-red-500"> *</span>
               </label>
               <Field
