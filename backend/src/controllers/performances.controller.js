@@ -31,7 +31,6 @@ const createPerformance = async (req, res, next) => {
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
-  
 
   try {
     await performanceValidationSchemaForCreate.validate({
@@ -40,12 +39,8 @@ const createPerformance = async (req, res, next) => {
       description,
       price,
       performanceDate,
+      creatorsId,
     });
-
-		// const posterUrl = await createFiles([poster]); // Handle single poster upload
-		// const imageUrls = await createFiles(images); // Handle multiple image uploads
-
-		// console.log(posterUrl);
 
     const parsedPerformanceDate = [new Date(performanceDate)];
     const newPerformance = await performancesService.create(
@@ -89,9 +84,20 @@ const updatePerformance = async (req, res, next) => {
     updateData.performanceDate = [parsedDate];
   }
 
-  const creatorsIds = Array.isArray(creatorsId)
-    ? creatorsId.map((creatorId) => ({ id: creatorId }))
-    : [];
+  // const creatorsIds = Array.isArray(creatorsId)
+  //   ? creatorsId.map((creatorId) => ({ id: creatorId }))
+  //   : [];
+
+  let parsedCreatorsIds = {};
+  try {
+    parsedCreatorsIds = creatorsId
+      ? JSON.parse(creatorsId)
+      : { toAdd: [], toRemove: [] };
+  } catch (error) {
+    return next(new HttpError("Invalid creatorsId format, must be JSON", 400));
+  }
+
+  const { toAdd = [], toRemove = [] } = parsedCreatorsIds;
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
@@ -102,7 +108,8 @@ const updatePerformance = async (req, res, next) => {
       updateData,
       poster,
       images,
-      creatorsIds,
+      // creatorsIds,
+      { toAdd, toRemove },
     );
     return res.status(200).json({ updatedPerformance });
   } catch (error) {
@@ -136,7 +143,10 @@ const deleteImage = async (req, res, next) => {
   console.log(imageUrl);
   console.log(performanceId);
   try {
-    const deletedImage = await performancesService.deleteSingleImage(performanceId, imageUrl);
+    const deletedImage = await performancesService.deleteSingleImage(
+      performanceId,
+      imageUrl,
+    );
     return res.status(200).json({ deletedImage });
   } catch (error) {
     return next(
@@ -146,7 +156,7 @@ const deleteImage = async (req, res, next) => {
       ),
     );
   }
-}
+};
 
 export default {
   createPerformance,
@@ -154,5 +164,5 @@ export default {
   destroyPerformance,
   listPerformances,
   getPerformanceByID,
-  deleteImage
+  deleteImage,
 };

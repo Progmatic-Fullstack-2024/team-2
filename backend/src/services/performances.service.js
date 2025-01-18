@@ -42,7 +42,7 @@ const create = async (performanceData, poster, images, creatorsIds) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to create performance",
-      error.status || 500
+      error.status || 500,
     );
   }
 };
@@ -52,32 +52,41 @@ const update = async (
   performanceData,
   poster,
   images,
-  creatorsIds
+  creatorsIds,
 ) => {
   try {
     const performanceToUpdate = await getById(performanceId);
-    const originalImagesUrl = performanceToUpdate.imagesURL;
+
     const posterURL = poster
       ? await updateFiles([performanceToUpdate.posterURL], [poster])
       : [performanceToUpdate.posterURL];
-    const imageUrls =
-      images && images.length
-        ? await updateFiles(performanceToUpdate.imagesURL, images)
-        : performanceToUpdate.imagesURL;
+
+    let imageUrls = performanceToUpdate.imagesURL;
+    if (images && images.length) {
+      const newImageUrls = await createFiles(images);
+      imageUrls = [...imageUrls, ...newImageUrls];
+    }
+
+    const { toAdd, toRemove } = creatorsIds;
+
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
       data: {
         ...performanceData,
         posterURL: posterURL[0],
         imagesURL: imageUrls,
-        creators: { connect: creatorsIds },
+        // creators: { connect: creatorsIds },
+        creators: {
+          connect: toAdd.map((creatorId) => ({ id: creatorId })), // Alkotók hozzáadása
+          disconnect: toRemove.map((creatorId) => ({ id: creatorId })), // Alkotók eltávolítása
+        },
       },
     });
     return updatedPerformance;
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to update performance",
-      error.status || 500
+      error.status || 500,
     );
   }
 };
@@ -91,7 +100,7 @@ const destroy = async (performanceId) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete performance",
-      error.status || 500
+      error.status || 500,
     );
   }
 };
@@ -105,9 +114,9 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
     }
     await deleteFiles(imageUrl);
     const updatedImagesUrl = originalImagesUrl.filter(
-      (url) => url !== imageUrl[0]
+      (url) => url !== imageUrl[0],
     );
-   
+
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
       data: { imagesURL: updatedImagesUrl },
@@ -116,9 +125,17 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete image",
-      error.statusCode || 500
+      error.statusCode || 500,
     );
   }
 };
 
-export default { create, update, destroy, list, getByName, deleteSingleImage, getById };
+export default {
+  create,
+  update,
+  destroy,
+  list,
+  getByName,
+  deleteSingleImage,
+  getById,
+};
