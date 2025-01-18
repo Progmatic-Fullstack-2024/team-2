@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+
 import DefaultButton from './misc/DefaultButton';
 import { performanceValidationSchema } from '../schema/userValidationSchema';
+import createPerformance from '../services/performance.service';
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ export default function NewPerformanceForm({ lecture }) {
     values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
 
     if (values.posterURL) {
-      formData.append('files', values.posterURL);
+      formData.append('poster', values.posterURL);
     }
     values.imagesURL.forEach((image) => {
       formData.append('files', image);
@@ -42,13 +44,15 @@ export default function NewPerformanceForm({ lecture }) {
     const token = localStorage.getItem('authToken');
 
     try {
-      const response = await fetch('/api/performances', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await createPerformance(formData);
+
+      // const response = await fetch('/api/performances', {
+      //   method: 'POST',
+      //   body: formData,
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
       if (!response.ok) throw new Error('Hiba történt az előadás létrehozásakor.');
 
