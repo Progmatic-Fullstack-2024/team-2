@@ -84,10 +84,6 @@ const updatePerformance = async (req, res, next) => {
     updateData.performanceDate = [parsedDate];
   }
 
-  // const creatorsIds = Array.isArray(creatorsId)
-  //   ? creatorsId.map((creatorId) => ({ id: creatorId }))
-  //   : [];
-
   let parsedCreatorsIds = {};
   try {
     parsedCreatorsIds = creatorsId
@@ -108,7 +104,6 @@ const updatePerformance = async (req, res, next) => {
       updateData,
       poster,
       images,
-      // creatorsIds,
       { toAdd, toRemove },
     );
     return res.status(200).json({ updatedPerformance });

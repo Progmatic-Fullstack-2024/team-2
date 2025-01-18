@@ -75,10 +75,9 @@ const update = async (
         ...performanceData,
         posterURL: posterURL[0],
         imagesURL: imageUrls,
-        // creators: { connect: creatorsIds },
         creators: {
-          connect: toAdd.map((creatorId) => ({ id: creatorId })), // Alkotók hozzáadása
-          disconnect: toRemove.map((creatorId) => ({ id: creatorId })), // Alkotók eltávolítása
+          connect: toAdd.map((creatorId) => ({ id: creatorId })), 
+          disconnect: toRemove.map((creatorId) => ({ id: creatorId })), 
         },
       },
     });
