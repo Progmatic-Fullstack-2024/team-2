@@ -52,9 +52,9 @@ const createPerformance = async (req, res, next) => {
       images,
       creatorsIds,
     );
-    res.status(201).json(newPerformance);
+    return res.status(201).json(newPerformance);
   } catch (error) {
-    next(
+    return next(
       new HttpError(
         error.message || "Failed to create performance",
         error.statusCode || 500,
@@ -111,9 +111,9 @@ const destroyPerformance = async (req, res, next) => {
   const { performanceId } = req.params;
   try {
     const deletedPerformance = await performancesService.destroy(performanceId);
-    res.status(200).json({ deletedPerformance });
+    return res.status(200).json({ deletedPerformance });
   } catch (error) {
-    next(
+    return next(
       new HttpError(
         error.message || "Failed to delete performance",
         error.statusCode || 500,
@@ -122,10 +122,29 @@ const destroyPerformance = async (req, res, next) => {
   }
 };
 
+const deleteImage = async (req, res, next) => {
+  const { imageUrl } = req.body;
+  const { performanceId } = req.params;
+  console.log(imageUrl);
+  console.log(performanceId);
+  try {
+    const deletedImage = await performancesService.deleteSingleImage(performanceId, imageUrl);
+    return res.status(200).json({ deletedImage });
+  } catch (error) {
+    return next(
+      new HttpError(
+        error.message || "Failed to delete image",
+        error.statusCode || 500,
+      ),
+    );
+  }
+}
+
 export default {
   createPerformance,
   updatePerformance,
   destroyPerformance,
   listPerformances,
   getPerformanceByID,
+  deleteImage
 };

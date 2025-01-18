@@ -30,5 +30,9 @@ router.patch(
   ]),
   performancesController.updatePerformance,
 );
-
+router.patch(
+  "/:performanceId/image",
+  isAdmin,
+  performancesController.deleteImage,
+);
 export default router;
