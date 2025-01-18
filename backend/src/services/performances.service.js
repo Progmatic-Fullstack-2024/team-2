@@ -85,4 +85,4 @@ const destroy = async (performanceId) => {
   }
 };
 
-export default { create, update, destroy, list, getById };
+export default { create, update, destroy, list, getById, getByName };

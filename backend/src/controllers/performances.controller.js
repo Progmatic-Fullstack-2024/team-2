@@ -1,6 +1,7 @@
 import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
+import { createFiles } from "../services/file.service.js";
 
 const listPerformances = async (req, res, next) => {
   const { title } = req.query;
