@@ -8,43 +8,42 @@ datasource db {
 }
 
 model User {
-  id           String         @id @default(cuid())
-  lastName     String
-  firstName    String
-  email        String         @unique()
-  phone        String?
-  password     String
-  role         String   
+  id        String  @id @default(cuid())
+  lastName  String
+  firstName String
+  email     String  @unique
+  phone     String?
+  password  String
+  role      String
 }
 
 model Performance {
-  id           String         @id @default(cuid())
-  title        String
-  theater      Theater        @relation(fields: [theaterId], references: [id]) 
-  theaterId    String
-  creators     Creator        @relation(fields: [creatorId], references: [id])
-  creatorId    String
-  posterURL    String?
-  imagesURL    String[] @default([])
-  performanceDate DateTime[]  @default([])
-  description  String
-  price        Int
+  id              String     @id @default(cuid())
+  title           String
+  theaterId       String
+  posterURL       String?
+  imagesURL       String[]   @default([])
+  performanceDate DateTime[] @default(dbgenerated("(ARRAY[]::timestamp without time zone[])::timestamp(3) without time zone[]"))
+  description     String
+  price           Int
+  theater         Theater    @relation(fields: [theaterId], references: [id])
+  creators        Creator[]  @relation("Performance_Creator")
 }
 
 model Creator {
-  id           String         @id @default(cuid())
+  id           String        @id @default(cuid())
   name         String
   imageURL     String?
-  performances Performance[]
+  performances Performance[] @relation("Performance_Creator")
 }
 
 model Theater {
-  id           String         @id @default(cuid())
+  id           String        @id @default(cuid())
   name         String
   address      String
   email        String?
   imageURL     String?
   phone        String?
   seats        Int
-  performances Performance[]    
+  performances Performance[]
 }
