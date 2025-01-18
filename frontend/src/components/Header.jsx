@@ -32,11 +32,11 @@ export default function Header() {
       setTransparentHeader(true);
 
       window.addEventListener('scroll', handleScroll, { passive: true });
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
     }
-    return 0;
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [location]);
 
   const handleLogout = () => {
