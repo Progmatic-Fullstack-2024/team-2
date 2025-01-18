@@ -33,7 +33,7 @@ export default function Header() {
 
       window.addEventListener('scroll', handleScroll, { passive: true });
     }
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -61,7 +61,10 @@ export default function Header() {
           <MenuLink text="Home" to="/SignedIn" />
         </div>
         {user ? (
-          <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
+          <>
+            <MenuLink text="Saját profil" to="/ownUser" />
+            <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
+          </>
         ) : (
           <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />
         )}

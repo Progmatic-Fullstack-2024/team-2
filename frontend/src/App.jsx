@@ -29,7 +29,7 @@ function App() {
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="ownuser" element={<OwnUserPage />} />
-          </Routes>
+            </Routes>
           </div>
         </main>
         <Footer />

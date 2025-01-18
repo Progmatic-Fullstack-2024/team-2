@@ -82,7 +82,7 @@ export default function RegistrationForm() {
                 <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
               </div>
               <div className="mb-4">
-                  <Field
+                <Field
                   type="password"
                   name="confirmPassword"
                   placeholder="Jelszó megerősítése (kötelező mező)"

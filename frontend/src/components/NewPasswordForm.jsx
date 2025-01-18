@@ -26,19 +26,20 @@ export default function NewPasswordForm({ goback }) {
         newPassword: values.newPassword,
       });
       if (answer) setMsg('Sikeres jelszó módosítás');
-      
     } catch (error) {
       setMsg('Érvénytelen jelszó! A jelszó módosítás sikertelen.');
     }
   };
 
-  const cancelModal = () => {
-    setIsVisilable(false);
-  };
-
   const cancelHandle = () => {
     goback();
   };
+
+  const cancelModal = () => {
+    setIsVisilable(false);
+    cancelHandle();
+  };
+
   return (
     <>
       <UserResult params={{ isVisilable, msg, clearProcedure: cancelModal }} />

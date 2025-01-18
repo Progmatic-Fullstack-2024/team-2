@@ -11,7 +11,7 @@ export default function listUserstable() {
       const loadUsers = await userHandle.getAllUsers();
       setUsers(loadUsers);
     } catch (e) {
-      return <h2>Hiba történt az oldal betöltésekor</h2>
+      return <h2>Hiba történt az oldal betöltésekor</h2>;
     }
     return null;
   }
@@ -20,7 +20,6 @@ export default function listUserstable() {
     loadList();
   }, []);
 
-  
   return (
     <div>
       {users ? (
