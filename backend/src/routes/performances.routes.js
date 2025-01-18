@@ -15,23 +15,14 @@ router.post(
     { name: "files", maxCount: 10 },
   ]),
   performancesController.createPerformance,
-  "/",
-  upload.fields([
-    { name: "poster", maxCount: 1 },
-    { name: "files", maxCount: 10 },
-  ]),
-  performancesController.createPerformance,
 );
+
 router.delete(
   "/:performanceId",
   isAdmin,
   performancesController.destroyPerformance,
 );
-router.delete(
-  "/:performanceId",
-  isAdmin,
-  performancesController.destroyPerformance,
-);
+
 router.patch(
   "/:performanceId",
   isAdmin,
@@ -41,9 +32,11 @@ router.patch(
   ]),
   performancesController.updatePerformance,
 );
+
 router.patch(
   "/:performanceId/image",
   isAdmin,
   performancesController.deleteImage,
 );
+
 export default router;
