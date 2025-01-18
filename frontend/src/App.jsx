@@ -10,7 +10,7 @@ import LoginPage from './pages/LoginPage';
 import NewPerformancePage from './pages/NewPerformancePage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
-
+import SinglePerformancePage from './pages/SinglePerformancePage';
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
             <Route path="/signedIn" element={<SignedInPage />} />
             <Route path="userlist" element={<ListUsers />} />
             <Route path="/new-performance" element={<NewPerformancePage />} />
+              <Route path="/performances/:id" element={<SinglePerformancePage />} />
             <Route path="comingsoon" element={<ComingSoonPage />} />
            
           </Routes>

@@ -8,6 +8,11 @@ const getById = async (performanceId) => {
   });
   if (!performance) throw new HttpError("Performance not found", 404);
   return performance;
+  const performance = await prisma.performance.findUnique({
+    where: { id: performanceId },
+  });
+  if (!performance) throw new HttpError("Performance not found", 404);
+  return performance;
 };
 
 const getByName = async (title) => {
@@ -18,8 +23,10 @@ const getByName = async (title) => {
   return performance.id;
 };
 
-const list = async () => {
-  const performances = await prisma.performance.findMany();
+const list = async ({ title }) => {
+  const performances = await prisma.performance.findMany({
+    where: { title: { contains: title, mode: "insensitive" } },
+  });
   if (!performances) throw new HttpError("Performances not found", 404);
   return performances;
 };
@@ -124,4 +131,4 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   }
 };
 
-export default { create, update, destroy, list, getByName, deleteSingleImage };
+export default { create, update, destroy, list, getByName, deleteSingleImage, getById };

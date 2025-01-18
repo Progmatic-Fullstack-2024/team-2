@@ -3,16 +3,18 @@ import HttpError from "../utils/HttpError.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
+  const { title } = req.query;
   try {
-    const performances = await performancesService.list();
+    const performances = await performancesService.list({ title });
     res.status(200).send(performances);
   } catch (error) {
     next(error);
   }
 };
 const getPerformanceByID = async (req, res, next) => {
+  const { performanceId } = req.params;
   try {
-    const performance = await performancesService.getById();
+    const performance = await performancesService.getById(performanceId);
     res.status(200).send(performance);
   } catch (error) {
     next(error);
@@ -29,6 +31,8 @@ const createPerformance = async (req, res, next) => {
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
+  const poster = req.files.poster ? req.files.poster[0] : null;
+  const images = req.files && req.files.files ? req.files.files : [];
 
   try {
     await performanceValidationSchemaForCreate.validate({
@@ -38,6 +42,11 @@ const createPerformance = async (req, res, next) => {
       price,
       performanceDate,
     });
+
+		// const posterUrl = await createFiles([poster]); // Handle single poster upload
+		// const imageUrls = await createFiles(images); // Handle multiple image uploads
+
+		// console.log(posterUrl);
 
     const parsedPerformanceDate = [new Date(performanceDate)];
     const newPerformance = await performancesService.create(
