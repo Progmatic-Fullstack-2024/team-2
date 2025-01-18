@@ -3,16 +3,18 @@ import HttpError from "../utils/HttpError.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
+  const { title } = req.query;
   try {
-    const performances = await performancesService.list();
+    const performances = await performancesService.list({ title });
     res.status(200).send(performances);
   } catch (error) {
     next(error);
   }
 };
 const getPerformanceByID = async (req, res, next) => {
+  const { performanceId } = req.params;
   try {
-    const performance = await performancesService.getById();
+    const performance = await performancesService.getById(performanceId);
     res.status(200).send(performance);
   } catch (error) {
     next(error);
@@ -20,12 +22,7 @@ const getPerformanceByID = async (req, res, next) => {
 };
 
 const createPerformance = async (req, res, next) => {
-  const { title, theaterId, description, price, performanceDate, creatorsId } =
-    req.body;
-
-  const creatorsIds = Array.isArray(creatorsId)
-    ? creatorsId.map((creatorId) => ({ id: creatorId }))
-    : [];
+  const { title, theaterId, description, price, performanceDate } = req.body;
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
@@ -48,9 +45,9 @@ const createPerformance = async (req, res, next) => {
         performanceDate: parsedPerformanceDate,
         price: Number(price),
       },
+
       poster,
       images,
-      creatorsIds,
     );
     res.status(201).json(newPerformance);
   } catch (error) {
@@ -65,40 +62,30 @@ const createPerformance = async (req, res, next) => {
 
 const updatePerformance = async (req, res, next) => {
   const { performanceId } = req.params;
-  const { title, theater, description, price, performanceDate, creatorsId } =
+  const { title, theater, description, price, performanceDate, creators } =
     req.body;
-
-  const updateData = {};
-  if (title) updateData.title = title;
-  if (theater) updateData.theater = theater;
-  if (description) updateData.description = description;
-  if (price) updateData.price = Number(price);
-  if (performanceDate) {
-    const parsedDate = new Date(performanceDate);
-    if (Number.isNaN(parsedDate.getTime())) {
-      return next(new HttpError("Invalid performanceDate format", 400));
-    }
-    updateData.performanceDate = [parsedDate];
-  }
-
-  const creatorsIds = Array.isArray(creatorsId)
-    ? creatorsId.map((creatorId) => ({ id: creatorId }))
-    : [];
-
-  const poster = req.files.poster ? req.files.poster[0] : null;
-  const images = req.files && req.files.files ? req.files.files : [];
+  const poster = req.files[0] || null;
+  const images = req.files.slice(1) || [];
+  const posterUrl = await createFiles([poster]); // Handle single poster upload
+  const imageUrls = await createFiles(images); // Handle multiple image uploads
 
   try {
     const updatedPerformance = await performancesService.update(
       performanceId,
-      updateData,
-      poster,
-      images,
-      creatorsIds,
+      {
+        title,
+        theater,
+        description,
+        performanceDate,
+        creators,
+        price: Number(price),
+      },
+      posterUrl[0], // Single poster URL
+      imageUrls, // Multiple image URLs
     );
-    return res.status(200).json({ updatedPerformance });
+    res.status(200).json({ updatedPerformance });
   } catch (error) {
-    return next(
+    next(
       new HttpError(
         error.message || "Failed to update performance",
         error.statusCode || 500,

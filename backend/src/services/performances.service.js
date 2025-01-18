@@ -18,13 +18,15 @@ const getByName = async (title) => {
   return performance.id;
 };
 
-const list = async () => {
-  const performances = await prisma.performance.findMany();
+const list = async ({ title }) => {
+  const performances = await prisma.performance.findMany({
+    where: { title: { contains: title, mode: "insensitive" } },
+  });
   if (!performances) throw new HttpError("Performances not found", 404);
   return performances;
 };
 
-const create = async (performanceData, poster, images, creatorsIds) => {
+const create = async (performanceData, poster, images) => {
   try {
     const posterURL = await createFiles([poster]);
     const imageUrls = await createFiles(images);
@@ -33,7 +35,6 @@ const create = async (performanceData, poster, images, creatorsIds) => {
         ...performanceData,
         posterURL: posterURL[0],
         imagesURL: imageUrls,
-        creators: { connect: creatorsIds },
       },
     });
     return newPerformance;
@@ -45,29 +46,20 @@ const create = async (performanceData, poster, images, creatorsIds) => {
   }
 };
 
-const update = async (
-  performanceId,
-  performanceData,
-  poster,
-  images,
-  creatorsIds,
-) => {
+const update = async (performanceId, performanceData, poster, images) => {
   try {
     const performanceToUpdate = await getById(performanceId);
-    const posterURL = poster
-      ? await updateFiles([performanceToUpdate.posterURL], [poster])
-      : [performanceToUpdate.posterURL];
-    const imageUrls =
-      images && images.length
-        ? await updateFiles(performanceToUpdate.imagesURL, images)
-        : performanceToUpdate.imagesURL;
+    const posterURL = await updateFiles(
+      [performanceToUpdate.posterURL],
+      [poster],
+    );
+    const imageUrls = await updateFiles(performanceToUpdate.imagesURL, images);
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
       data: {
         ...performanceData,
         posterURL: posterURL[0],
         imagesURL: imageUrls,
-        creators: { connect: creatorsIds },
       },
     });
     return updatedPerformance;
@@ -93,4 +85,4 @@ const destroy = async (performanceId) => {
   }
 };
 
-export default { create, update, destroy, list, getByName };
+export default { create, update, destroy, list, getById };

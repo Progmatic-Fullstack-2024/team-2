@@ -9,7 +9,6 @@ export default function AuthResult({ params }) {
   const { navigateTo } = params;
   const { authMsg, showAuthMsg } = useContext(AuthContext);
   const navigate = useNavigate();
-  if (!authMsg.show) return null;
 
   const handleClick = (success) => {
     showAuthMsg(false);

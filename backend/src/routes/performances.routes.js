@@ -5,8 +5,8 @@ import performancesController from "../controllers/performances.controller.js";
 
 const router = express.Router();
 
+router.get("/:performanceId", performancesController.getPerformanceByID);
 router.get("/", performancesController.listPerformances);
-router.get("/:performanceId", performancesController.listPerformances);
 
 router.post(
   "/",
@@ -24,10 +24,7 @@ router.delete(
 router.patch(
   "/:performanceId",
   isAdmin,
-  upload.fields([
-    { name: "poster", maxCount: 1 },
-    { name: "files", maxCount: 10 },
-  ]),
+  upload.array("files", 10),
   performancesController.updatePerformance,
 );
 

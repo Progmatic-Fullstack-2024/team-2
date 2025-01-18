@@ -36,6 +36,7 @@ export default function Header() {
         window.removeEventListener('scroll', handleScroll);
       };
     }
+    return 0;
   }, [location]);
 
   const handleLogout = () => {
