@@ -2,7 +2,7 @@ export default function DefaultButton({
   color = 'c-primary',
   text = '',
   textColor = 'white',
-  fontSize = '3xl',
+  fontSize = 'ml',
   onClick,
   onClickParams,
   type = 'button',
