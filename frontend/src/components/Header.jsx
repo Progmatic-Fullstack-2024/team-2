@@ -24,6 +24,7 @@ export default function Header() {
 
   const handleScroll = () => setTransparentHeader(isYPositionInLimit());
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     window.scrollTo(0, 0);
     if (noTransparencyHeader.includes(location.pathname)) {
@@ -36,12 +37,12 @@ export default function Header() {
         window.removeEventListener('scroll', handleScroll);
       };
     }
-    return 0;
+    // return 0;
   }, [location]);
 
   const handleLogout = () => {
     logout();
-    return navigate('/login');
+    return navigate('/');
   };
 
   return (
@@ -58,7 +59,7 @@ export default function Header() {
       <nav className="flex gap-4 items-center">
         <div className="flex justify-center h-full gap-1">
           <MenuLink text="Előadások" to="/performances" />
-          <MenuLink text="Home" to="/SignedIn" />
+          <MenuLink text="Home" to="/" />
         </div>
         {user ? (
           <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
