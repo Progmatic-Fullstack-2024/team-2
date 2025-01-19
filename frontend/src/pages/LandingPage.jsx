@@ -3,7 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 
 // Components
 import ImageTitle from '../components/misc/ImageTitle';
-import PerformancesList from '../components/performances/PerformancesList';
+// import PerformancesList from '../components/performances/PerformancesList';
+import PerformancesByTheaters from '../components/performances/PerformancesByTheaters';
+import PerformancesNextWeek from '../components/performances/PerformancesNextWeek';
 import performancesService from '../services/performances.service';
 
 export default function PerformancesPage() {
@@ -35,8 +37,11 @@ export default function PerformancesPage() {
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
 
-      <div className="min-h-screen w-full max-w-screen-desktop flex flex-col items-center mx-auto ">
-        {performances ? <PerformancesList performances={performances} /> : null}
+      <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto ">
+        {performances ? <PerformancesNextWeek performances={performances} /> : null}
+      </div>
+      <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto">
+        {performances ? <PerformancesByTheaters performances={performances} /> : null}
       </div>
     </>
   );
