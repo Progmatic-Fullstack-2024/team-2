@@ -62,7 +62,28 @@ export default function PerformanceCard({ data }) {
       />
       <h1 className="z-10 mx-5 mt-3 text-2xl font-semibold">{data.title}</h1>
       <div className="z-10 mx-5 mb-5 flex flex-col bot-0">
-        <span className="mb-3">Időpont: {data.performanceDate[0]}</span>
+        <div className="mb-3">
+          <span className="font-bold">Időpontok:</span>
+          <ul className="list-disc list-inside">
+            {data.performanceDate.map((date) => {
+              const formattedDate = new Date(date).toLocaleDateString('hu-HU', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              });
+              const formattedTime = new Date(date).toLocaleTimeString('hu-HU', {
+                hour: '2-digit',
+                minute: '2-digit',
+              });
+
+              return (
+                <li key={date}>
+                  {formattedDate}, {formattedTime}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
         {isHovered && ( // Show additional details on hover
           <>
             <span className="self-end text-3xl text-c-secondary-light font-bold mb-2">
