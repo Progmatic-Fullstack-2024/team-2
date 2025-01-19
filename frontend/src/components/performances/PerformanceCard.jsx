@@ -44,7 +44,7 @@ export default function PerformanceCard({ data }) {
   return (
     <div
       className={`flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500 ${
-        isHovered ? 'scale-105' : 'scale-100'
+        isHovered ? 'scale-95' : 'scale-75'
       }`}
       style={{
         backgroundImage: `url(${localStorage.getItem(imageReady)})`,

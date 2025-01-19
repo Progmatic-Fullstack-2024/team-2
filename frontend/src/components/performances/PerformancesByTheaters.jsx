@@ -54,7 +54,7 @@ export default function PerformancesByTheaters({ performances }) {
                   {theaterPerformances.map((perf) => (
                     <div
                       key={perf.id}
-                      className="flex-shrink-0 w-1/5 scale-75 transform transition-transform duration-500 hover:scale-95 hover:z-10 relative"
+                      className="flex-shrink-0 w-1/5 transform transition-transform duration-700 hover:z-10 relative"
                     >
                       <PerformanceCard data={perf} />
                     </div>
