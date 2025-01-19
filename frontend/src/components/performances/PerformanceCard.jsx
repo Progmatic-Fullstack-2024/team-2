@@ -1,13 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
+import AuthContext from '../../contexts/AuthContext'; // Import AuthContext
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformanceCard({ data }) {
   const rendered = useRef(false); // stops unnecessary rerender of imageReady state
   const [imageReady, setImageReady] = useState(false);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // Access user from AuthContext
 
   async function fetchImageAndCache(url) {
     try {
@@ -61,7 +63,11 @@ export default function PerformanceCard({ data }) {
         <span>Helyszín : </span>
         <span>Közeműködők : </span>
         <span className="mb-3">Időpont : {data.performanceDate[0]}</span>
-        <DefaultButton onClick={() => navigate(`/performances/${data.id}`)} text="Érdekel..." />
+        {user ? (
+          <DefaultButton onClick={() => navigate(`/performances/${data.id}`)} text="Érdekel..." />
+        ) : (
+          <DefaultButton onClick={() => navigate('/login')} text="Bejelentkezem" />
+        )}
       </div>
     </div>
   );

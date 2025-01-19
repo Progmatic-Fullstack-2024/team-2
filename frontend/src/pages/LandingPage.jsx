@@ -33,8 +33,8 @@ export default function PerformancesPage() {
   return (
     <>
       <ImageTitle
-        title="Előadások"
-        description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
+        title="Theatron"
+        description="Üdvözlünk a világ első színházi bérlet applikációjában - Jelentkezz be és böngéssz a több 100 előadás között! Válaszd ki a darabot, a helyed és már mehetsz is!"
       />
 
       <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto ">
