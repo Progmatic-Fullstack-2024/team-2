@@ -19,7 +19,7 @@ export default function PerformancesByTheaters({ performances }) {
   // Scroll handler for filmstrip
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {
-      const scrollAmount = containerRef.current.offsetWidth; // Scroll by container width
+      const scrollAmount = containerRef.current.offsetWidth / 4; // Scroll by one card width
       containerRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
@@ -41,7 +41,7 @@ export default function PerformancesByTheaters({ performances }) {
               <div className="flex items-center justify-between">
                 {/* Left Scroll Button */}
                 <DefaultButton
-                  className="bg-black/50 text-white px-3 py-2 rounded-full"
+                  className="bg-black/50 text-white px-3 py-2 rounded-full z-10"
                   onClick={() => scroll('left', containerRef)}
                   text="<"
                 />
@@ -49,20 +49,21 @@ export default function PerformancesByTheaters({ performances }) {
                 {/* Scrollable Filmstrip */}
                 <div
                   ref={containerRef}
-                  className="flex overflow-x-hidden space-x-4 p-2 scroll-smooth w-full"
-                  style={{
-                    scrollbarWidth: 'none', // Hide scrollbar for Firefox
-                    msOverflowStyle: 'none', // Hide scrollbar for Internet Explorer
-                  }}
+                  className="flex overflow-hidden scroll-smooth w-full relative"
                 >
                   {theaterPerformances.map((perf) => (
-                    <PerformanceCard data={perf} key={perf.id} />
+                    <div
+                      key={perf.id}
+                      className="flex-shrink-0 w-1/5 scale-75 transform transition-transform duration-500 hover:scale-95 hover:z-10 relative"
+                    >
+                      <PerformanceCard data={perf} />
+                    </div>
                   ))}
                 </div>
 
                 {/* Right Scroll Button */}
                 <DefaultButton
-                  className="bg-black/50 text-white px-3 py-2 rounded-full"
+                  className="bg-black/50 text-white px-3 py-2 rounded-full z-10"
                   onClick={() => scroll('right', containerRef)}
                   text=">"
                 />
