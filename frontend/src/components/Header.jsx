@@ -45,7 +45,7 @@ export default function Header() {
   };
 
   return (
-    <header className={headerClass}>
+    <header className="fixed top-0 left-0 w-full bg-c-primary text-white py-4 px-24 flex justify-between">
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">
         <img src="../../public/theater-masks.svg" alt="logo" />
 
@@ -61,7 +61,13 @@ export default function Header() {
           <MenuLink text="Home" to="/SignedIn" />
         </div>
         {user ? (
-          <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
+          <>
+            <DefaultButton
+              text="Új előadás létrehozása"
+              onClick={() => navigate('/new-performance')} // Itt történik a navigálás
+            />
+            <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
+          </>
         ) : (
           <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />
         )}
