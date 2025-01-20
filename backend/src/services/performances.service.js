@@ -109,26 +109,6 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
 	}
 };
 
-const deleteSingleImage = async (performanceId, imageUrl) => {
-	try {
-		const performanceToUpdate = await getById(performanceId);
-		const originalImagesUrl = performanceToUpdate.imagesURL;
-		if (!originalImagesUrl.includes(imageUrl[0])) {
-			throw new HttpError("Image URL not found in performance", 400);
-		}
-		await deleteFiles(imageUrl);
-		const updatedImagesUrl = originalImagesUrl.filter((url) => url !== imageUrl[0]);
-
-		const updatedPerformance = await prisma.performance.update({
-			where: { id: performanceId },
-			data: { imagesURL: updatedImagesUrl },
-		});
-		return updatedPerformance;
-	} catch (error) {
-		throw new HttpError(error.message || "Failed to delete image", error.statusCode || 500);
-	}
-};
-
 export default {
 	create,
 	update,
