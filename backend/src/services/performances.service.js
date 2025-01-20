@@ -18,12 +18,21 @@ const getByName = async (title) => {
   return performance.id;
 };
 
-const list = async ({ title }) => {
+const list = async ({ pagination, search }) => {
+  console.log({ pagination });
+  const { orderBy } = pagination;
   const performances = await prisma.performance.findMany({
-    where: { title: { contains: title, mode: "insensitive" } },
+    orderBy,
+    where: { title: { contains: search, mode: "insensitive" } },
   });
   if (!performances) throw new HttpError("Performances not found", 404);
-  return performances;
+  // custom skip and take
+  const filteredPerformances = performances.filter(
+    (item, index) =>
+      index >= pagination.skip && index < pagination.skip + pagination.take,
+  );
+
+  return { data: filteredPerformances, maxSize: performances.length };
 };
 
 const create = async (performanceData, poster, images, creatorsIds) => {

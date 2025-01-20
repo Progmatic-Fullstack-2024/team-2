@@ -5,7 +5,7 @@ import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
 
-const noTransparencyHeader = ['/login', '/register', '/'];
+const noTransparencyHeader = ['/login', '/register', '/', '/new-performance'];
 
 export default function Header() {
   const location = useLocation();
@@ -17,7 +17,7 @@ export default function Header() {
   const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-background/40' : 'c-primary border-c-background'} transition-colors duration-200 text-white px-10 flex justify-between  z-50`;
 
   const isYPositionInLimit = () => {
-    const screenYPos = window.pageYOffset;
+    const screenYPos = window.scrollY;
     if (screenYPos <= 30) return true;
     return false;
   };
@@ -33,7 +33,6 @@ export default function Header() {
 
       window.addEventListener('scroll', handleScroll, { passive: true });
     }
-    
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -43,9 +42,9 @@ export default function Header() {
     logout();
     return navigate('/login');
   };
-
+  console.log({ user });
   return (
-    <header className="fixed top-0 left-0 w-full bg-c-primary text-white py-4 px-24 flex justify-between">
+    <header className={headerClass}>
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">
         <img src="../../public/theater-masks.svg" alt="logo" />
 
@@ -62,10 +61,7 @@ export default function Header() {
         </div>
         {user ? (
           <>
-            <DefaultButton
-              text="Új előadás létrehozása"
-              onClick={() => navigate('/new-performance')} // Itt történik a navigálás
-            />
+            {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
             <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
           </>
         ) : (
