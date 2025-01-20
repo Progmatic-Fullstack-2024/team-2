@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+
 import DropdownButton from '../misc/DropdownButton';
 
 export default function PerformancesSearch({ params }) {
@@ -67,14 +68,14 @@ export default function PerformancesSearch({ params }) {
             menuItems={{ Cím: 'title', Ár: 'price', Dátum: 'performanceDate' }}
             props={{ searchParams, setSearchParams }}
             initialValue={searchParams.get('orderBy')}
-            searchVariable={'orderBy'}
+            searchVariable="orderBy"
           />
           <DropdownButton
             key="sortMenuButton"
             menuItems={{ Növekvő: 'asc', Csökkenő: 'desc' }}
             props={{ searchParams, setSearchParams }}
             initialValue={searchParams.get('sort')}
-            searchVariable={'sort'}
+            searchVariable="sort"
             width={32}
           />
         </div>

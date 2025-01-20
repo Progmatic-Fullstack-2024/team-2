@@ -3,10 +3,10 @@ import { useSearchParams } from 'react-router-dom';
 
 // Components
 import ImageTitle from '../components/misc/ImageTitle';
+import Pagination from '../components/misc/Pagination';
 import PerformancesList from '../components/performances/PerformancesList';
 import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
-import Pagination from '../components/misc/Pagination';
 
 export default function PerformancesPage() {
   const [performances, setPerformances] = useState();
@@ -16,7 +16,6 @@ export default function PerformancesPage() {
 
   const getPeformances = async (params) => {
     const data = await performancesService.list(params);
-    console.log('data', data);
     setPerformances(data);
   };
 
@@ -29,7 +28,6 @@ export default function PerformancesPage() {
   }, []);
 
   useEffect(() => {
-    console.log('get peformances ', searchParams);
     getPeformances(searchParams);
   }, [searchParams]);
 
