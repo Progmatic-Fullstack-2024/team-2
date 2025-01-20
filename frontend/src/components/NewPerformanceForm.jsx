@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-
 import DefaultButton from './misc/DefaultButton';
 import { performanceValidationSchema } from '../schema/userValidationSchema';
 import createPerformance from '../services/performance.service';
@@ -41,18 +40,10 @@ export default function NewPerformanceForm({ lecture }) {
       formData.append('files', image);
     });
 
-    const token = localStorage.getItem('authToken');
+    // const token = localStorage.getItem('authToken');
 
     try {
       const response = await createPerformance(formData);
-
-      // const response = await fetch('/api/performances', {
-      //   method: 'POST',
-      //   body: formData,
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
 
       if (!response.ok) throw new Error('Hiba történt az előadás létrehozásakor.');
 

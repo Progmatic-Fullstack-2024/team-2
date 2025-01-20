@@ -10,7 +10,7 @@ export default function Pagination({ params }) {
   const activeClass = 'bg-c-primary-light text-white font-bold text-xl hover:bg-c-primary h-9';
 
   useEffect(() => {
-    focusRef.current = searchParams.get('page') || 1;
+    focusRef.current = Number(searchParams.get('page')) || 1;
   }, [maxSize, searchParams]);
 
   const changePage = ({ direction, page }) => {
@@ -26,7 +26,7 @@ export default function Pagination({ params }) {
       setSearchParams(searchParams);
     }
   };
-  // console.log('RENDER pagi');
+
   return (
     <nav aria-label="Page navigation example ">
       <ul className="flex items-center  my-4">
@@ -59,7 +59,7 @@ export default function Pagination({ params }) {
             <li key={index + 1}>
               <button
                 type="button"
-                className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-800 rounded-lg select-none cursor-pointer ${focusRef.current === String(index + 1) ? activeClass : 'bg-c-secondary/20 hover:bg-c-secondary/50'}`}
+                className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-800 rounded-lg select-none cursor-pointer ${focusRef.current === index + 1 ? activeClass : 'bg-c-secondary/20 hover:bg-c-secondary/50'}`}
                 onClick={() => changePage({ page: index + 1 })}
               >
                 {index + 1}
