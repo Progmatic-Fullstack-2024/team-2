@@ -17,7 +17,7 @@ export default function Header() {
   const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-background/40' : 'c-primary border-c-background'} transition-colors duration-200 text-white px-10 flex justify-between  z-50`;
 
   const isYPositionInLimit = () => {
-    const screenYPos = window.pageYOffset;
+    const screenYPos = window.scrollY;
     if (screenYPos <= 30) return true;
     return false;
   };
@@ -32,11 +32,10 @@ export default function Header() {
       setTransparentHeader(true);
 
       window.addEventListener('scroll', handleScroll, { passive: true });
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
     }
-    return 0;
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [location]);
 
   const handleLogout = () => {
