@@ -76,8 +76,8 @@ const update = async (
         posterURL: posterURL[0],
         imagesURL: imageUrls,
         creators: {
-          connect: toAdd.map((creatorId) => ({ id: creatorId })), 
-          disconnect: toRemove.map((creatorId) => ({ id: creatorId })), 
+          connect: toAdd.map((creatorId) => ({ id: creatorId })),
+          disconnect: toRemove.map((creatorId) => ({ id: creatorId })),
         },
       },
     });
