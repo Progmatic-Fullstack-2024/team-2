@@ -24,7 +24,6 @@ export default function Header() {
 
   const handleScroll = () => setTransparentHeader(isYPositionInLimit());
 
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
     window.scrollTo(0, 0);
     if (noTransparencyHeader.includes(location.pathname)) {
@@ -43,7 +42,7 @@ export default function Header() {
     logout();
     return navigate('/');
   };
-  console.log({ user });
+  // console.log({ user });
   return (
     <header className={headerClass}>
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">

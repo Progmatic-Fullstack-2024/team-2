@@ -15,7 +15,10 @@ export default function ComingSoonPage() {
         <Link to="/signedIn" className="text-c-primary text-lg font-semibold hover:underline">
           Vissza a kezdőlapra
         </Link>
-        <Link to="/new-performance" className="text-c-primary text-lg font-semibold hover:underline">
+        <Link
+          to="/new-performance"
+          className="text-c-primary text-lg font-semibold hover:underline"
+        >
           Új előadás hozzáadása
         </Link>
         <Link to="/performances" className="text-c-primary text-lg font-semibold hover:underline">

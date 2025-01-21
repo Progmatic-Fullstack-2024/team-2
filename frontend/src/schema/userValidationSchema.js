@@ -36,11 +36,15 @@ export const performanceValidationSchema = Yup.object({
     .required('Alkotó azonosítók szükségesek.'),
   description: Yup.string().required('Leírás szükséges.'),
   posterURL: Yup.mixed()
-    .test('fileFormat', 'Csak kép fájl engedélyezett.', (value) => value ? ['image/jpeg', 'image/png', 'image/jpg'].includes(value.type) : true)
+    .test('fileFormat', 'Csak kép fájl engedélyezett.', (value) =>
+      value ? ['image/jpeg', 'image/png', 'image/jpg'].includes(value.type) : true,
+    )
     .notRequired(),
   imagesURL: Yup.array()
     .of(
-      Yup.mixed().test('fileFormat', 'Csak kép fájlok engedélyezettek.', (value) => value ? ['image/jpeg', 'image/png', 'image/jpg'].includes(value.type) : true)
+      Yup.mixed().test('fileFormat', 'Csak kép fájlok engedélyezettek.', (value) =>
+        value ? ['image/jpeg', 'image/png', 'image/jpg'].includes(value.type) : true,
+      ),
     )
     .notRequired(),
   performanceDate: Yup.array()
@@ -51,4 +55,3 @@ export const performanceValidationSchema = Yup.object({
     .integer('Az ár egész szám kell legyen.')
     .notRequired(),
 });
-
