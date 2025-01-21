@@ -18,15 +18,24 @@ const getByName = async (title) => {
   return performance.id;
 };
 
-const list = async ({ title }) => {
+const list = async ({ pagination, search }) => {
+  console.log({ pagination });
+  const { orderBy } = pagination;
   const performances = await prisma.performance.findMany({
-    where: { title: { contains: title, mode: "insensitive" } },
+    orderBy,
+    where: { title: { contains: search, mode: "insensitive" } },
   });
   if (!performances) throw new HttpError("Performances not found", 404);
-  return performances;
+  // custom skip and take
+  const filteredPerformances = performances.filter(
+    (item, index) =>
+      index >= pagination.skip && index < pagination.skip + pagination.take,
+  );
+
+  return { data: filteredPerformances, maxSize: performances.length };
 };
 
-const create = async (performanceData, poster, images) => {
+const create = async (performanceData, poster, images, creatorsIds) => {
   try {
     const posterURL = await createFiles([poster]);
     const imageUrls = await createFiles(images);
@@ -35,6 +44,7 @@ const create = async (performanceData, poster, images) => {
         ...performanceData,
         posterURL: posterURL[0],
         imagesURL: imageUrls,
+        creators: { connect: creatorsIds },
       },
     });
     return newPerformance;
@@ -46,20 +56,38 @@ const create = async (performanceData, poster, images) => {
   }
 };
 
-const update = async (performanceId, performanceData, poster, images) => {
+const update = async (
+  performanceId,
+  performanceData,
+  poster,
+  images,
+  creatorsIds,
+) => {
   try {
     const performanceToUpdate = await getById(performanceId);
-    const posterURL = await updateFiles(
-      [performanceToUpdate.posterURL],
-      [poster],
-    );
-    const imageUrls = await updateFiles(performanceToUpdate.imagesURL, images);
+
+    const posterURL = poster
+      ? await updateFiles([performanceToUpdate.posterURL], [poster])
+      : [performanceToUpdate.posterURL];
+
+    let imageUrls = performanceToUpdate.imagesURL;
+    if (images && images.length) {
+      const newImageUrls = await createFiles(images);
+      imageUrls = [...imageUrls, ...newImageUrls];
+    }
+
+    const { toAdd, toRemove } = creatorsIds;
+
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
       data: {
         ...performanceData,
         posterURL: posterURL[0],
         imagesURL: imageUrls,
+        creators: {
+          connect: toAdd.map((creatorId) => ({ id: creatorId })),
+          disconnect: toRemove.map((creatorId) => ({ id: creatorId })),
+        },
       },
     });
     return updatedPerformance;
@@ -85,4 +113,37 @@ const destroy = async (performanceId) => {
   }
 };
 
-export default { create, update, destroy, list, getById, getByName };
+const deleteSingleImage = async (performanceId, imageUrl) => {
+  try {
+    const performanceToUpdate = await getById(performanceId);
+    const originalImagesUrl = performanceToUpdate.imagesURL;
+    if (!originalImagesUrl.includes(imageUrl[0])) {
+      throw new HttpError("Image URL not found in performance", 400);
+    }
+    await deleteFiles(imageUrl);
+    const updatedImagesUrl = originalImagesUrl.filter(
+      (url) => url !== imageUrl[0],
+    );
+
+    const updatedPerformance = await prisma.performance.update({
+      where: { id: performanceId },
+      data: { imagesURL: updatedImagesUrl },
+    });
+    return updatedPerformance;
+  } catch (error) {
+    throw new HttpError(
+      error.message || "Failed to delete image",
+      error.statusCode || 500,
+    );
+  }
+};
+
+export default {
+  create,
+  update,
+  destroy,
+  list,
+  getByName,
+  deleteSingleImage,
+  getById,
+};

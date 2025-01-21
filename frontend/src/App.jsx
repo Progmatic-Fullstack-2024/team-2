@@ -8,6 +8,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
+import NewPerformancePage from './pages/NewPerformancePage';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
@@ -25,9 +26,11 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/signedIn" element={<SignedInPage />} />
+              <Route path="/userlist" element={<ListUsers />} />
+              <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
-              <Route path="/userlist" element={<ListUsers />} />
+              <Route path="/comingsoon" element={<ComingSoonPage />} />
             </Routes>
           </div>
         </main>
