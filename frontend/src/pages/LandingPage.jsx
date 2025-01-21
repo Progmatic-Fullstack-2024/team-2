@@ -13,8 +13,8 @@ export default function PerformancesPage() {
   const [searchParams] = useSearchParams();
   const rendered = useRef(false); // stops unnecessary rerender of performances state
 
-  const getPeformances = async (params) => {
-    const data = await performancesService.list(params);
+  const getPeformances = async () => {
+    const data = await performancesService.listAll();
     setPerformances(data);
   };
 

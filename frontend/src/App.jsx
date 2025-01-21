@@ -30,7 +30,7 @@ function App() {
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
-              <Route path="/comingsoon" element={<ComingSoonPage />} />
+              {/* <Route path="/comingsoon" element={<ComingSoonPage />} /> */}
             </Routes>
           </div>
         </main>

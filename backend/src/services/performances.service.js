@@ -29,10 +29,15 @@ const list = async ({ pagination, search }) => {
   // custom skip and take
   const filteredPerformances = performances.filter(
     (item, index) =>
-      index >= pagination.skip && index < pagination.skip + pagination.take,
+      index >= pagination.skip && index < pagination.skip + pagination.take
   );
 
   return { data: filteredPerformances, maxSize: performances.length };
+};
+
+const listAll = async () => {
+  const allPerformances = await prisma.performance.findMany();
+  return allPerformances;
 };
 
 const create = async (performanceData, poster, images, creatorsIds) => {
@@ -51,7 +56,7 @@ const create = async (performanceData, poster, images, creatorsIds) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to create performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -61,7 +66,7 @@ const update = async (
   performanceData,
   poster,
   images,
-  creatorsIds,
+  creatorsIds
 ) => {
   try {
     const performanceToUpdate = await getById(performanceId);
@@ -94,7 +99,7 @@ const update = async (
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to update performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -108,7 +113,7 @@ const destroy = async (performanceId) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -122,7 +127,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
     }
     await deleteFiles(imageUrl);
     const updatedImagesUrl = originalImagesUrl.filter(
-      (url) => url !== imageUrl[0],
+      (url) => url !== imageUrl[0]
     );
 
     const updatedPerformance = await prisma.performance.update({
@@ -133,7 +138,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete image",
-      error.statusCode || 500,
+      error.statusCode || 500
     );
   }
 };
@@ -143,6 +148,7 @@ export default {
   update,
   destroy,
   list,
+  listAll,
   getByName,
   deleteSingleImage,
   getById,

@@ -5,6 +5,7 @@ import performancesController from "../controllers/performances.controller.js";
 
 const router = express.Router();
 
+router.get("/all", performancesController.listAllPerformances);
 router.get("/:performanceId", performancesController.getPerformanceByID);
 router.get("/", performancesController.listPerformances);
 
@@ -14,13 +15,13 @@ router.post(
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },
   ]),
-  performancesController.createPerformance,
+  performancesController.createPerformance
 );
 
 router.delete(
   "/:performanceId",
   isAdmin,
-  performancesController.destroyPerformance,
+  performancesController.destroyPerformance
 );
 
 router.patch(
@@ -30,13 +31,13 @@ router.patch(
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },
   ]),
-  performancesController.updatePerformance,
+  performancesController.updatePerformance
 );
 
 router.patch(
   "/:performanceId/image",
   isAdmin,
-  performancesController.deleteImage,
+  performancesController.deleteImage
 );
 
 export default router;
