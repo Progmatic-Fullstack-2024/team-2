@@ -42,7 +42,7 @@ export default function Header() {
     logout();
     return navigate('/login');
   };
-  console.log({ user });
+  
   return (
     <header className={headerClass}>
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">

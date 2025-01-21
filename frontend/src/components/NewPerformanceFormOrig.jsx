@@ -5,17 +5,13 @@ import { toast } from 'react-toastify';
 
 import DefaultButton from './misc/DefaultButton';
 import { performanceValidationSchema } from '../schema/userValidationSchema';
-import getCreators from '../services/creators.service'; 
 import createPerformance from '../services/performance.service';
-import getTheaters from '../services/theaters.service'; 
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
 
   const [posterPreview, setPosterPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
-  const [theaterOptions, setTheaterOptions] = useState([]);
-  const [creatorOptions, setCreatorOptions] = useState([]);
 
   const initialValues = lecture || {
     title: '',
@@ -43,6 +39,8 @@ export default function NewPerformanceForm({ lecture }) {
     values.imagesURL.forEach((image) => {
       formData.append('files', image);
     });
+
+    // const token = localStorage.getItem('authToken');
 
     try {
       const response = await createPerformance(formData);
@@ -84,28 +82,6 @@ export default function NewPerformanceForm({ lecture }) {
     updatedPreviews.splice(index, 1);
     setImagesPreview(updatedPreviews);
   };
-  
-  const fetchTheaters = async () => {
-    if (theaterOptions.length === 0) {
-      try {
-        const theaters = await getTheaters();
-        setTheaterOptions(theaters);
-      } catch (error) {
-        toast.error('Hiba történt a színházak betöltésekor.');
-      }
-    }
-  };
-
-  const fetchCreators = async () => {
-    if (creatorOptions.length === 0) {
-      try {
-        const creators = await getCreators();
-        setCreatorOptions(creators);
-      } catch (error) {
-        toast.error('Hiba történt az alkotók betöltésekor.');
-      }
-    }
-  };
 
   return (
     <div className="mx-auto p-12 my-40 bg-c-secondary-light rounded-md">
@@ -136,31 +112,12 @@ export default function NewPerformanceForm({ lecture }) {
               <label htmlFor="theaterId" className="text-gray-800 font-bold">
                 Színház <span className="text-red-500">*</span>
               </label>
-              <div className="flex items-center">
-                <Field
-                  as="select"
-                  name="theaterId"
-                  className="w-full border p-2 rounded text-gray-800"
-                >
-                  <option value="">Válassz egy színházat</option>
-                  {theaterOptions.map((theater) => (
-                    <option key={theater.id} value={theater.id}>
-                      {theater.name}
-                    </option>
-                  ))}
-                </Field>
-                <button
-                  type="button"
-                  onClick={fetchTheaters}
-                  className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                >
-                  <img
-                    src="../../public/theaterSearchIcon.svg"
-                    alt="Színház keresése ikon"
-                    className="w-6 h-6"
-                  />
-                </button>
-              </div>
+              <Field
+                type="text"
+                name="theaterId"
+                placeholder="Add meg a színház azonosítóját"
+                className="w-full border p-2 rounded my-1 text-gray-800"
+              />
               <ErrorMessage name="theaterId" component="div" className="text-red-500 text-sm" />
             </div>
 
@@ -171,17 +128,11 @@ export default function NewPerformanceForm({ lecture }) {
               {values.creatorId.map((_, index) => (
                 <div key={index} className="flex items-center mb-2">
                   <Field
-                    as="select"
+                    type="text"
                     name={`creatorId[${index}]`}
+                    placeholder="Add meg az alkotó azonosítóját"
                     className="w-full border p-2 rounded text-gray-800"
-                  >
-                    <option value="">Válassz egy alkotót</option>
-                    {creatorOptions.map((creator) => (
-                      <option key={creator.id} value={creator.id}>
-                        {creator.name}
-                      </option>
-                    ))}
-                  </Field>
+                  />
                   <button
                     type="button"
                     onClick={() => {
@@ -193,27 +144,13 @@ export default function NewPerformanceForm({ lecture }) {
                   >
                     Törlés
                   </button>
-                  <button
-                  type="button"
-                  onClick={fetchCreators}
-                  className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                >
-                  <img
-                    src="../../public/creatorSearchIcon.svg"
-                    alt="Alkotó keresése ikon"
-                    className="w-6 h-6"
-                  />
-                </button>
                 </div>
               ))}
-              <div className="flex items-center">
-                <DefaultButton
-                  text="Új alkotó hozzáadása"
-                  type="button"
-                  onClick={() => setFieldValue('creatorId', [...values.creatorId, ''])}
-                />
-                
-              </div>
+              <DefaultButton
+                text="Új alkotó hozzáadása"
+                type="button"
+                onClick={() => setFieldValue('creatorId', [...values.creatorId, ''])}
+              />
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
             </div>
 
