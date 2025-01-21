@@ -1,4 +1,4 @@
-import PerformanceCard from './PerformanceCard';
+import PerformanceCard02 from './PerformanceCard02';
 
 export default function PerformancesNextWeek({ performances }) {
   if (!performances) return null;
@@ -25,7 +25,7 @@ export default function PerformancesNextWeek({ performances }) {
         <h2 className="text-2xl font-bold mb-5">Előadások a következő hét napban:</h2>
         <div className="grid grid-cols-1 tablet:grid-cols-3 laptop:grid-cols-5">
           {upcomingPerformances.map((perf) => (
-            <PerformanceCard data={perf} key={perf.id} />
+            <PerformanceCard02 data={perf} key={perf.id} />
           ))}
         </div>
       </section>

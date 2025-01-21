@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 
-import PerformanceCard from './PerformanceCard';
+import PerformanceCard02 from './PerformanceCard02';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformancesByTheaters({ performances }) {
@@ -87,7 +87,7 @@ export default function PerformancesByTheaters({ performances }) {
                       key={perf.id}
                       className={`flex-shrink-0 transition-transform duration-700 hover:z-10 ${getWidthClass(visibleCards)}`}
                     >
-                      <PerformanceCard data={perf} />
+                      <PerformanceCard02 data={perf} />
                     </div>
                   ))}
                 </div>
