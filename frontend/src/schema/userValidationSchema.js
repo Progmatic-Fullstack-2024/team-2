@@ -56,11 +56,11 @@ export const performanceValidationSchema = Yup.object({
     .notRequired(),
 });
 
-export const userValidationSchemaForUpdateUser = yup.object({
-  firstName: yup.string().required('A keresztnév megadása kötelező!'),
-  lastName: yup.string().required('A vezetéknév megadása kötelező!'),
-  email: yup.string().email('Valós emailt adj meg!').required('Email megadása kötelező!'),
-  phone: yup
+export const userValidationSchemaForUpdateUser = Yup.object({
+  firstName: Yup.string().required('A keresztnév megadása kötelező!'),
+  lastName: Yup.string().required('A vezetéknév megadása kötelező!'),
+  email: Yup.string().email('Valós emailt adj meg!').required('Email megadása kötelező!'),
+  phone: Yup
     .string()
     .matches(
       /^\+?[0-9]{10,15}$/,
@@ -69,17 +69,17 @@ export const userValidationSchemaForUpdateUser = yup.object({
     .notRequired(),
 });
 
-export const userValidationSchemaForPassword = yup.object({
-  oldPassword: yup
+export const userValidationSchemaForPassword = Yup.object({
+  oldPassword: Yup
     .string()
     .min(6, 'A jelszónak minimum 6 karakternek kell lennie')
     .required('A régi jelszó megadása kötelező!'),
-  newPassword: yup
+  newPassword: Yup
     .string()
     .min(6, 'A jelszónak minimum 6 karakternek kell lennie')
     .required('Az új jelszó megadása kötelező!'),
-  confirmPassword: yup
+  confirmPassword: Yup
     .string()
-    .oneOf([yup.ref('newPassword')], 'A jelszavak nem egyeznek!')
+    .oneOf([Yup.ref('newPassword')], 'A jelszavak nem egyeznek!')
     .required('Az új jelszó megerősítése kötelező!'),
 });
