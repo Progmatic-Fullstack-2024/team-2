@@ -36,14 +36,13 @@ const getOwnUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const { id, firstName, lastName, email, phone } = req.body;
-  let { password, role } = req.body;
+  let { role } = req.body;
   if (id) {
     if (req.user.role !== "Admin" && id !== req.user.id) {
       next(new HttpError("Access denied: Admin can update users only", 403));
       return;
     }
     if (req.user.role !== "Admin") role = undefined;
-    else if (id !== req.user.id) password = undefined;
     try {
       const user = await authService.updateUser(
         id,
@@ -52,7 +51,6 @@ const updateUser = async (req, res, next) => {
         email,
         phone,
         role,
-        password,
       );
       if (user) res.status(201).json({ message: "Update is successful." });
       else next(new HttpError("User is not Found", 404));
