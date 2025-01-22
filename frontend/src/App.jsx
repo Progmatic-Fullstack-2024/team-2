@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import OwnUserPage from './pages/OwnUserPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
+import SelectedUser from "./pages/SelectedUser.jsx";
 import SignedInPage from './pages/SignedIn';
 import SinglePerformancePage from './pages/SinglePerformancePage';
 
@@ -29,6 +30,8 @@ function App() {
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="ownuser" element={<OwnUserPage />} />
+              <Route path="/userhandler" element={<SelectedUser />} />
+
             </Routes>
           </div>
         </main>
