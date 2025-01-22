@@ -3,6 +3,7 @@ import cors from "cors";
 import errorHandler from "./middlewares/error-handler.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import performancesRoutes from "./routes/performances.routes.js";
+import userRoutes from "./routes/user.routes.js";
 import { FRONTEND_URL } from "./constants/constants.js";
 import { authenticate } from "./middlewares/auth.middleware.js";
 
@@ -14,6 +15,7 @@ app.use(json());
 app.use("/", authenticate);
 
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 app.use("/api/performances", performancesRoutes);
 
 app.use(errorHandler);
