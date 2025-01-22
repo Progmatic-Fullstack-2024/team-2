@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
+import { useDarkMode } from '../contexts/DarkModeContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
 
@@ -11,6 +12,7 @@ export default function Header() {
   const location = useLocation();
   const { user, logout } = useContext(AuthContext);
   const [transparentHeader, setTransparentHeader] = useState(true);
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const navigate = useNavigate();
 
@@ -53,11 +55,24 @@ export default function Header() {
             {`${user.firstName}`}
           </div>
         )}
+        <button
+          type="button"
+          onClick={toggleDarkMode}
+          className={`rounded-md px-3 py-2 transform transition duration-300 hover:scale-110 ${
+            isDarkMode
+              ? 'hover:bg-gray-700 hover:text-white'
+              : 'hover:bg-yellow-500 hover:text-white'
+          }`}
+        >
+          {isDarkMode ? '🌙 Light Mode' : '☀️ Dark Mode'}
+        </button>
       </div>
+
       <nav className="flex gap-4 items-center">
         <div className="flex justify-center h-full gap-1">
           <MenuLink text="Előadások" to="/performances" />
           <MenuLink text="Home" to="/" />
+          <MenuLink text="Kosár" to="/cart" />
         </div>
         {user ? (
           <>
