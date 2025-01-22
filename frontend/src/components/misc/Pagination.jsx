@@ -60,7 +60,7 @@ export default function Pagination({ params }) {
             <li key={index + 1}>
               <button
                 type="button"
-                className={`flex items-center justify-center px-3 h-8 leading-tight ring-1 ring-gray-300 text-gray-800 rounded-lg select-none cursor-pointer ${focusRef.current === index + 1 ? activeClass : ' hover:ring-c-primary'}`}
+                className={`flex items-center justify-center px-3 h-8 leading-tight ring-1 ring-gray-300 text-gray-800 rounded-md select-none cursor-pointer ${focusRef.current === index + 1 ? activeClass : ' hover:ring-c-primary'}`}
                 onClick={() => changePage({ page: index + 1 })}
               >
                 {index + 1}
