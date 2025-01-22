@@ -67,6 +67,7 @@ export default function Header() {
               <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
             </>
           </>
+          </>
         ) : (
           <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />
         )}
