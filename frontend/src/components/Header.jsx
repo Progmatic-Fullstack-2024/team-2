@@ -5,7 +5,7 @@ import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
 
-const noTransparencyHeader = ['/login', '/register', '/', '/new-performance'];
+const noTransparencyHeader = ['/login', '/register', '/new-performance'];
 
 export default function Header() {
   const location = useLocation();
