@@ -1,11 +1,9 @@
-
 import { useContext } from 'react';
 
 import ImageTitle from '../components/misc/ImageTitle';
 import OwnUserEdit from '../components/OwnUserEdit.jsx';
 import Unautorized from '../components/Unautorized.jsx';
 import AuthContext from '../contexts/AuthContext';
-
 
 export default function OwnUser() {
   const { user } = useContext(AuthContext);
