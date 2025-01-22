@@ -14,7 +14,7 @@ const performanceValidationSchemaForCreate = yup.object({
       yup
         .date()
         .typeError("Please provide a valid date!")
-        .min(new Date(), "The date must be in the future!")
+        .min(new Date(), "The date must be in the future!"),
     ),
   creatorsIds: yup
     .array()
@@ -30,7 +30,7 @@ const performanceValidationSchemaForUpdate = yup.object({
       yup
         .date()
         .typeError("Please provide a valid date!")
-        .min(new Date(), "The date must be in the future!")
+        .min(new Date(), "The date must be in the future!"),
     ),
 });
 
