@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import DefaultButton from '../components/misc/DefaultButton';
 import ImageTitle from '../components/misc/ImageTitle';
+import performanceService from '../services/performances.service';
 
 export default function DetailsPage() {
   const { id } = useParams();
@@ -10,34 +11,16 @@ export default function DetailsPage() {
   const [performance, setPerformance] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Képgörgetéshez
   const [selectedImage, setSelectedImage] = useState(null); // Modalhoz
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
-      // Később ide jöhet az API hívás
-      const performances = [
-        {
-          id: 1,
-          title: 'Performance1',
-          imgUrl: 'https://picsum.photos/307/402',
-          price: 200,
-          location: 'Színház1',
-          actors: ['Actor1', 'Actor2'],
-          date: '2025-02-10',
-          gallery: [
-            'https://picsum.photos/id/1015/400/600',
-            'https://picsum.photos/id/1016/400/600',
-            'https://picsum.photos/id/1018/400/600',
-            'https://picsum.photos/id/1020/400/600',
-            'https://picsum.photos/id/1021/400/600',
-            'https://picsum.photos/id/1022/400/600',
-            'https://picsum.photos/id/1023/400/600',
-            'https://picsum.photos/id/1024/400/600',
-            'https://picsum.photos/id/1025/400/600',
-          ],
-        },
-      ];
-      const foundPerformance = performances.find((p) => p.id === parseInt(performanceId, 10));
-      setPerformance(foundPerformance);
+      try {
+        const fetchedPerformance = await performanceService.getById(performanceId);
+        setPerformance(fetchedPerformance);
+      } catch (err) {
+        setError('Nem sikerült betölteni az előadás adatait.');
+      }
     }
 
     fetchPerformanceById(id);
@@ -45,15 +28,16 @@ export default function DetailsPage() {
 
   // Képgörgetés kezelése
   const handleNextImage = () => {
-    if (performance) {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % performance.gallery.length);
+    if (performance && performance.imagesURL) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % performance.imagesURL.length);
     }
   };
 
   const handlePreviousImage = () => {
-    if (performance) {
+    if (performance && performance.imagesURL) {
       setCurrentImageIndex(
-        (prevIndex) => (prevIndex - 1 + performance.gallery.length) % performance.gallery.length,
+        (prevIndex) =>
+          (prevIndex - 1 + performance.imagesURL.length) % performance.imagesURL.length,
       );
     }
   };
@@ -61,24 +45,32 @@ export default function DetailsPage() {
   // Modal bezárása
   const closeModal = () => setSelectedImage(null);
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg font-bold">{error}</div>
+    );
+  }
+
   if (!performance) {
     return (
       <div className="min-h-screen flex items-center justify-center text-lg font-bold">
-        Előadás nem található.
+        Előadás betöltése...
       </div>
     );
   }
 
   // Galéria három képének kiszámítása
   const getGalleryImages = () => {
-    if (!performance) return [];
-    const { gallery } = performance;
-    const totalImages = gallery.length;
+    if (!performance || !performance.imagesURL || performance.imagesURL.length === 0) {
+      return ['https://via.placeholder.com/400x600?text=Nincs+kép'];
+    }
+    const { imagesURL } = performance;
+    const totalImages = imagesURL.length;
 
     return [
-      gallery[currentImageIndex % totalImages],
-      gallery[(currentImageIndex + 1) % totalImages],
-      gallery[(currentImageIndex + 2) % totalImages],
+      imagesURL[currentImageIndex % totalImages],
+      imagesURL[(currentImageIndex + 1) % totalImages],
+      imagesURL[(currentImageIndex + 2) % totalImages],
     ];
   };
 
@@ -88,8 +80,8 @@ export default function DetailsPage() {
       <div className="min-h-screen flex flex-col items-center justify-center p-10">
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
           <img
-            src={performance.imgUrl}
-            alt={performance.title}
+            src={performance.posterURL || 'https://via.placeholder.com/640x360?text=Nincs+plakát'}
+            alt={performance.title || 'Előadás'}
             className="w-full h-64 object-cover"
           />
           <div className="p-5">
@@ -113,7 +105,12 @@ export default function DetailsPage() {
                       }`}
                       aria-label={`Galéria kép ${index + 1} megnyitása`}
                     >
-                      <img src={img} alt={`Galéria kép ${index + 1}`} className="w-full h-auto" />
+                      <img
+                        src={img || 'https://via.placeholder.com/400x600?text=Nincs+kép'}
+                        alt={`Galéria kép ${index + 1}`}
+                        className="w-full h-auto"
+                        onError={() => 'https://via.placeholder.com/400x600?text=Nincs+kép'}
+                      />
                     </button>
                   ))}
                 </div>
@@ -123,12 +120,14 @@ export default function DetailsPage() {
               </div>
             </div>
 
-            <p className="text-lg mb-2">Leírás:</p>
-            <p className="text-lg mb-2">Kritikák:</p>
-            <p className="text-lg mb-2">Közreműködők: {performance.actors.join(', ')}</p>
-            <p className="text-lg mb-2">Helyszín: {performance.location}</p>
+            <p className="text-lg mb-2">{performance.description}</p>
             <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
-            <p className="text-lg mb-2">Időpont: {performance.date}</p>
+            <p className="text-lg mb-2">
+              Időpont(ok):{' '}
+              {performance.performanceDate
+                .map((date) => new Date(date).toLocaleString('hu-HU'))
+                .join(', ')}
+            </p>
             <div className="flex justify-around">
               <div>
                 <DefaultButton onClick={() => navigate('/performances')} text="Vissza" />
@@ -150,7 +149,6 @@ export default function DetailsPage() {
           tabIndex="0"
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
-              // Csak az Escape gombra zárja be a modalt
               closeModal();
             }
           }}

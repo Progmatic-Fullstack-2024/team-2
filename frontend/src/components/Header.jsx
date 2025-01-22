@@ -5,7 +5,7 @@ import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
 
-const noTransparencyHeader = ['/login', '/register', '/', '/new-performance'];
+const noTransparencyHeader = ['/login', '/register', '/new-performance'];
 
 export default function Header() {
   const location = useLocation();
@@ -40,9 +40,9 @@ export default function Header() {
 
   const handleLogout = () => {
     logout();
-    return navigate('/login');
+    return navigate('/');
   };
-  console.log({ user });
+  // console.log({ user });
   return (
     <header className={headerClass}>
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">
@@ -57,7 +57,7 @@ export default function Header() {
       <nav className="flex gap-4 items-center">
         <div className="flex justify-center h-full gap-1">
           <MenuLink text="Előadások" to="/performances" />
-          <MenuLink text="Home" to="/SignedIn" />
+          <MenuLink text="Home" to="/" />
         </div>
         {user ? (
           <>
