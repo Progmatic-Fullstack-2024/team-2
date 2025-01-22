@@ -50,6 +50,7 @@ export default function SelectedUserForm() {
             lastName: handleuser.lastName,
             email: handleuser.email,
             phone: handleuser.phone,
+            role: handleuser.role,
           };
         } else initialValues = null;
         return initialValues;
@@ -62,7 +63,6 @@ export default function SelectedUserForm() {
         try {
             const userId=locationData.state; 
 
-            console.log("userId: ",userId);
             if (!userId) throw Error();
             const getUser = await UserHandle.getUser(userId);
             sethandleUser(getUser);
@@ -70,7 +70,6 @@ export default function SelectedUserForm() {
             console.log(e);
             return <h2>User nem található</h2>;
           }
-          console.log("user: ",handleuser);
           return null;
         }
         useEffect(() => {
@@ -89,7 +88,7 @@ export default function SelectedUserForm() {
           setButtonType('button');
         };
       
-        const sendData = async (values) => {
+        const sendData = async (values,action) => {
           const newUserData = { id: handleuser.id };
           const keys = Object.keys(values);
           keys.forEach((key) => {
@@ -98,12 +97,18 @@ export default function SelectedUserForm() {
           if (Object.keys(newUserData).length > 1) {
             setIsVisilable(true);
             try {
-              //const answer = await userHandle.patchUser(newUserData);
-              //if (answer) setMsg('Az adatmódosítás sikeres');
-              setMsg("Az adatmódosítás nincs kész");
+              const answer = await UserHandle.patchOwnUser(newUserData);
+              if (answer) setMsg('Az adatmódosítás sikeres');
+              else {
+                setMsg("Az adatmódosítás sikertelen");
+                action.resetform();
+              }
+
               loadUser();
             } catch (error) {
-              setMsg('Hiba: az adatmódosítás elutsítva');
+              console.log(error);
+              setMsg('Hiba: az adatmódosítás elutasítva.');
+              action.resetForm();
             }
             cancelHandle();
           }
@@ -177,10 +182,18 @@ export default function SelectedUserForm() {
                       <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
                     </div>
                     <div className="mb-4">
-                        <h3>Szerepkör</h3>
-                        <div className='border p-2'>
-                                {handleuser.role}  
-                        </div>
+                      <Field
+                        name="role" as="select"
+                        className="w-full border p-2 rounded my-1 text-gray-800"
+                        disabled={modify}
+                      >
+                        <option value="user" >
+                          User
+                          </option>
+                        <option value="Admin" >
+                          Admin
+                          </option>
+                      </Field>
                     </div>
     
                     <div className="flex justify-between gap-3 flex-col tablet:flex-row">
