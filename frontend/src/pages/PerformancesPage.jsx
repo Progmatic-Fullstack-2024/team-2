@@ -42,10 +42,10 @@ export default function PerformancesPage() {
           <PerformancesSearch
             params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
           />
-          {/* <Pagination
+          <Pagination
             key="PaginationTop"
             params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-          /> */}
+          />
           <PerformancesList performances={performances.data} />
           <Pagination
             key="PaginationBot"
