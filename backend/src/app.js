@@ -20,7 +20,6 @@ app.use("/api/performances", performancesRoutes);
 app.use("/api/dropdown-data-theaters", theatersRoutes);
 app.use("/api/dropdown-data-creators", creatorsRoutes);
 
-
 app.use(errorHandler);
 
 app.use("/", (req, res) => {

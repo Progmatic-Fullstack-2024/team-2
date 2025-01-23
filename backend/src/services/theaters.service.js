@@ -13,7 +13,7 @@ const getTheaterIdName = async () => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to load theaters",
-      error.status || 500
+      error.status || 500,
     );
   }
 };

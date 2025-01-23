@@ -4,10 +4,6 @@ import { isAdmin } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.get(
-  "/",
-  isAdmin,
-  theatersController.getTheaterForDropdown,
-);
+router.get("/", isAdmin, theatersController.getTheaterForDropdown);
 
 export default router;

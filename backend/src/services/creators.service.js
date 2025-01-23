@@ -13,7 +13,7 @@ const getCreatorsIdName = async () => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to load creators",
-      error.status || 500
+      error.status || 500,
     );
   }
 };

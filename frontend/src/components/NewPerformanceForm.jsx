@@ -29,7 +29,6 @@ export default function NewPerformanceForm({ lecture }) {
   };
 
   const handleSubmit = async (values, { resetForm }) => {
-    console.log(values);
     const formData = new FormData();
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
