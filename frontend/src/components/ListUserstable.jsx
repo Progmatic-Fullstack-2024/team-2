@@ -6,7 +6,6 @@ import userHandle from '../services/userhandle.service.js';
 export default function listUserstable() {
   const [users, setUsers] = useState(null);
 
-
   async function loadList() {
     try {
       const loadUsers = await userHandle.getAllUsers();
@@ -17,16 +16,14 @@ export default function listUserstable() {
     return null;
   }
 
-
-
   useEffect(() => {
     loadList();
   }, []);
 
   return (
-    <div>
+    <div className="w-full mx-auto my-40 bg-c-secondary-light p-12 rounded-md">
       {users ? (
-        <table className="table-auto border-solid p-2 border-gray-950 border border-separate rounded">
+        <table className="table-auto border-solid p-2 border-gray-950 border border-separate rounded ">
           <thead>
             <tr className="font-bold">
               <td className="border-solid p-2 border-gray-950 border rounded">Sorszám</td>
@@ -44,7 +41,6 @@ export default function listUserstable() {
             ))}
           </tbody>
         </table>
-
       ) : (
         <h2>Betöltés...</h2>
       )}

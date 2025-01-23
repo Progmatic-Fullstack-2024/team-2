@@ -45,4 +45,4 @@ const changePassword = async (data) => {
   }
 };
 
-export default { getAllUsers, getOwnUser, patchOwnUser, changePassword,getUser };
+export default { getAllUsers, getOwnUser, patchOwnUser, changePassword, getUser };

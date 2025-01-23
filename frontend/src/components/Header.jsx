@@ -62,9 +62,8 @@ export default function Header() {
         {user ? (
           <>
             {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
-              <MenuLink text="Saját profil" to="/ownUser" />
-              <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
-
+            <MenuLink text="Saját profil" to="/ownUser" />
+            <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
           </>
         ) : (
           <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />

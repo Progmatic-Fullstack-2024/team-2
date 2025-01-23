@@ -1,14 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 
-import { useNavigate } from "react-router-dom";
+import DefaultButton from './misc/DefaultButton';
 
-import DefaultButton from "./misc/DefaultButton";
-
-function UserTableRow({ user, index}) {
-
+function UserTableRow({ user, index }) {
   const navigate = useNavigate();
-  const selectUser=(selectedUser)=>{
-    navigate("/userhandler",{ state: selectedUser});
-  }
+  const selectUser = (selectedUser) => {
+    navigate('/userhandler', { state: selectedUser });
+  };
 
   return (
     <tr>
@@ -19,7 +17,12 @@ function UserTableRow({ user, index}) {
       <td className="border-solid p-2 border-gray-950 border rounded">{user.phone}</td>
       <td className="border-solid p-2 border-gray-950 border rounded">{user.role}</td>
       <td className="border-solid p-2 border-gray-950 border rounded">
-        <DefaultButton type="button" text="kiválaszt" onClick={selectUser} onClickParams={user.id}/>
+        <DefaultButton
+          type="button"
+          text="kiválaszt"
+          onClick={selectUser}
+          onClickParams={user.id}
+        />
       </td>
     </tr>
   );
