@@ -1,20 +1,17 @@
 import { useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
 
-const noTransparencyHeader = ['/login', '/register', '/new-performance'];
-
 export default function Header() {
-  const location = useLocation();
   const { user, logout } = useContext(AuthContext);
   const [transparentHeader, setTransparentHeader] = useState(true);
 
   const navigate = useNavigate();
 
-  const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-text/40' : 'c-primary border-c-text'} transition-colors duration-200 text-white px-10 flex justify-between  z-50`;
+  const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-background/40' : 'c-primary border-c-background'} transition-colors duration-200 text-white px-10 flex justify-between z-50`;
 
   const isYPositionInLimit = () => {
     const screenYPos = window.scrollY;
@@ -26,17 +23,11 @@ export default function Header() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (noTransparencyHeader.includes(location.pathname)) {
-      setTransparentHeader(false);
-    } else {
-      setTransparentHeader(true);
-
-      window.addEventListener('scroll', handleScroll, { passive: true });
-    }
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [location]);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -62,10 +53,8 @@ export default function Header() {
         {user ? (
           <>
             {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
-            <>
-              <MenuLink text="Saját profil" to="/ownUser" />
-              <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
-            </>
+            <MenuLink text="Saját profil" to="/ownUser" />
+            <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
           </>
         ) : (
           <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />
