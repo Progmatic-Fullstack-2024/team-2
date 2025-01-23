@@ -37,55 +37,73 @@ export default function RegistrationForm() {
           >
             <Form>
               <div className="mb-4">
+                <label htmlFor="lastName" className="text-gray-800 font-bold">
+                  Vezetéknév <span className="text-red-500">*</span>
+                </label>
                 <Field
                   type="text"
                   name="lastName"
-                  placeholder="Vezetéknév (kötelező mező)"
+                  placeholder="Add meg a vezetéknevedet"
                   className="w-full border p-2 rounded my-1 text-gray-800"
                 />
                 <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
               </div>
               <div className="mb-4">
+                <label htmlFor="firstName" className="text-gray-800 font-bold">
+                  Keresztnév <span className="text-red-500">*</span>
+                </label>
                 <Field
                   type="text"
                   name="firstName"
-                  placeholder="Keresztnév (kötelező mező)"
+                  placeholder="Add meg a keresztnevedet"
                   className="w-full border p-2 rounded my-1 text-gray-800"
                 />
                 <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
               </div>
               <div className="mb-4">
+                <label htmlFor="E-mail" className="text-gray-800 font-bold">
+                  E-mail cím <span className="text-red-500">*</span>
+                </label>
                 <Field
                   type="email"
                   name="email"
-                  placeholder="Email cím (kötelező mező)"
+                  placeholder="Add meg az e-mail címedet"
                   className="w-full border p-2 rounded my-1 text-gray-800"
                 />
                 <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
               </div>
               <div className="mb-4">
+                <label htmlFor="phone" className="text-gray-800 font-bold">
+                  Telefonszám
+                </label>
                 <Field
                   type="text"
                   name="phone"
-                  placeholder="Telefonszám (opcionális)"
+                  placeholder="Add meg a telefonszámodat"
                   className="w-full border p-2 rounded my-1 text-gray-800"
                 />
                 <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
               </div>
               <div className="mb-4">
+                <label htmlFor="password" className="text-gray-800 font-bold">
+                  Jelszó <span className="text-red-500">*</span>
+                </label>
                 <Field
                   type="password"
                   name="password"
-                  placeholder="Jelszó (kötelező mező)"
+                  placeholder="Adj meg egy jelszót min 6 karakter"
                   className="w-full border p-2 rounded my-1 text-gray-800"
                 />
                 <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
               </div>
               <div className="mb-4">
+                <label htmlFor="confirmPassword" className="text-gray-800 font-bold">
+                  Jelszó megerősítése<span className="text-red-500"> *</span>
+                </label>
                 <Field
                   type="password"
                   name="confirmPassword"
-                  placeholder="Jelszó megerősítése (kötelező mező)"
+                  placeholder="Add meg a jelszót mégegyszer"
                   className="w-full border p-2 rounded my-1 text-gray-800"
                 />
                 <ErrorMessage

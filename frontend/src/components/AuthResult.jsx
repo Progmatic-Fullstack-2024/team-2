@@ -16,19 +16,14 @@ export default function AuthResult({ params }) {
   };
 
   return (
-    <div className="w-full h-full min-h-48 p-5 flex flex-col items-center rounded-md justify-between gap-10  border-c-primary bg-c-background/90">
+    <div className="w-full h-full min-h-48 p-5 flex flex-col items-center justify-between gap-10  bg-c-background/20">
       {authMsg.msg ? (
         <>
           <h1 className="text-xl text-center">{`${authMsg.msg}`}</h1>
           {authMsg.success ? (
             <DefaultButton text="Tovább" onClick={handleClick} onClickParams />
           ) : (
-            <DefaultButton
-              color="c-primary"
-              text="Vissza"
-              onClick={handleClick}
-              onClickParams={false}
-            />
+            <DefaultButton text="Vissza" onClick={handleClick} onClickParams={false} />
           )}
         </>
       ) : (
