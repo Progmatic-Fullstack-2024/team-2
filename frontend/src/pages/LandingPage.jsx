@@ -43,6 +43,7 @@ export default function PerformancesPage() {
       <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto">
         {performances ? <PerformancesByTheaters performances={performances} /> : null}
       </div>
+      
     </>
   );
 }
