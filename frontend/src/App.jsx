@@ -12,6 +12,7 @@ import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
 import NewPerformancePage from './pages/NewPerformancePage';
+import OwnUserPage from './pages/OwnUserPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';

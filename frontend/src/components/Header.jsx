@@ -6,7 +6,7 @@ import { useDarkMode } from '../contexts/DarkModeContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
 
-const noTransparencyHeader = ['/login', '/register', '/', '/new-performance'];
+const noTransparencyHeader = ['/login', '/register', '/new-performance'];
 
 export default function Header() {
   const location = useLocation();
@@ -77,7 +77,10 @@ export default function Header() {
         {user ? (
           <>
             {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
-            <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
+            <>
+              <MenuLink text="Saját profil" to="/ownUser" />
+              <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
+            </>
           </>
         ) : (
           <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />

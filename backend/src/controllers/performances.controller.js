@@ -67,7 +67,7 @@ const createPerformance = async (req, res, next) => {
       description,
       price,
       performanceDate: parsedPerformanceDates,
-      creatorsId,
+      creatorsIds,
     });
 
     const newPerformance = await performancesService.create(
