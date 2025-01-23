@@ -210,6 +210,7 @@ export default function NewPerformanceForm({ lecture }) {
                 <DefaultButton
                   text="Új alkotó hozzáadása"
                   type="button"
+                  disabled={values.creatorId.some((id) => !id || id === '')}
                   onClick={() => setFieldValue('creatorId', [...values.creatorId, ''])}
                 />
               </div>
