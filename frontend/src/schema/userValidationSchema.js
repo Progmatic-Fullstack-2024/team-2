@@ -31,8 +31,10 @@ export const performanceValidationSchema = Yup.object({
     .min(3, 'Az előadás neve legalább 3 karakter hosszú kell legyen.'),
   theaterId: Yup.string().required('Színház azonosító szükséges.'),
   creatorId: Yup.array()
-    .of(Yup.string().required('Minden alkotó azonosító megadása kötelező.'))
-    .min(1, 'Legalább egy alkotó szükséges.')
+    .of(Yup.string())
+    .test('no-undefined', 'Minden alkotó megadása kötelező.', (value) =>
+      Array.isArray(value) ? !value.includes(undefined) : false
+    )
     .required('Alkotó azonosítók szükségesek.'),
   description: Yup.string().required('Leírás szükséges.'),
   posterURL: Yup.mixed()

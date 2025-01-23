@@ -5,9 +5,9 @@ import { toast } from 'react-toastify';
 
 import DefaultButton from './misc/DefaultButton';
 import { performanceValidationSchema } from '../schema/userValidationSchema';
-import getCreators from '../services/creators.service'; 
+import getCreators from '../services/creators.service';
 import createPerformance from '../services/performance.service';
-import getTheaters from '../services/theaters.service'; 
+import getTheaters from '../services/theaters.service';
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ export default function NewPerformanceForm({ lecture }) {
   };
 
   const handleSubmit = async (values, { resetForm }) => {
+    console.log(values);
     const formData = new FormData();
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
@@ -84,7 +85,7 @@ export default function NewPerformanceForm({ lecture }) {
     updatedPreviews.splice(index, 1);
     setImagesPreview(updatedPreviews);
   };
-  
+
   const fetchTheaters = async () => {
     if (theaterOptions.length === 0) {
       try {
@@ -194,16 +195,16 @@ export default function NewPerformanceForm({ lecture }) {
                     Törlés
                   </button>
                   <button
-                  type="button"
-                  onClick={fetchCreators}
-                  className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                >
-                  <img
-                    src="../../public/creatorSearchIcon.svg"
-                    alt="Alkotó keresése ikon"
-                    className="w-6 h-6"
-                  />
-                </button>
+                    type="button"
+                    onClick={fetchCreators}
+                    className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
+                  >
+                    <img
+                      src="../../public/creatorSearchIcon.svg"
+                      alt="Alkotó keresése ikon"
+                      className="w-6 h-6"
+                    />
+                  </button>
                 </div>
               ))}
               <div className="flex items-center">
@@ -212,7 +213,6 @@ export default function NewPerformanceForm({ lecture }) {
                   type="button"
                   onClick={() => setFieldValue('creatorId', [...values.creatorId, ''])}
                 />
-                
               </div>
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
             </div>

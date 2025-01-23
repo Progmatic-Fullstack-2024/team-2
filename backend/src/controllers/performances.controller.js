@@ -42,7 +42,6 @@ const createPerformance = async (req, res, next) => {
   const { title, theaterId, description, price, performanceDate, creatorsId } =
     req.body;
 
-    console.log(req.body);
   const creatorsIds = Array.isArray(creatorsId)
     ? creatorsId.map((creatorId) => ({ id: creatorId }))
     : [];
