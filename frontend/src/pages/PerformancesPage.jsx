@@ -7,6 +7,7 @@ import Pagination from '../components/misc/Pagination';
 import PerformancesList from '../components/performances/PerformancesList';
 import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
+import FilterBar from '../components/performances/FilterBar';
 
 export default function PerformancesPage() {
   const [performances, setPerformances] = useState();
@@ -37,22 +38,28 @@ export default function PerformancesPage() {
         title="Előadások"
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
-      {performances ? (
-        <div className="min-h-screen w-full max-w-screen-desktop flex flex-col items-center mx-auto py-5 gap-5">
-          <PerformancesSearch
-            params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-          />
-          {/* <Pagination
-            key="PaginationTop"
-            params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-          /> */}
-          <PerformancesList performances={performances.data} />
-          <Pagination
-            key="PaginationBot"
-            params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-          />
+
+      <div className="flex flex-col items-center">
+        <div className="flex flex-row  py-5 gap-5">
+          <FilterBar />
+          {performances ? (
+            <div className="min-h-screen w-full max-w-screen-desktop flex flex-col items-center  gap-5">
+              <PerformancesSearch
+                params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+              />
+              <Pagination
+                key="PaginationTop"
+                params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+              />
+              <PerformancesList performances={performances.data} />
+              <Pagination
+                key="PaginationBot"
+                params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+              />
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </>
   );
 }
