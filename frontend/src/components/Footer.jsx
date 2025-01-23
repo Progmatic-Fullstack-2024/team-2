@@ -1,14 +1,14 @@
 export default function Footer({ height = 64 }) {
-  const classFooter = `bot-0 w-full bg-c-text flex justify-between relative h-${height}`;
+  const classFooter = `bot-0 w-full bg-c-secondary/30 flex justify-between relative h-${height} text-c-text`;
   const classImage = `mix-blend-screen object-cover w-full  absolute h-${height}`;
 
   return (
     <section className={classFooter}>
       <img className={classImage} src="../../public/theatron_01.jpg" alt="footer-bg" />
-      <div className=" text-c-background font-semibold text-clip mx-auto my-5 w-2/3 flex justify-around gap-20 z-10 overflow-hidden">
+      <div className="font-medium text-clip mx-auto my-5 w-2/3 flex justify-around gap-20 z-10 overflow-hidden">
         <div className="">
           <img src="../../public/theater-masks.svg" alt="footer-icon" />
-          <p className="text-xl mb-4">Theatron Inc.</p>
+          <p className="text-xl font-bold mb-4">Theatron Inc.</p>
           <p>emailme@theatron.hu.</p>
           <p> 6969 Valahol, Fiktív utca 10.</p>
           <p>+36 12 345 6789</p>

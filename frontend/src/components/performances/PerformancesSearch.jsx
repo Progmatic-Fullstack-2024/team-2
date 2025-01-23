@@ -18,7 +18,7 @@ export default function PerformancesSearch({ params }) {
   };
 
   return (
-    <div className="h-full min-h-32 w-full mb-2 border border-gray-200 p-5">
+    <div className="h-full min-h-32 w-full mb-2 bg-c-secondary/20 p-5">
       <form
         id="inputForm"
         className="w-full min-w-96 tablet:w-1/2 self-start mb-6"
@@ -44,7 +44,7 @@ export default function PerformancesSearch({ params }) {
           </div>
           <input
             name="inputSearchTitle"
-            className="outline-none block w-full h-9  ps-12 text-sm text-gray-900 border border-gray-400 rounded-s-xl outline:0 focus:ring-2 ring-c-primary  "
+            className="outline-none block w-full h-9 ps-12 text-sm text-gray-900 border border-gray-400 rounded-s-xl outline:0 focus:ring-1 ring-c-primary  "
             placeholder="Előadás keresése..."
             ref={titleSearchRef}
           />
@@ -56,9 +56,9 @@ export default function PerformancesSearch({ params }) {
           </button>
         </div>
       </form>
-      <div className="flex justify-between">
+      <div className="flex justify-between text-c-text">
         <div>
-          <span className="text-xl font-bold">{maxSize}</span>
+          <span className="text-xl font-bold ">{maxSize}</span>
           <span> Találat</span>
         </div>
 
@@ -77,6 +77,15 @@ export default function PerformancesSearch({ params }) {
             initialValue={searchParams.get('sort')}
             searchVariable="sort"
             width={32}
+          />
+          <DropdownButton
+            key="limitMenuButton"
+            menuItems={{ 12: '12', 21: '21', 30: '30' }}
+            props={{ searchParams, setSearchParams }}
+            initialValue={searchParams.get('limit')}
+            searchVariable="limit"
+            width={20}
+            reload={true}
           />
         </div>
       </div>
