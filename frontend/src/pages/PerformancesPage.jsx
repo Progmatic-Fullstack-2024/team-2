@@ -4,10 +4,10 @@ import { useSearchParams } from 'react-router-dom';
 // Components
 import ImageTitle from '../components/misc/ImageTitle';
 import Pagination from '../components/misc/Pagination';
+import FilterBar from '../components/performances/FilterBar';
 import PerformancesList from '../components/performances/PerformancesList';
 import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
-import FilterBar from '../components/performances/FilterBar';
 
 export default function PerformancesPage() {
   const [performances, setPerformances] = useState();

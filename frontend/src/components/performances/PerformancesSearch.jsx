@@ -85,7 +85,7 @@ export default function PerformancesSearch({ params }) {
             initialValue={searchParams.get('limit')}
             searchVariable="limit"
             width={20}
-            reload={true}
+            reload
           />
         </div>
       </div>
