@@ -191,7 +191,7 @@ export default function OwnUserEdit() {
                         text={dataButton.text}
                         type={dataButton.type}
                         onClick={dataButton.click}
-                        disabled={!dirty || isSubmitting}
+                        disabled={isSubmitting}
                       />
                     </div>
                   )}
