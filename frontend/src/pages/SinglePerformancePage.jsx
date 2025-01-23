@@ -133,7 +133,7 @@ export default function DetailsPage() {
               .join(', ')}
           </p>
           <div className="flex justify-around">
-            <DefaultButton onClick={() => navigate('/performances')} text="Vissza" />
+            <DefaultButton onClick={() => navigate('/')} text="Vissza" />
             <DefaultButton text="Foglalás" />
           </div>
         </div>
