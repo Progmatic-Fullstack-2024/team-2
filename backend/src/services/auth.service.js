@@ -116,6 +116,23 @@ const deleteUser = async (id) => {
   return user;
 };
 
+const passwordChange = async (id, oldPassword, newPassword) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: { password: true },
+  });
+  const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+  if (isPasswordValid) {
+    const hashedPassword = await bcrypt.hash(newPassword, 5);
+    const answer = await prisma.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+    return answer;
+  }
+  return null;
+};
+
 export default {
   registration,
   login,
@@ -124,4 +141,5 @@ export default {
   getOwnUserById,
   updateUser,
   deleteUser,
+  passwordChange,
 };

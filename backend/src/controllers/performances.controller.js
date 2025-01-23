@@ -20,6 +20,15 @@ const listPerformances = async (req, res, next) => {
   }
 };
 
+const listAllPerformances = async (req, res, next) => {
+  try {
+    const allPerformances = await performancesService.listAll();
+    res.status(200).send(allPerformances);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getPerformanceByID = async (req, res, next) => {
   const { performanceId } = req.params;
   try {
@@ -58,7 +67,7 @@ const createPerformance = async (req, res, next) => {
       description,
       price,
       performanceDate: parsedPerformanceDates,
-      creatorsId,
+      creatorsIds,
     });
 
     const newPerformance = await performancesService.create(
@@ -178,6 +187,7 @@ export default {
   updatePerformance,
   destroyPerformance,
   listPerformances,
+  listAllPerformances,
   getPerformanceByID,
   deleteImage,
 };

@@ -5,10 +5,11 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
-import ComingSoonPage from './pages/ComingSoonPage';
+import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
 import NewPerformancePage from './pages/NewPerformancePage';
+import OwnUserPage from './pages/OwnUserPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
@@ -22,7 +23,7 @@ function App() {
         <main className="bg-c-background">
           <div className="w-full ">
             <Routes>
-              <Route path="/" element={<LoginPage />} />
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/signedIn" element={<SignedInPage />} />
@@ -30,7 +31,7 @@ function App() {
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
-              <Route path="/comingsoon" element={<ComingSoonPage />} />
+              <Route path="ownuser" element={<OwnUserPage />} />
             </Routes>
           </div>
         </main>
