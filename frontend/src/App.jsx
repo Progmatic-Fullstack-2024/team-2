@@ -14,28 +14,34 @@ import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
 import SinglePerformancePage from './pages/SinglePerformancePage';
+import { DarkModeProvider } from './contexts/DarkModeContext.jsx';
+import { CartProvider } from './contexts/CartContext.jsx';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <Header />
-        <main className="bg-c-background">
-          <div className="w-full ">
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegistrationPage />} />
-              <Route path="/signedIn" element={<SignedInPage />} />
-              <Route path="/userlist" element={<ListUsers />} />
-              <Route path="/new-performance" element={<NewPerformancePage />} />
-              <Route path="/performances" element={<PerformancesPage />} />
-              <Route path="/performances/:id" element={<SinglePerformancePage />} />
-              <Route path="ownuser" element={<OwnUserPage />} />
-            </Routes>
-          </div>
-        </main>
-        <Footer />
+        <DarkModeProvider>
+          <CartProvider>
+            <Header />
+            <main className="bg-c-background">
+              <div className="w-full ">
+                <Routes>
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegistrationPage />} />
+                  <Route path="/signedIn" element={<SignedInPage />} />
+                  <Route path="/userlist" element={<ListUsers />} />
+                  <Route path="/new-performance" element={<NewPerformancePage />} />
+                  <Route path="/performances" element={<PerformancesPage />} />
+                  <Route path="/performances/:id" element={<SinglePerformancePage />} />
+                  <Route path="ownuser" element={<OwnUserPage />} />
+                </Routes>
+              </div>
+            </main>
+            <Footer />
+          </CartProvider>
+        </DarkModeProvider>
       </AuthProvider>
     </Router>
   );
