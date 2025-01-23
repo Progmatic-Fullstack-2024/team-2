@@ -52,7 +52,7 @@ export default {
       variants: ['hover', 'active'],
     },
     {
-      pattern: /(black|white)-(100|200|300|400|500|600|700|800|900)$/,
+      pattern: /(black|white|gray)-(100|200|300|400|500|600|700|800|900)$/,
     },
     { pattern: /^(w|h)-\d+/ },
   ],
