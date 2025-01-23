@@ -76,7 +76,7 @@ export default function PerformancesByTheaters({ performances }) {
     <div className="w-full my-12 space-y-12">
       <section className="relative mb-12">
         <h2 className="text-2xl font-bold mb-5">
-          Színház ID:{' '}
+          Random Színház ID:{' '}
           {randomTheaterId === 'Ismeretlen színház' ? randomTheaterId : `#${randomTheaterId}`}
         </h2>
         <div className="relative">
