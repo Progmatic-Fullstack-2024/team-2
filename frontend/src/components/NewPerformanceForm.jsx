@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import DefaultButton from './misc/DefaultButton';
-import { performanceValidationSchema } from '../schema/userValidationSchema';
+import { performanceValidationSchema } from '../schema/performanceValidationSchema';
 import getCreators from '../services/creators.service';
 import createPerformance from '../services/performance.service';
 import getTheaters from '../services/theaters.service';
