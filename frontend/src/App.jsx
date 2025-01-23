@@ -14,6 +14,8 @@ import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
 import SinglePerformancePage from './pages/SinglePerformancePage';
+import CartPage from './pages/CartPage';
+
 import { DarkModeProvider } from './contexts/DarkModeContext.jsx';
 import { CartProvider } from './contexts/CartContext.jsx';
 
@@ -36,6 +38,7 @@ function App() {
                   <Route path="/performances" element={<PerformancesPage />} />
                   <Route path="/performances/:id" element={<SinglePerformancePage />} />
                   <Route path="ownuser" element={<OwnUserPage />} />
+                  <Route path="cart" element={<CartPage />} />
                 </Routes>
               </div>
             </main>
