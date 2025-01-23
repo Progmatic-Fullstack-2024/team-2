@@ -20,7 +20,7 @@ export default function LoginForm() {
     <div className="mx-aut min-w-96 min-h-96 p-12 my-40 bg-c-secondary-light rounded-md flex flex-col justify-between">
       <h2 className="font-bold text-xk text-gray-800 text-2xl mb-6">Bejelentkezés</h2>
       {authMsg.show ? (
-        <AuthResult params={{ navigateTo: '/signedIn' }} />
+        <AuthResult params={{ navigateTo: '/' }} />
       ) : (
         <>
           <Formik

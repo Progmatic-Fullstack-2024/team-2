@@ -35,6 +35,11 @@ const list = async ({ pagination, search }) => {
   return { data: filteredPerformances, maxSize: performances.length };
 };
 
+const listAll = async () => {
+  const allPerformances = await prisma.performance.findMany();
+  return allPerformances;
+};
+
 const create = async (performanceData, poster, images, creatorsIds) => {
   try {
     const posterURL = await createFiles([poster]);
@@ -143,6 +148,7 @@ export default {
   update,
   destroy,
   list,
+  listAll,
   getByName,
   deleteSingleImage,
   getById,
