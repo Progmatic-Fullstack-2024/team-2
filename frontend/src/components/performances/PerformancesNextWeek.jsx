@@ -77,14 +77,10 @@ export default function PerformancesNextWeek({ performances }) {
   return (
     <div className="w-full my-12 px-auto">
       <section className="mb-12">
-        <h2 className="text-2xl font-bold mb-5">Előadások a következő hét napban:</h2>
+        <h2 className="text-2xl font-bold mb-5 text-c-text">Előadások a következő hét napban:</h2>
         <div className="relative">
           <div className="flex items-center justify-between">
-            <DefaultButton
-              className="bg-black/50 text-white px-3 py-2 rounded-full z-10"
-              onClick={() => scroll('left', containerRef)}
-              text="<"
-            />
+            <DefaultButton onClick={() => scroll('left', containerRef)} text="<" />
             <div ref={containerRef} className="flex overflow-hidden scroll-smooth w-full">
               {upcomingPerformances.map((perf) => (
                 <div
@@ -97,11 +93,7 @@ export default function PerformancesNextWeek({ performances }) {
                 </div>
               ))}
             </div>
-            <DefaultButton
-              className="bg-black/50 text-white px-3 py-2 rounded-full z-10"
-              onClick={() => scroll('right', containerRef)}
-              text=">"
-            />
+            <DefaultButton onClick={() => scroll('right', containerRef)} text=">" />
           </div>
         </div>
       </section>
