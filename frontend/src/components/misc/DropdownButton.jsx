@@ -6,6 +6,8 @@ export default function DropdownButton({
   props,
   initialValue,
   searchVariable,
+  textColor = 'c-text',
+  reload = false,
 }) {
   const { searchParams, setSearchParams } = props;
   const currentItem = useRef(
@@ -15,8 +17,8 @@ export default function DropdownButton({
   );
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
 
-  const dropdownMenuClass = `absolute w-${width} z-20 bg-white justify-self-end`;
-  const buttonClass = `w-${width} text-white bg-c-primary hover:bg-c-primary-dark active:bg-c-primary-light outline-none font-semibold ${dropdownMenuOpen ? 'rounded-t-lg' : 'rounded-lg'} text-sm p-2 px-4  text-center inline-flex items-center`;
+  const dropdownMenuClass = `absolute w-${width} z-20 bg-c-background justify-self-end`;
+  const buttonClass = `w-${width} text-${textColor} bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none font-semibold ${dropdownMenuOpen ? 'rounded-t-lg' : 'rounded-lg'} text-sm p-2 px-4 text-center inline-flex items-center`;
 
   const toggleMenu = () => {
     setDropdownMenuOpen(!dropdownMenuOpen);
@@ -24,12 +26,12 @@ export default function DropdownButton({
 
   const handleClick = (value) => {
     currentItem.current = value;
+    if (reload) searchParams.set('page', 1);
     searchParams.set(searchVariable, menuItems[value]);
     setSearchParams(searchParams);
     setDropdownMenuOpen(!dropdownMenuOpen);
   };
 
-  // console.log('RENDER DROPDOWN');
   return (
     <div>
       <button className={buttonClass} type="button" onClick={toggleMenu}>
@@ -58,7 +60,7 @@ export default function DropdownButton({
               <li key={value}>
                 <button
                   type="button"
-                  className="w-full mt-0.5 block px-4 py-1 select-none hover:text-c-primary-dark hover:ring-1 hover:ring-c-primary cursor-pointer border border-gray-200"
+                  className="w-full mt-0.5 block px-4 py-1 select-none text-c-secondary hover:text-c-accent hover:ring-1 hover:ring-c-accent cursor-pointer border border-gray-500"
                   onClick={() => handleClick(value)}
                 >
                   {value}
