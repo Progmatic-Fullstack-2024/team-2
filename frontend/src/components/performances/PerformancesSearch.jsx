@@ -13,7 +13,12 @@ export default function PerformancesSearch({ params }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     searchParams.set('page', 1);
-    searchParams.set('search', e.target.inputSearchTitle.value);
+    if (e.target.inputSearchTitle.value) {
+      searchParams.set('search', e.target.inputSearchTitle.value);
+    } else {
+      searchParams.delete('search');
+    }
+
     setSearchParams(searchParams);
   };
 
