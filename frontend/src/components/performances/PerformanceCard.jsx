@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
 
 export default function PerformanceCard({ data }) {
   const rendered = useRef(false); // stops unnecessary rerender of imageReady state
   const [imageReady, setImageReady] = useState(false);
-  const navigate = useNavigate();
 
   async function fetchImageAndCache(url) {
     try {
@@ -36,9 +35,8 @@ export default function PerformanceCard({ data }) {
   }, []);
   if (!imageReady) return <PerformanceCardEmpty />;
   return (
-    <div
-      type="button"
-      onClick={() => navigate(`/performances/${data.id}`)}
+    <Link
+      to={`/performances/${data.id}`}
       className="w-80 h-100 flex flex-col justify-between
       bg-c-secondary-light/10 tablet:rounded-md text-c-text 
       ring-1 ring-c-secondary-light/20
@@ -49,7 +47,7 @@ export default function PerformanceCard({ data }) {
         style={{
           backgroundImage: `url(${localStorage.getItem(imageReady)})`,
         }}
-      ></div>
+      />
 
       <div className="z-10 mx-3  flex flex-col h-fit bot-0">
         <h1 className="z-10 mb-2 text-2xl font-semibold truncate">{data.title}</h1>
@@ -60,6 +58,6 @@ export default function PerformanceCard({ data }) {
         <span>Helyszín : </span>
         <span className="mb-3">Időpont : {data.performanceDate[0]}</span>
       </div>
-    </div>
+    </Link>
   );
 }

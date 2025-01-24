@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <!-- Circle representing the head -->
+  <circle cx="400" cy="240" r="160" fill="none" stroke="black" stroke-width="80" />
+  <!-- Arc representing the body -->
+  <path d="M200 640 Q400 480 600 640" fill="none" stroke="black" stroke-width="80" />
+</svg>
+
+

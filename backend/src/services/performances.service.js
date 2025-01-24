@@ -19,7 +19,6 @@ const getByName = async (title) => {
 };
 
 const list = async ({ pagination, search }) => {
-  console.log({ pagination });
   const { orderBy } = pagination;
   const performances = await prisma.performance.findMany({
     orderBy,
