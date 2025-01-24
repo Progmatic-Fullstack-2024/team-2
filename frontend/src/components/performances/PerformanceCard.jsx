@@ -37,6 +37,7 @@ export default function PerformanceCard({ data }) {
   if (!imageReady) return <PerformanceCardEmpty />;
   return (
     <div
+      type="button"
       onClick={() => navigate(`/performances/${data.id}`)}
       className="w-80 h-100 flex flex-col justify-between
       bg-c-secondary-light/10 tablet:rounded-md text-c-text 

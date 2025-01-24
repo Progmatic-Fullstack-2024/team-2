@@ -34,8 +34,8 @@ function App() {
               <Route path="ownuser" element={<OwnUserPage />} />
             </Routes>
           </div>
+          <Footer />
         </main>
-        <Footer />
       </AuthProvider>
     </Router>
   );

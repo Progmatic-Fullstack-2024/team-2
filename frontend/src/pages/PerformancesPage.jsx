@@ -4,10 +4,10 @@ import { useSearchParams } from 'react-router-dom';
 // Components
 import ImageTitle from '../components/misc/ImageTitle';
 import Pagination from '../components/misc/Pagination';
+import SideBar from '../components/performances/filter/SideBar';
 import PerformancesList from '../components/performances/PerformancesList';
 import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
-import FilterBar from '../components/performances/FilterBar';
 
 export default function PerformancesPage() {
   const [performances, setPerformances] = useState();
@@ -38,12 +38,14 @@ export default function PerformancesPage() {
         title="Előadások"
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
-
-      <div className="flex flex-col items-center">
-        <div className="flex flex-row  py-5 gap-5">
-          <FilterBar />
-          {performances ? (
-            <div className="min-h-screen w-full max-w-screen-desktop flex flex-col items-center  gap-5">
+      {/* <div className="flex flex-col desktop:flex-row my-10 "> */}
+      <div className="flex flex-row w-full  justify-center desxktop:-ms-72 my-10">
+        {performances ? (
+          <>
+            <div className="w-72 me-10 ">
+              <SideBar />
+            </div>
+            <div className="min-h-screen w-fit max-w-screen-desktop flex flex-col items-start gap-5 ">
               <PerformancesSearch
                 params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
               />
@@ -57,9 +59,10 @@ export default function PerformancesPage() {
                 params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
               />
             </div>
-          ) : null}
-        </div>
+          </>
+        ) : null}
       </div>
+      {/* </div> */}
     </>
   );
 }
