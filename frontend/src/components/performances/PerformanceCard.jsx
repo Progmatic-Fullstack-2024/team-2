@@ -37,7 +37,7 @@ export default function PerformanceCard({ data }) {
   return (
     <Link
       to={`/performances/${data.id}`}
-      className="w-80 h-100 flex flex-col justify-between
+      className="h-100 flex flex-col justify-between w-full tablet:w-80 
       bg-c-secondary-light/10 tablet:rounded-md text-c-text 
       ring-1 ring-c-secondary-light/20
       transition-transform ease-out hover:scale-110 hover:bg-c-secondary/20 cursor-pointer"

@@ -19,10 +19,14 @@ const getByName = async (title) => {
 };
 
 const list = async ({ pagination, search }) => {
-  const { orderBy } = pagination;
+  const { orderBy, where } = pagination;
+  console.log(pagination);
   const performances = await prisma.performance.findMany({
     orderBy,
-    where: { title: { contains: search, mode: "insensitive" } },
+    where: {
+      ...where,
+      title: { contains: search, mode: "insensitive" },
+    },
   });
   if (!performances) throw new HttpError("Performances not found", 404);
   // custom skip and take
@@ -30,7 +34,7 @@ const list = async ({ pagination, search }) => {
     (item, index) =>
       index >= pagination.skip && index < pagination.skip + pagination.take,
   );
-
+  console.log({ filteredPerformances });
   return { data: filteredPerformances, maxSize: performances.length };
 };
 

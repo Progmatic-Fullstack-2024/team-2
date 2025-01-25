@@ -38,13 +38,13 @@ export default function PerformancesPage() {
         title="Előadások"
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
-      <div className="flex flex-row w-full  justify-center desxktop:-ms-72 my-10 px-3">
+      <div className="flex flex-col tablet:flex-row w-full  items-center tablet:items-start justify-center desxktop:-ms-72 my-10 px-3">
         {performances ? (
           <>
             <div className="w-72 me-10 ">
               <SideBar params={{ searchParams, setSearchParams }} />
             </div>
-            <div className="min-h-screen w-fit max-w-screen-desktop flex flex-col items-start gap-5 ">
+            <div className="min-h-screen w-max laptop:min-w-[600px] desktop:min-w-[1040px] me-1/2 flex flex-col items-start gap-5 ">
               <PerformancesSearch
                 params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
               />
