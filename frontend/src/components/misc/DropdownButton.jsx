@@ -26,7 +26,7 @@ export default function DropdownButton({
 
   const handleClick = (value) => {
     currentItem.current = value;
-    reload && searchParams.set('page', 1);
+    if (reload) searchParams.set('page', 1);
     searchParams.set(searchVariable, menuItems[value]);
     setSearchParams(searchParams);
     setDropdownMenuOpen(!dropdownMenuOpen);

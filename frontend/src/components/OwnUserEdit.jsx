@@ -129,7 +129,7 @@ export default function OwnUserEdit() {
             validationSchema={userValidationSchemaForUpdateUser}
             onSubmit={sendData}
           >
-            {({ resetForm, dirty, isSubmitting }) => (
+            {({ resetForm, isSubmitting }) => (
               <Form>
                 <div className="mb-4">
                   <label htmlFor="lastName" className="text-gray-800 font-bold">
