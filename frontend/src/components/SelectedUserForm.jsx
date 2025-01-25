@@ -20,16 +20,38 @@ export default function SelectedUserForm() {
 
   const [title, setTitle] = useState('Felhasználó adatainak megtekintése');
   const color = 'c-primary';
-  const textColor = 'white';
+  const textColor = 'c-text';
   const fontSize = 'ml';
   const buttonClass = `w-auto h-auto bg-${color} text-${fontSize} text-${textColor}
      font-bold rounded p-3 pl-7 pr-7 hover:bg-${color}-light active:scale-95 active:bg-${color}-dark`;
 
   const [msg, setMsg] = useState('');
+  const [buttonmsg, setButtonmsg] = useState('');
+  const [buttonmsg2, setButtonmsg2] = useState('');
+  const [isUserDeleting, setIsUserDeleting] = useState(false);
+  const [navigate, setNavigate] = useState(undefined);
   const locationData = useLocation();
 
-  const cancelModal = () => {
-    setIsVisilable(false);
+  const sendDeleteUser = async () => {
+    try {
+      const answer = await UserHandle.deleteUser(handleuser.id);
+      console.log(answer);
+      if (answer.mesaage === 'User deleted');
+      setMsg('A felhasználó törklése megtörtént.');
+      setNavigate('../userlist');
+    } catch (error) {
+      setMsg('Hiba: a felhasználó törlése sikertelen');
+    }
+  };
+
+  const cancelModal = (item) => {
+    setMsg('');
+    setButtonmsg('Tovább');
+    setButtonmsg2('');
+    if (isUserDeleting && item === 1) {
+      sendDeleteUser();
+    } else setIsVisilable(false);
+    setIsUserDeleting(false);
   };
 
   const modifyHandle = () => {
@@ -91,6 +113,9 @@ export default function SelectedUserForm() {
     });
     if (Object.keys(newUserData).length > 1) {
       setIsVisilable(true);
+      setIsUserDeleting(false);
+      setButtonmsg('Tovább');
+      setButtonmsg2('');
       try {
         const answer = await UserHandle.patchOwnUser(newUserData);
         if (answer) setMsg('Az adatmódosítás sikeres');
@@ -108,11 +133,28 @@ export default function SelectedUserForm() {
     }
   };
 
+  const deleteUser = () => {
+    setIsVisilable(true);
+    setMsg('A felhasználó törlése végleges! Folytatja? ');
+    setButtonmsg('Igen');
+    setButtonmsg2('Nem');
+    setIsUserDeleting(true);
+  };
+
   return (
     <div>
       {handleuser ? (
         <div className="w-full mx-auto my-40 bg-c-secondary-light p-12 rounded-md relative">
-          <UserResult params={{ isVisilable, msg, clearProcedure: cancelModal }} />
+          <UserResult
+            params={{
+              isVisilable,
+              msg,
+              buttonmsg,
+              buttonmsg2,
+              clearProcedure: cancelModal,
+              navigateTo: navigate,
+            }}
+          />
 
           <h1 className="font-bold text-gray-800 text-xl mx-auto mb-10 text-center">{title}</h1>
           <Formik
@@ -197,7 +239,7 @@ export default function SelectedUserForm() {
                     />
                   </div>
 
-                  <div className="flex justify-center">
+                  <div className="flex justify-between flex-col tablet:flex-row">
                     {buttonType === 'reset' ? (
                       <button
                         type="button"
@@ -209,7 +251,13 @@ export default function SelectedUserForm() {
                       >
                         Mégse
                       </button>
-                    ) : undefined}
+                    ) : (
+                      <DefaultButton
+                        text="Felhasználó törlése"
+                        type="button"
+                        onClick={deleteUser}
+                      />
+                    )}
                   </div>
                 </div>
               </Form>

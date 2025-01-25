@@ -53,6 +53,7 @@ export default function Header() {
         {user ? (
           <>
             {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
+            {user.role === 'Admin' && <MenuLink text="felhasználók kezelése" to="/userlist" />}
             <MenuLink text="Saját profil" to="/ownUser" />
             <DefaultButton text="Kijelentkezés" onClick={handleLogout} />
           </>

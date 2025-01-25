@@ -45,4 +45,13 @@ const changePassword = async (data) => {
   }
 };
 
-export default { getAllUsers, getOwnUser, patchOwnUser, changePassword, getUser };
+const deleteUser = async (userId) => {
+  try {
+    const response = await axiosInstance.delete(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
+export default { getAllUsers, getOwnUser, patchOwnUser, changePassword, getUser, deleteUser };
