@@ -13,12 +13,17 @@ export default function PerformancesSearch({ params }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     searchParams.set('page', 1);
-    searchParams.set('search', e.target.inputSearchTitle.value);
+    if (e.target.inputSearchTitle.value) {
+      searchParams.set('search', e.target.inputSearchTitle.value);
+    } else {
+      searchParams.delete('search');
+    }
+
     setSearchParams(searchParams);
   };
 
   return (
-    <div className="h-full min-h-32 w-full mb-2 bg-c-secondary/20 p-5">
+    <div className="h-fit min-h-32 w-full min-w- mb-2 bg-c-secondary/20 p-5 rounded-lg">
       <form
         id="inputForm"
         className="w-full min-w-96 tablet:w-1/2 self-start mb-6"
@@ -58,8 +63,8 @@ export default function PerformancesSearch({ params }) {
       </form>
       <div className="flex justify-between text-c-text">
         <div>
-          <span className="text-xl font-bold ">{maxSize}</span>
-          <span> Találat</span>
+          <span className="text-xl font-bold me-3">{maxSize}</span>
+          <span className="hidden laptop:inline-block"> Találat</span>
         </div>
 
         <div className="flex gap-3 ">

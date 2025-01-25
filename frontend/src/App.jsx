@@ -36,8 +36,8 @@ function App() {
               <Route path="/userhandler" element={<SelectedUser />} />
             </Routes>
           </div>
+          <Footer />
         </main>
-        <Footer />
       </AuthProvider>
     </Router>
   );

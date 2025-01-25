@@ -55,6 +55,7 @@ export default {
       pattern: /(black|white|gray)-(100|200|300|400|500|600|700|800|900)$/,
     },
     { pattern: /^(w|h)-\d+/ },
+    { pattern: /(h)-([30px]|[60px]|[90px]|[120px]|[150px]|[180px]|[280px]|[320px]|[360px])$/ },
   ],
   plugins: [],
 };
