@@ -11,7 +11,7 @@ export default function Header() {
 
   const navigate = useNavigate();
 
-  const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-background/40' : 'c-primary border-c-background'} transition-colors duration-200 text-white px-10 flex justify-between z-50`;
+  const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-text/40' : 'c-background border-c-text/60'} transition-colors duration-200 text-white px-10 flex justify-between  z-50`;
 
   const isYPositionInLimit = () => {
     const screenYPos = window.scrollY;
