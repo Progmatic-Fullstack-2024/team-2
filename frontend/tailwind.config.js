@@ -7,6 +7,16 @@ export default {
 
   theme: {
     extend: {
+      width: {
+        88: '88px',
+      },
+      height: {
+        600: '600px',
+        100: '25rem',
+      },
+      brightness: {
+        65: 0.65,
+      },
       colors: {
         // DAY mode
         'c-text': COLORS.DAY.TEXT,
@@ -18,15 +28,7 @@ export default {
         'c-secondary-dark': COLORS.DAY.SECONDARY_DARK,
         'c-secondary-light': COLORS.DAY.SECONDARY_LIGHT,
         'c-accent': COLORS.DAY.ACCENT,
-        'c-accent-light': COLORS.DAY.ACCENT_LIGHT,
-        // NIGHT mode
-        'text-night': COLORS.NIGHT.TEXT,
-        'background-night': COLORS.NIGHT.BACKGROUND,
-        // PRIMARY is the same as in DAY mode
-        'secondary-night': COLORS.NIGHT.SECONDARY,
-        'secondary-night-dark': COLORS.NIGHT.SECONDARY_DARK,
-        'secondary-night-light': COLORS.NIGHT.SECONDARY_LIGHT,
-        'accent-night': COLORS.NIGHT.ACCENT,
+        // 'c-accent-light': COLORS.DAY.ACCENT_LIGHT,
       },
       backgroundImage: {
         'theatron01-pattern': "url('Public/theatron01.jpg')",
@@ -46,10 +48,14 @@ export default {
   },
   safelist: [
     {
-      pattern: /^(bg|text)-c-(primary|secondary|accent)(|-light|-dark)$/,
+      pattern: /^(bg|text)-c-(primary|secondary|accent|text|background)(|-light|-dark)$/,
       variants: ['hover', 'active'],
     },
+    {
+      pattern: /(black|white|gray)-(100|200|300|400|500|600|700|800|900)$/,
+    },
     { pattern: /^(w|h)-\d+/ },
+    { pattern: /(h)-([30px]|[60px]|[90px]|[120px]|[150px]|[180px]|[280px]|[320px]|[360px])$/ },
   ],
   plugins: [],
 };
