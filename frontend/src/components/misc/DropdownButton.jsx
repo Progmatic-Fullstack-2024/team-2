@@ -29,7 +29,7 @@ export default function DropdownButton({
     setDropdownMenuOpen(!dropdownMenuOpen);
   };
 
-  // console.log('RENDER DROPDOWN');
+  
   return (
     <div>
       <button className={buttonClass} type="button" onClick={toggleMenu}>
