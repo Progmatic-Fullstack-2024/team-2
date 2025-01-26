@@ -59,6 +59,16 @@ export default function DetailsPage() {
     );
   }
 
+  // Vissza gomb funkció
+
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/"); 
+    }
+  };
+
   // Galéria három képének kiszámítása
   const getGalleryImages = () => {
     if (!performance || !performance.imagesURL || performance.imagesURL.length === 0) {
@@ -130,7 +140,7 @@ export default function DetailsPage() {
             </p>
             <div className="flex justify-around">
               <div>
-                <DefaultButton onClick={() => navigate('/performances')} text="Vissza" />
+                <DefaultButton onClick={handleBack} text="Vissza" />
               </div>
               <div>
                 <DefaultButton text="Foglalás" />
