@@ -119,7 +119,7 @@ export default function OwnUserEdit() {
   return (
     <div>
       {user ? (
-        <div className="w-full mx-auto my-40 bg-c-secondary-light p-12 rounded-md relative">
+        <div className="w-full mx-auto my-40 bg-c-secondary-light p-12  px-auto rounded-md relative">
           <UserResult params={{ isVisilable, msg, clearProcedure: cancelModal }} />
           {passwordformactive ? <NewPasswordForm goback={cancelPassword} /> : undefined}
           <h1 className="font-bold text-gray-800 text-xl mx-auto mb-10 text-center">{title}</h1>

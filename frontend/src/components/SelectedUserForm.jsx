@@ -4,7 +4,9 @@ import { useLocation } from 'react-router-dom';
 
 import { userValidationSchemaForUpdateUser } from '../schema/userValidationSchema';
 import DefaultButton from './misc/DefaultButton';
+import OptionList from './OptionList.jsx';
 import UserResult from './UserResult.jsx';
+import TheatreHandle from '../services/theaters.service.js';
 import UserHandle from '../services/userhandle.service.js';
 
 export default function SelectedUserForm() {
@@ -30,12 +32,13 @@ export default function SelectedUserForm() {
   const [buttonmsg2, setButtonmsg2] = useState('');
   const [isUserDeleting, setIsUserDeleting] = useState(false);
   const [navigate, setNavigate] = useState(undefined);
+  const [theatre, setTheatre] = useState([{ id: '-', name: 'Nincs megadva' }]);
+  const [isTheatreAdmin, setIsTheatreAdmin] = useState(false);
   const locationData = useLocation();
 
   const sendDeleteUser = async () => {
     try {
       const answer = await UserHandle.deleteUser(handleuser.id);
-      console.log(answer);
       if (answer.mesaage === 'User deleted');
       setMsg('A felhasználó törklése megtörtént.');
       setNavigate('../userlist');
@@ -77,6 +80,19 @@ export default function SelectedUserForm() {
 
   const initialValues = inicializeForm();
 
+  async function theatreLoader(newUser) {
+    if (newUser.role === 'theatreAdmin') {
+      try {
+        const getTheatre = await TheatreHandle();
+        getTheatre.unshift({ id: 'new', name: 'Új felveendő színház' });
+        setTheatre(getTheatre);
+      } catch (e) {
+        setMsg(e);
+      }
+      setIsTheatreAdmin(true);
+    } else setIsTheatreAdmin(false);
+  }
+
   async function loadUser() {
     try {
       const userId = locationData.state;
@@ -84,6 +100,7 @@ export default function SelectedUserForm() {
       if (!userId) throw Error();
       const getUser = await UserHandle.getUser(userId);
       sethandleUser(getUser);
+      theatreLoader(getUser);
     } catch (e) {
       return <h2>User nem található</h2>;
     }
@@ -103,6 +120,7 @@ export default function SelectedUserForm() {
     setDataButton({ text: 'Adatok módosítása', click: modifyHandle, type: 'button' });
     setTitle('Felhasználó adatainak megtekintése');
     setButtonType('button');
+    theatreLoader(handleuser);
   };
 
   const sendData = async (values, action) => {
@@ -141,6 +159,13 @@ export default function SelectedUserForm() {
     setIsUserDeleting(true);
   };
 
+  const roleHandle = (e) => {
+    if (e.target.value === 'theatreAdmin') {
+      const newUser = { ...handleuser, role: e.target.value };
+      theatreLoader(newUser);
+    } else setIsTheatreAdmin(false);
+  };
+
   return (
     <div>
       {handleuser ? (
@@ -163,7 +188,7 @@ export default function SelectedUserForm() {
             validationSchema={userValidationSchemaForUpdateUser}
             onSubmit={sendData}
           >
-            {({ resetForm, isSubmitting }) => (
+            {({ resetForm, isSubmitting, setFieldValue }) => (
               <Form>
                 <div className="mb-4">
                   <label htmlFor="lastName" className="text-gray-800 font-bold">
@@ -223,11 +248,28 @@ export default function SelectedUserForm() {
                     as="select"
                     className="w-full border p-2 rounded my-1 text-gray-800"
                     disabled={modify}
+                    onChange={(e) => {
+                      roleHandle(e);
+                      setFieldValue('role', e.target.value);
+                    }}
                   >
                     <option value="user">User</option>
+                    <option value="theatreAdmin">SzínházAdmin</option>
                     <option value="Admin">Admin</option>
                   </Field>
                 </div>
+                {isTheatreAdmin && (
+                  <div className="mb-4">
+                    <Field
+                      name="theatre"
+                      as="select"
+                      className="w-full border p-2 rounded my-1 text-gray-800"
+                      disabled={modify}
+                    >
+                      <OptionList list={theatre} />
+                    </Field>
+                  </div>
+                )}
 
                 <div className="flex justify-between gap-3 flex-col tablet:flex-row">
                   <div className="flex justify-center">
