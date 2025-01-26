@@ -27,6 +27,7 @@ const listAll = async () => {
   }
 };
 
+
 export default {
   getById,
   list,

@@ -20,7 +20,6 @@ const getByName = async (title) => {
 
 const list = async ({ pagination, search }) => {
   const { orderBy, where } = pagination;
-  console.log(pagination);
   const performances = await prisma.performance.findMany({
     orderBy,
     where: {
@@ -34,12 +33,24 @@ const list = async ({ pagination, search }) => {
     (item, index) =>
       index >= pagination.skip && index < pagination.skip + pagination.take,
   );
-  console.log({ filteredPerformances });
   return { data: filteredPerformances, maxSize: performances.length };
 };
 
+// const listAll = async () => {
+//   const allPerformances = await prisma.performance.findMany();
+//   return allPerformances;
+// };
+
 const listAll = async () => {
-  const allPerformances = await prisma.performance.findMany();
+  const allPerformances = await prisma.performance.findMany({
+	include:{
+	  theater:{
+	    select: {
+		id: true,
+		name: true,	}
+},
+},	
+});
   return allPerformances;
 };
 

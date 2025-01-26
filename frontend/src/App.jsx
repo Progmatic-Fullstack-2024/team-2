@@ -14,6 +14,7 @@ import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
 import SinglePerformancePage from './pages/SinglePerformancePage';
+import BrowsingPage from './pages/BrowsingPage.jsx'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               <Route path="/performances" element={<PerformancesPage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
               <Route path="ownuser" element={<OwnUserPage />} />
+              <Route path="/browse" element={<BrowsingPage />} />
             </Routes>
           </div>
           <Footer />
