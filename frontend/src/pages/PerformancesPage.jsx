@@ -45,23 +45,22 @@ export default function PerformancesPage() {
         <div className="flex flex-cols tablet:flex-row items-center tablet:items-start justify-center">
           {performances ? (
             <div className="min-h-screen flex flex-col items-start gap-5">
-                <PerformancesSearch
-                  params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-                />
-                <Pagination
-                  key="PaginationTop"
-                  params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-                />
-                <PerformancesList performances={performances.data} />
-                <Pagination
-                  key="PaginationBot"
-                  params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-                />
-              </div>
+              <PerformancesSearch
+                params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+              />
+              <Pagination
+                key="PaginationTop"
+                params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+              />
+              <PerformancesList performances={performances.data} />
+              <Pagination
+                key="PaginationBot"
+                params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+              />
+            </div>
           ) : null}
         </div>
       </div>
-      {/* </div> */}
     </>
   );
 }

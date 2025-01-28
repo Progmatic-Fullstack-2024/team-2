@@ -1,7 +1,4 @@
-// import { useEffect } from 'react';
-
 import MenuButton from './MenuButton';
-// import getTheaters from '../../../services/theaters.service';
 
 const filterData = [];
 function addFilterData(name, searchName, options, searchOptions, type = 'checkbox') {
@@ -23,18 +20,8 @@ function convertURL(url) {
     .filter((item) => item !== '');
 }
 
-// async function fetchTheaters() {
-//   try {
-//     const theaters = await getTheaters();
-//   } catch (error) {}
-// }
-
 export default function SideBar({ params }) {
   const { searchParams, setSearchParams } = params;
-
-  // useEffect(() => {
-  //   fetchTheaters();
-  // }, []);
 
   const handleChange = ({ searchName, searchValue, type }) => {
     let query = searchParams.get(searchName);

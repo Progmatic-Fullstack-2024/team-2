@@ -30,7 +30,6 @@ export default function ImageTitle({ title, description, image = 'title_bg_3.jpg
         src={`../../public/${image}`}
       />
 
-      {/* <div className="h-4 bottom-0 absolute w-full z-10 bg-gradient-to-b from-transparent to-c-background " /> */}
       <div
         className={`inset-0 absolute flex flex-col items-center gap-6 z-20 mt-24 mx-auto ${!transparentTitle ? 'opacity-100' : 'opacity-0'}`}
       >
