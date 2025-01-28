@@ -9,14 +9,6 @@ function addFilterData(name, searchName, options, searchOptions, type = 'checkbo
 }
 
 addFilterData(
-  'Ár',
-  'price',
-  ['Korlátlan', '2000 Ft alatt', '4000 Ft alatt', '6000 Ft alatt'],
-  [null, '2000', '4000', '6000'],
-  'radio',
-);
-
-addFilterData(
   'Dátum',
   'date',
   ['2020', '2021', '2023', '2024', '2025'],
@@ -85,7 +77,7 @@ export default function SideBar({ params }) {
   };
 
   return (
-    <div className="min-w-48 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text mx-5 sticky top-24 rounded-lg overflow-hidden">
+    <div className="min-w-fit laptop:min-w-52 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text  sticky top-24 rounded-lg overflow-hidden">
       {filterData.map((element) => (
         <MenuButton
           key={element.name}
