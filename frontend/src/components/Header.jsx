@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { Menu, MenuItem } from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
+import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
@@ -52,7 +52,10 @@ export default function Header() {
           </Link>
 
           {user && (
-            <Link to="/ownUser" className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-pointer mx-5 my-auto">
+            <Link
+              to="/ownUser"
+              className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-pointer mx-5 my-auto"
+            >
               {`${user.firstName}`}
             </Link>
           )}
@@ -69,8 +72,8 @@ export default function Header() {
             </>
           ) : (
             <>
-            <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />
-            <DefaultButton text="Regisztráció" onClick={() => navigate('/register')} />
+              <DefaultButton text="Bejelentkezés" onClick={() => navigate('/login')} />
+              <DefaultButton text="Regisztráció" onClick={() => navigate('/register')} />
             </>
           )}
         </nav>
@@ -86,9 +89,11 @@ export default function Header() {
                 onClick={handleAdminMenuOpen}
               />
               <button
+                type="button"
                 className="text-white font-bold hover:underline"
                 onClick={handleAdminMenuOpen}
-              ></button>
+                aria-label="Admin menü megnyitása"
+              />
             </div>
             <Menu
               anchorEl={adminMenuAnchor}
@@ -97,15 +102,19 @@ export default function Header() {
               disableScrollLock
               PaperProps={{
                 sx: {
-                  maxHeight: '200px',   // vagy amekkora tetszik
-                  overflowY: 'auto',    // legyen függőleges scroll
+                  maxHeight: '200px', // vagy amekkora tetszik
+                  overflowY: 'auto', // legyen függőleges scroll
                 },
               }}
             >
               <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
               <MenuItem onClick={() => navigate('/admin/dashboard')}>Admin Dashboard</MenuItem>
-              <MenuItem onClick={() => navigate('/user-management')}>Felhasználók kezelése</MenuItem>
-              <MenuItem onClick={() => navigate('/theater-management')}>Színházak kezelése</MenuItem>
+              <MenuItem onClick={() => navigate('/user-management')}>
+                Felhasználók kezelése
+              </MenuItem>
+              <MenuItem onClick={() => navigate('/theater-management')}>
+                Színházak kezelése
+              </MenuItem>
               <MenuItem onClick={() => navigate('/pay-management')}>Fizetési ügyek</MenuItem>
               <MenuItem onClick={() => navigate('/other-management')}>Egyéb</MenuItem>
             </Menu>
