@@ -35,10 +35,10 @@ export default function PerformancesNextWeek({ performances }) {
   // Filter and sort performances within the next week
   const upcomingPerformances = performances
     .filter((perf) => {
-      const performanceDate = new Date(perf.performanceDate[0]);
+      const performanceDate = new Date(perf.performanceEvents.performanceDate);
       return performanceDate >= today && performanceDate <= oneWeekLater;
     })
-    .sort((a, b) => new Date(a.performanceDate[0]) - new Date(b.performanceDate[0])); // Sort by date
+    .sort((a, b) => new Date(a.performanceEvents.performanceDate) - new Date(b.performanceEvents.performanceDate)); // Sort by date
 
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {

@@ -6,8 +6,8 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
   const activeCheckbox = useRef([]);
   const optionHeight = `${options.length * (35 + 1) + 4}px`;
 
-  const buttonClass = `w-full text-${textColor} font-bold text-lg bg-c-secondary/50 hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center`;
-  const dropdownMenuClass = `w-full bot-0 truncate justify-self-end ${dropdownMenuOpen ? 'opacity-100' : ' opacity-100 w-0 '} transition-[height,width,opacity] duration-200  ease-out block`;
+  const buttonClass = `w-full text-${textColor} font-bold text-lg bg-c-secondary/50 hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center text-end`;
+  const dropdownMenuClass = `w-full bot-0 truncate justify-self-end ${dropdownMenuOpen ? 'opacity-100' : ' opacity-100 w-0 '} transition-[height ] duration-200  ease-out block`;
 
   const checkActiveCheckboxes = () => {
     if (searchParams.get(searchName)) {

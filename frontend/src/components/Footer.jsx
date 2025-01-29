@@ -20,7 +20,7 @@ export default function Footer({ height = 64 }) {
           <p>Bazsi</p>
           <p>László</p>
           <p>Tamás</p>
-          <p>(Andris)</p>
+          <p>(Andris, Gergő)</p>
         </div>
         <div className="hidden laptop:block ">
           <p className="text-xl mb-4">Lorem</p>
