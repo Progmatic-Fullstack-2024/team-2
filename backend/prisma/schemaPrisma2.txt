@@ -26,16 +26,17 @@ enum Theme {
 }
 
 model User {
-  id                  String        @id @default(cuid())
-  lastName            String
-  firstName           String
-  email               String        @unique
-  phone               String?
-  password            String
-  role                String
-  birthDate           DateTime?
-  userSettings        UserSetting?
-  theaterAdmin        TheaterAdmin? @relation("TheaterAdmin_User")
+  id           String        @id @default(cuid())
+  lastName     String
+  firstName    String
+  email        String        @unique
+  phone        String?
+  password     String
+  role         String
+  birthDate    DateTime?     @db.Date
+  userSettings UserSetting?
+  theaterAdmin TheaterAdmin? @relation(fields: [id], references: [userId])
+
   followedTheater     Theater[]     @relation("TheaterFollower_User")
   followedPerformance Performance[] @relation("PerformanceFollower_User")
 }
@@ -118,16 +119,16 @@ model Theater {
   phone          String?
   seatsAvailable Int?
   performances   Performance[]
-  admins         TheaterAdmin[] @relation("TheaterAdmin_Theater")
+  theaterAdmin   TheaterAdmin[]
   followers      User[]         @relation("TheaterFollower_User")
   // campaigns    String/Campaigns[]  EZ LEKÉRDEWZHETŐ   --- ez még nagyon a jövő zenéje, de lehetne majd csinálni egy kapcsoló táblát, ami összeköti az adott színházat a különböző típusú adománygyűjtő kampánnyal, addig meg csak egy url, vag egy leírás lehet itt, de ez nagyon jövő zene 
 }
 
 model TheaterAdmin {
-  userId    String  @id @unique
+  userId    String  @unique
   theaterId String
-  user      User    @relation("TheaterAdmin_User", fields: [userId], references: [id])
-  theater   Theater @relation("TheaterAdmin_Theater", fields: [theaterId], references: [id])
+  Theater   Theater @relation(fields: [theaterId], references: [id])
+  admins    User[]
 
-  @@unique([userId, theaterId])
+  @@id([userId, theaterId])
 }

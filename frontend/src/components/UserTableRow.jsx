@@ -4,6 +4,8 @@ import DefaultButton from './misc/DefaultButton';
 
 function UserTableRow({ user, index }) {
   const navigate = useNavigate();
+  if (user.birthDate) user.birthDate = user.birthDate.slice(0, 10);
+  else user.birthDate = 'n.a';
   const selectUser = (selectedUser) => {
     navigate('/userhandler', { state: selectedUser });
   };
@@ -15,6 +17,7 @@ function UserTableRow({ user, index }) {
       <td className="border-solid p-2 border-gray-950 border rounded">{user.firstName}</td>
       <td className="border-solid p-2 border-gray-950 border rounded">{user.email}</td>
       <td className="border-solid p-2 border-gray-950 border rounded">{user.phone}</td>
+      <td className="border-solid p-2 border-gray-950 border rounded">{user.birthDate}</td>
       <td className="border-solid p-2 border-gray-950 border rounded">{user.role}</td>
       <td className="border-solid p-2 border-gray-950 border rounded">
         <DefaultButton

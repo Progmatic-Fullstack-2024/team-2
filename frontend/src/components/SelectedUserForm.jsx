@@ -67,11 +67,13 @@ export default function SelectedUserForm() {
   function inicializeForm() {
     let initialValues;
     if (handleuser) {
+      if (handleuser.birthDate) handleuser.birthDate = handleuser.birthDate.slice(0, 10);
       initialValues = {
         firstName: handleuser.firstName,
         lastName: handleuser.lastName,
         email: handleuser.email,
         phone: handleuser.phone,
+        birthDate: handleuser.birthDate,
         role: handleuser.role,
       };
     } else initialValues = null;
@@ -130,6 +132,7 @@ export default function SelectedUserForm() {
       if (handleuser[key] !== values[key]) newUserData[key] = values[key];
     });
     if (Object.keys(newUserData).length > 1) {
+      if (newUserData.birthDate) newUserData.birthDate = newUserData.birthDate.replaceAll('.', '-');
       setIsVisilable(true);
       setIsUserDeleting(false);
       setButtonmsg('Tovább');
@@ -241,6 +244,19 @@ export default function SelectedUserForm() {
                     disabled={modify}
                   />
                   <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="BirthDate" className="text-gray-800 font-bold">
+                    Születési dátum
+                  </label>
+                  <Field
+                    type="text"
+                    name="birthDate"
+                    placeholder="Add meg a születési dátumod"
+                    className="w-full border p-2 rounded my-1 text-gray-800"
+                    disabled={modify}
+                  />
+                  <ErrorMessage name="birthDate" component="div" className="text-red-500 text-sm" />
                 </div>
                 <div className="mb-4">
                   <Field

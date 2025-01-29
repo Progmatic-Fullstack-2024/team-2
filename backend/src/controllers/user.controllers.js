@@ -35,7 +35,7 @@ const getOwnUser = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const { id, firstName, lastName, email, phone } = req.body;
+  const { id, firstName, lastName, email, phone, birthDate } = req.body;
   let { role } = req.body;
   if (id) {
     if (req.user.role !== "Admin" && id !== req.user.id) {
@@ -50,6 +50,7 @@ const updateUser = async (req, res, next) => {
         lastName,
         email,
         phone,
+        birthDate,
         role,
       );
       if (user) res.status(201).json({ message: "Update is successful." });
