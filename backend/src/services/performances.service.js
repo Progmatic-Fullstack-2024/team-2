@@ -5,6 +5,9 @@ import HttpError from "../utils/HttpError.js";
 const getById = async (performanceId) => {
   const performance = await prisma.performance.findUnique({
     where: { id: performanceId },
+    include: {
+      performanceEvents: true,
+    },
   });
   if (!performance) throw new HttpError("Performance not found", 404);
   return performance;
@@ -19,11 +22,17 @@ const getByName = async (title) => {
 };
 
 const list = async ({ pagination, search }) => {
-  
-  const { orderBy } = pagination;
+  const { orderBy, where } = pagination;
+
   const performances = await prisma.performance.findMany({
     orderBy,
-    where: { title: { contains: search, mode: "insensitive" } },
+    where: {
+      ...where,
+      title: { contains: search, mode: "insensitive" },
+    },
+    include: {
+      performanceEvents: true,
+    },
   });
   if (!performances) throw new HttpError("Performances not found", 404);
   // custom skip and take
@@ -31,12 +40,15 @@ const list = async ({ pagination, search }) => {
     (item, index) =>
       index >= pagination.skip && index < pagination.skip + pagination.take,
   );
-
   return { data: filteredPerformances, maxSize: performances.length };
 };
 
 const listAll = async () => {
-  const allPerformances = await prisma.performance.findMany();
+  const allPerformances = await prisma.performance.findMany({
+    include: {
+      performanceEvents: true,
+    },
+  });
   return allPerformances;
 };
 

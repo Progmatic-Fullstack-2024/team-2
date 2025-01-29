@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 
 export default function Pagination({ params }) {
   const { searchParams, setSearchParams, maxSize } = params;
-  const maxPagination = Math.ceil(maxSize / 10);
+  const maxPagination = Math.ceil(maxSize / (searchParams.get('limit') || 12));
   const focusRef = useRef(1);
 
   const arrowClass =
-    'flex items-center justify-center px-3 h-8 ms-0 leading-tight  bg-c-secondary/30  hover:bg-c-secondary/60 cursor-pointer select-none';
-  const activeClass = 'bg-c-primary-light text-white font-bold text-xl hover:bg-c-primary h-9';
+    'flex items-center justify-center px-3 h-8 ms-0 text-c-text leading-tight ring-1 ring-gray-600 hover:ring-c-accent cursor-pointer select-none';
+  const activeClass = 'bg-c-primary/80 font-bold text-xl ring-1 h-9 hover:ring-c-accent  ';
 
   useEffect(() => {
     focusRef.current = Number(searchParams.get('page')) || 1;
@@ -29,11 +29,11 @@ export default function Pagination({ params }) {
 
   return (
     <nav aria-label="Page navigation example ">
-      <ul className="flex items-center  my-4">
+      <ul className="flex items-center  my-1">
         <li>
           <button
             type="button"
-            className={`${arrowClass} rounded-s-full me-1`}
+            className={`${arrowClass} rounded-s-md me-1`}
             onClick={() => changePage({ direction: -1 })}
           >
             <span className="sr-only">Previous</span>
@@ -59,7 +59,7 @@ export default function Pagination({ params }) {
             <li key={index + 1}>
               <button
                 type="button"
-                className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-800 rounded-lg select-none cursor-pointer ${focusRef.current === index + 1 ? activeClass : 'bg-c-secondary/20 hover:bg-c-secondary/50'}`}
+                className={`flex items-center justify-center px-3 h-8 leading-tight ring-1 ring-gray-600 text-c-text rounded-sm select-none cursor-pointer ${focusRef.current === index + 1 ? activeClass : ' hover:ring-c-accent'}`}
                 onClick={() => changePage({ page: index + 1 })}
               >
                 {index + 1}
@@ -70,7 +70,7 @@ export default function Pagination({ params }) {
         <li>
           <button
             type="button"
-            className={`${arrowClass} rounded-e-xl ms-1`}
+            className={`${arrowClass} rounded-e-md ms-1`}
             onClick={() => changePage({ direction: 1 })}
           >
             <span className="sr-only">Next</span>

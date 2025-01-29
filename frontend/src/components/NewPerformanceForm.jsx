@@ -4,22 +4,24 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import DefaultButton from './misc/DefaultButton';
-import { performanceValidationSchema } from '../schema/userValidationSchema';
+import performanceValidationSchema from '../schema/performanceValidationSchema';
+import getCreators from '../services/creators.service';
 import createPerformance from '../services/performance.service';
+import getTheaters from '../services/theaters.service';
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
 
   const [posterPreview, setPosterPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
+  const [theaterOptions, setTheaterOptions] = useState([]);
+  const [creatorOptions, setCreatorOptions] = useState([]);
 
   const initialValues = lecture || {
     title: '',
     theaterId: '',
     creatorId: [''],
     description: '',
-    performanceDate: [],
-    price: '',
     posterURL: null,
     imagesURL: [],
   };
@@ -29,8 +31,6 @@ export default function NewPerformanceForm({ lecture }) {
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
-    formData.append('price', values.price);
-    values.performanceDate.forEach((date) => formData.append('performanceDate[]', date));
     values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
 
     if (values.posterURL) {
@@ -39,8 +39,6 @@ export default function NewPerformanceForm({ lecture }) {
     values.imagesURL.forEach((image) => {
       formData.append('files', image);
     });
-
-    // const token = localStorage.getItem('authToken');
 
     try {
       const response = await createPerformance(formData);
@@ -83,6 +81,28 @@ export default function NewPerformanceForm({ lecture }) {
     setImagesPreview(updatedPreviews);
   };
 
+  const fetchTheaters = async () => {
+    if (theaterOptions.length === 0) {
+      try {
+        const theaters = await getTheaters();
+        setTheaterOptions(theaters);
+      } catch (error) {
+        toast.error('Hiba történt a színházak betöltésekor.');
+      }
+    }
+  };
+
+  const fetchCreators = async () => {
+    if (creatorOptions.length === 0) {
+      try {
+        const creators = await getCreators();
+        setCreatorOptions(creators);
+      } catch (error) {
+        toast.error('Hiba történt az alkotók betöltésekor.');
+      }
+    }
+  };
+
   return (
     <div className="mx-auto p-12 my-40 bg-c-secondary-light rounded-md">
       <h2 className="font-bold text-gray-800 text-xl mb-6">
@@ -112,12 +132,31 @@ export default function NewPerformanceForm({ lecture }) {
               <label htmlFor="theaterId" className="text-gray-800 font-bold">
                 Színház <span className="text-red-500">*</span>
               </label>
-              <Field
-                type="text"
-                name="theaterId"
-                placeholder="Add meg a színház azonosítóját"
-                className="w-full border p-2 rounded my-1 text-gray-800"
-              />
+              <div className="flex items-center">
+                <Field
+                  as="select"
+                  name="theaterId"
+                  className="w-full border p-2 rounded text-gray-800"
+                >
+                  <option value="">Válassz egy színházat</option>
+                  {theaterOptions.map((theater) => (
+                    <option key={theater.id} value={theater.id}>
+                      {theater.name}
+                    </option>
+                  ))}
+                </Field>
+                <button
+                  type="button"
+                  onClick={fetchTheaters}
+                  className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
+                >
+                  <img
+                    src="../../public/theaterSearchIcon.svg"
+                    alt="Színház keresése ikon"
+                    className="w-6 h-6"
+                  />
+                </button>
+              </div>
               <ErrorMessage name="theaterId" component="div" className="text-red-500 text-sm" />
             </div>
 
@@ -128,11 +167,17 @@ export default function NewPerformanceForm({ lecture }) {
               {values.creatorId.map((_, index) => (
                 <div key={index} className="flex items-center mb-2">
                   <Field
-                    type="text"
+                    as="select"
                     name={`creatorId[${index}]`}
-                    placeholder="Add meg az alkotó azonosítóját"
                     className="w-full border p-2 rounded text-gray-800"
-                  />
+                  >
+                    <option value="">Válassz egy alkotót</option>
+                    {creatorOptions.map((creator) => (
+                      <option key={creator.id} value={creator.id}>
+                        {creator.name}
+                      </option>
+                    ))}
+                  </Field>
                   <button
                     type="button"
                     onClick={() => {
@@ -144,13 +189,27 @@ export default function NewPerformanceForm({ lecture }) {
                   >
                     Törlés
                   </button>
+                  <button
+                    type="button"
+                    onClick={fetchCreators}
+                    className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
+                  >
+                    <img
+                      src="../../public/creatorSearchIcon.svg"
+                      alt="Alkotó keresése ikon"
+                      className="w-6 h-6"
+                    />
+                  </button>
                 </div>
               ))}
-              <DefaultButton
-                text="Új alkotó hozzáadása"
-                type="button"
-                onClick={() => setFieldValue('creatorId', [...values.creatorId, ''])}
-              />
+              <div className="flex items-center">
+                <DefaultButton
+                  text="Új alkotó hozzáadása"
+                  type="button"
+                  disabled={values.creatorId.some((id) => !id || id === '')}
+                  onClick={() => setFieldValue('creatorId', [...values.creatorId, ''])}
+                />
+              </div>
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
             </div>
 
@@ -165,57 +224,6 @@ export default function NewPerformanceForm({ lecture }) {
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="performanceDate" className="text-gray-800 font-bold">
-                Előadás dátumai
-              </label>
-              <div className="flex flex-col gap-2">
-                {values.performanceDate.map((date, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Field
-                      type="date"
-                      name={`performanceDate[${index}]`}
-                      className="border p-2 rounded w-full"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updatedDates = [...values.performanceDate];
-                        updatedDates.splice(index, 1);
-                        setFieldValue('performanceDate', updatedDates);
-                      }}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
-                    >
-                      Törlés
-                    </button>
-                  </div>
-                ))}
-                <DefaultButton
-                  text="Új dátum hozzáadása"
-                  type="button"
-                  onClick={() => setFieldValue('performanceDate', [...values.performanceDate, ''])}
-                />
-              </div>
-              <ErrorMessage
-                name="performanceDate"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="price" className="text-gray-800 font-bold">
-                Ár
-              </label>
-              <Field
-                type="number"
-                name="price"
-                placeholder="Add meg az előadás árát"
-                className="w-full border p-2 rounded my-1 text-gray-800"
-              />
-              <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="mb-4">

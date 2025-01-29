@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
@@ -11,7 +11,7 @@ export default function Header() {
 
   const navigate = useNavigate();
 
-  const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-background/40' : 'c-primary border-c-background'} transition-colors duration-200 text-white px-10 flex justify-between z-50`;
+  const headerClass = `fixed top-0 left-0 w-full border-b bg-${transparentHeader ? 'transparent border-c-text/40' : 'c-background border-c-text/60'} transition-colors duration-200 text-white px-10 flex justify-between  z-50`;
 
   const isYPositionInLimit = () => {
     const screenYPos = window.scrollY;
@@ -37,7 +37,13 @@ export default function Header() {
   return (
     <header className={headerClass}>
       <div className="flex gap-4 px-3 py-2 text-xl font-bold">
-        <img src="../../public/theater-masks.svg" alt="logo" />
+        <Link to="/">
+          <img
+            src="../../public/theater-masks.svg"
+            alt="logo"
+            className="cursor-pointer hover:scale-110 transition-transform duration-300"
+          />
+        </Link>
 
         {user && (
           <div className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default mx-5 my-auto">
