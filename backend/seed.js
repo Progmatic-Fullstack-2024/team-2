@@ -73,8 +73,8 @@ async function main() {
           role: i < 5 ? "admin" : "user", // First 5 users are admins
           birthDate: new Date(`1990-01-${(i % 31) + 1}`),
         },
-      })
-    )
+      }),
+    ),
   );
 
   // Create 5 unique theaters with pre-defined names
@@ -94,8 +94,8 @@ async function main() {
             },
           },
         },
-      })
-    )
+      }),
+    ),
   );
 
   // Create 25 unique creators with pre-defined names
@@ -109,8 +109,8 @@ async function main() {
           awards: i % 2 === 0 ? `Award ${i + 1}` : null,
           introductions: `Introduction of ${name}`,
         },
-      })
-    )
+      }),
+    ),
   );
 
   // Create performances for each theater with pre-defined titles
@@ -166,7 +166,7 @@ async function main() {
   }
 
   console.log(
-    "Seed data with unique names (from keywords) created successfully!"
+    "Seed data with unique names (from keywords) created successfully!",
   );
 }
 

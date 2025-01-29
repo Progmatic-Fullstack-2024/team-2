@@ -56,7 +56,9 @@ export default function PerformanceCard({ data }) {
           {data.price} <span className="text-c-text text-xl">Ft/fő</span>
         </span>
         <span>Helyszín : </span>
-        <span className="mb-3">Időpont : {data.performanceDate[0]}</span>
+        {data.performanceEvents[0] && (
+          <span className="mb-3">Időpont : {data.performanceEvents[0].performanceDate}</span>
+        )}
       </div>
     </Link>
   );

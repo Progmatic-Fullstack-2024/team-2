@@ -35,7 +35,6 @@ export default function PerformancesNextWeek({ performances }) {
   // Filter and sort performances within the next week
   const upcomingPerformances = performances
     .filter((perf) => {
-      console.log(perf);
       const performanceDate = new Date(perf.performanceEvents.performanceDate);
       return performanceDate >= today && performanceDate <= oneWeekLater;
     })
