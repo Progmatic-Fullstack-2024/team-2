@@ -34,7 +34,7 @@ export default function ImageTitle({ title, description }) {
 
       <div className="h-4 bottom-0 absolute w-full z-10 bg-gradient-to-b from-transparent to-c-background " />
       <div
-        className={`inset-0 absolute  top-8 flex flex-col items-center gap-6 z-20 mt-24 mx-auto ${!transparentTitle ? 'opacity-100' : 'opacity-0'}`}
+        className={`inset-0 absolute flex flex-col items-center gap-6 z-20 mt-24 mx-auto ${!transparentTitle ? 'opacity-100' : 'opacity-0'}`}
       >
         <h1 className="text-white text-4xl font-bold ">{title}</h1>
         <p className="text-c-secondary-light text-center overflow-clip max-h-32 text-2xl font-medium tracking-wider mx-20 hidden tablet:inline-block">
