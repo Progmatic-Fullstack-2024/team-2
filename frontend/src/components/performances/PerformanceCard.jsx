@@ -72,7 +72,7 @@ export default function PerformanceCard({ data }) {
             <p>Helyszín : </p>
             {data.performanceEvents[0] && (
               <p className="flex justify-between">
-                Időpont :<span>{converDate(data.performanceDate[0])}</span>{' '}
+                Időpont :<span>{converDate(data.performanceEvents[0])}</span>{' '}
               </p>
             )}
           </div>
