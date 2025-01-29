@@ -70,9 +70,11 @@ export default function PerformanceCard({ data }) {
           </h1>
           <div className="mb-2 ">
             <p>Helyszín : </p>
-            <p className="flex justify-between">
-              Időpont :<span>{converDate(data.performanceDate[0])}</span>{' '}
-            </p>
+            {data.performanceEvents[0] && (
+              <p className="flex justify-between">
+                Időpont :<span>{converDate(data.performanceDate[0])}</span>{' '}
+              </p>
+            )}
           </div>
         </div>
       </div>

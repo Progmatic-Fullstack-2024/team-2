@@ -65,19 +65,19 @@ export default function PerformanceCard02({ data }) {
         <div className="mb-3">
           <span className="font-bold">Időpontok:</span>
           <ul className="list-disc list-inside">
-            {data.performanceDate.map((date) => {
-              const formattedDate = new Date(date).toLocaleDateString('hu-HU', {
+            {data.performanceEvents.map((event) => {
+              const formattedDate = new Date(event.performanceDate).toLocaleDateString('hu-HU', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
               });
-              const formattedTime = new Date(date).toLocaleTimeString('hu-HU', {
+              const formattedTime = new Date(event.performanceDate).toLocaleTimeString('hu-HU', {
                 hour: '2-digit',
                 minute: '2-digit',
               });
 
               return (
-                <li key={date}>
+                <li key={event}>
                   {formattedDate}, {formattedTime}
                 </li>
               );
