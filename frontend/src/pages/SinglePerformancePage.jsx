@@ -59,6 +59,16 @@ export default function DetailsPage() {
     );
   }
 
+  // Vissza gomb funkció
+
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/"); 
+    }
+  };
+
   // Galéria három képének kiszámítása
   const getGalleryImages = () => {
     if (!performance || !performance.imagesURL || performance.imagesURL.length === 0) {
@@ -124,19 +134,25 @@ export default function DetailsPage() {
             </div>
           </div>
 
-          <p className="text-lg mb-2">{performance.description}</p>
-          <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
-          <p className="text-lg mb-2">
-            Időpont(ok):{' '}
-            {performance.performanceEvents
+            <p className="text-lg mb-2">{performance.description}</p>
+            <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
+            <p className="text-lg mb-2">
+              Időpont(ok):{' '}
+              {performance.performanceEvents
               .map((event) => new Date(event.performanceDate).toLocaleString('hu-HU'))
               .join(', ')}
-          </p>
-          <div className="flex justify-around">
-            <DefaultButton onClick={() => navigate('/')} text="Vissza" />
-            <DefaultButton text="Foglalás" />
+            </p>
+            <div className="flex justify-around">
+              <div>
+                <DefaultButton onClick={handleBack} text="Vissza" />
+              </div>
+              <div>
+                <DefaultButton text="Foglalás" />
+              </div>
+            </div>
           </div>
         </div>
+      
 
         {/* Modal a teljes méretű képhez */}
         {selectedImage && (
@@ -160,7 +176,7 @@ export default function DetailsPage() {
             </div>
           </div>
         )}
-      </div>
+    
     </>
   );
 }
