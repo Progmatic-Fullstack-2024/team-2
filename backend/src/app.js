@@ -19,7 +19,7 @@ app.use("/", authenticate);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/api/performances", performancesRoutes);
-app.use("/api/dropdown-data-theaters", theatersRoutes);
+app.use("/api/theater", theatersRoutes);
 app.use("/api/dropdown-data-creators", creatorsRoutes);
 
 app.use(errorHandler);
