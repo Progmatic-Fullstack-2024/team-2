@@ -37,7 +37,6 @@ const list = async ({ pagination, search }) => {
     (item, index) =>
       index >= pagination.skip && index < pagination.skip + pagination.take
   );
-  console.log({ filteredPerformances });
   return { data: filteredPerformances, maxSize: performances.length };
 };
 
