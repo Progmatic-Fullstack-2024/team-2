@@ -5,3 +5,6 @@ export const { FRONTEND_URL } = process.env;
 export const { CLOUDINARY_NAME } = process.env;
 export const { CLOUDINARY_API_KEY } = process.env;
 export const { CLOUDINARY_API_SECRET } = process.env;
+
+export const { STRIPE_PUBLIC_KEY } = process.env;
+export const { STRIPE_SECRET_KEY } = process.env;
