@@ -48,8 +48,7 @@ function makeParsedPerformanceDates(performanceDate) {
 }
 
 const createPerformance = async (req, res, next) => {
-  const { title, theaterId, description, price, performanceDate, creatorsId } =
-    req.body;
+  const { title, theaterId, description, creatorsId } = req.body;
 
   const creatorsIds = Array.isArray(creatorsId)
     ? creatorsId.map((creatorId) => ({ id: creatorId }))
@@ -58,15 +57,11 @@ const createPerformance = async (req, res, next) => {
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
 
-  const parsedPerformanceDates = makeParsedPerformanceDates(performanceDate);
-
   try {
     await performanceValidationSchemaForCreate.validate({
       title,
       theaterId,
       description,
-      price,
-      performanceDate: parsedPerformanceDates,
       creatorsIds,
     });
 
@@ -75,8 +70,6 @@ const createPerformance = async (req, res, next) => {
         title,
         theaterId,
         description,
-        performanceDate: parsedPerformanceDates,
-        price: Number(price),
       },
       poster,
       images,

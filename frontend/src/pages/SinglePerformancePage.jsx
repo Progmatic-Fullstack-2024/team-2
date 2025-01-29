@@ -128,8 +128,8 @@ export default function DetailsPage() {
           <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
           <p className="text-lg mb-2">
             Időpont(ok):{' '}
-            {performance.performanceDate
-              .map((date) => new Date(date).toLocaleString('hu-HU'))
+            {performance.performanceEvents
+              .map((event) => new Date(event.performanceDate).toLocaleString('hu-HU'))
               .join(', ')}
           </p>
           <div className="flex justify-around">
