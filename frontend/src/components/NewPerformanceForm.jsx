@@ -22,8 +22,6 @@ export default function NewPerformanceForm({ lecture }) {
     theaterId: '',
     creatorId: [''],
     description: '',
-    performanceDate: [],
-    price: '',
     posterURL: null,
     imagesURL: [],
   };
@@ -33,8 +31,6 @@ export default function NewPerformanceForm({ lecture }) {
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
-    formData.append('price', values.price);
-    values.performanceDate.forEach((date) => formData.append('performanceDate[]', date));
     values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
 
     if (values.posterURL) {
@@ -228,57 +224,6 @@ export default function NewPerformanceForm({ lecture }) {
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
               <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="performanceDate" className="text-gray-800 font-bold">
-                Előadás dátumai
-              </label>
-              <div className="flex flex-col gap-2">
-                {values.performanceDate.map((date, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Field
-                      type="date"
-                      name={`performanceDate[${index}]`}
-                      className="border p-2 rounded w-full"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updatedDates = [...values.performanceDate];
-                        updatedDates.splice(index, 1);
-                        setFieldValue('performanceDate', updatedDates);
-                      }}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
-                    >
-                      Törlés
-                    </button>
-                  </div>
-                ))}
-                <DefaultButton
-                  text="Új dátum hozzáadása"
-                  type="button"
-                  onClick={() => setFieldValue('performanceDate', [...values.performanceDate, ''])}
-                />
-              </div>
-              <ErrorMessage
-                name="performanceDate"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="price" className="text-gray-800 font-bold">
-                Ár
-              </label>
-              <Field
-                type="number"
-                name="price"
-                placeholder="Add meg az előadás árát"
-                className="w-full border p-2 rounded my-1 text-gray-800"
-              />
-              <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="mb-4">

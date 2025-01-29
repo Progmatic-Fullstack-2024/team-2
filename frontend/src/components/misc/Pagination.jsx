@@ -6,8 +6,8 @@ export default function Pagination({ params }) {
   const focusRef = useRef(1);
 
   const arrowClass =
-    'flex items-center justify-center px-3 h-8 ms-0 text-c-text leading-tight ring-1 ring-gray-600 hover:ring-c-accent cursor-pointer select-none';
-  const activeClass = 'bg-c-primary/80 font-bold text-xl ring-1 h-9 hover:ring-c-accent  ';
+    'flex items-center justify-center px-3 h-8 ms-0 text-c-text leading-tight ring-1 ring-gray-600 hover:ring-c-secondary/60 cursor-pointer select-none';
+  const activeClass = 'bg-c-primary/80 font-bold text-xl ring-1 h-9 hover:ring-c-secondary  ';
 
   useEffect(() => {
     focusRef.current = Number(searchParams.get('page')) || 1;
@@ -59,7 +59,7 @@ export default function Pagination({ params }) {
             <li key={index + 1}>
               <button
                 type="button"
-                className={`flex items-center justify-center px-3 h-8 leading-tight ring-1 ring-gray-600 text-c-text rounded-sm select-none cursor-pointer ${focusRef.current === index + 1 ? activeClass : ' hover:ring-c-accent'}`}
+                className={`flex items-center justify-center px-3 h-8 leading-tight ring-1 ring-gray-600 text-c-text rounded-sm select-none cursor-pointer ${focusRef.current === index + 1 ? activeClass : ' hover:ring-c-secondary/60'}`}
                 onClick={() => changePage({ page: index + 1 })}
               >
                 {index + 1}
