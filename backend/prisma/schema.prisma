@@ -73,7 +73,7 @@ model Performance {
 
 model PerformanceEvents {
   id              String       @id @default(cuid())
-  performanceDate DateTime[]   @default(dbgenerated("(ARRAY[]::timestamp without time zone[])::timestamp(3) without time zone[]"))
+  performanceDate DateTime   @default(now())
   spots           Int
   soldSpots       Int          @default(0)
   premiere        Performance? @relation("premiere")
