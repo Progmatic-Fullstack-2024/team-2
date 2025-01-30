@@ -24,13 +24,6 @@ const performanceValidationSchema = Yup.object({
       ),
     )
     .notRequired(),
-  performanceDate: Yup.array()
-    .of(Yup.date().min(new Date(), 'A dátum nem lehet a múltban.').notRequired())
-    .notRequired(),
-  price: Yup.number()
-    .positive('Az ár csak pozitív szám lehet.')
-    .integer('Az ár egész szám kell legyen.')
-    .notRequired(),
 });
 
 export default performanceValidationSchema;

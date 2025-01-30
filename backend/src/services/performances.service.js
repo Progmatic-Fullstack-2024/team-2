@@ -5,6 +5,9 @@ import HttpError from "../utils/HttpError.js";
 const getById = async (performanceId) => {
   const performance = await prisma.performance.findUnique({
     where: { id: performanceId },
+    include: {
+      performanceEvents: true,
+    },
   });
   if (!performance) throw new HttpError("Performance not found", 404);
   return performance;
@@ -20,11 +23,15 @@ const getByName = async (title) => {
 
 const list = async ({ pagination, search }) => {
   const { orderBy, where } = pagination;
+
   const performances = await prisma.performance.findMany({
     orderBy,
     where: {
       ...where,
       title: { contains: search, mode: "insensitive" },
+    },
+    include: {
+      performanceEvents: true,
     },
   });
   if (!performances) throw new HttpError("Performances not found", 404);
@@ -43,7 +50,8 @@ const list = async ({ pagination, search }) => {
 
 const listAll = async () => {
   const allPerformances = await prisma.performance.findMany({
-	include:{
+    include: {
+      performanceEvents: true,
 	  theater:{
 	    select: {
 		id: true,
