@@ -54,11 +54,13 @@ export default function OwnUserEdit() {
   function inicializeForm() {
     let initialValues;
     if (user) {
+      if (user.birthDate) user.birthDate = user.birthDate.slice(0, 10);
       initialValues = {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
         phone: user.phone,
+        birthDate: user.birthDate,
       };
     } else initialValues = null;
     return initialValues;
@@ -102,8 +104,11 @@ export default function OwnUserEdit() {
     keys.forEach((key) => {
       if (user[key] !== values[key]) newUserData[key] = values[key];
     });
-
+    Object.keys(newUserData).forEach(
+      (key) => newUserData[key] === undefined && delete newUserData[key],
+    );
     if (Object.keys(newUserData).length > 1) {
+      if (newUserData.birthDate) newUserData.birthDate = newUserData.birthDate.replaceAll('.', '-');
       setIsVisilable(true);
       try {
         const answer = await userHandle.patchOwnUser(newUserData);
@@ -119,7 +124,7 @@ export default function OwnUserEdit() {
   return (
     <div>
       {user ? (
-        <div className="w-full mx-auto my-40 bg-c-secondary-light p-12 rounded-md relative">
+        <div className="w-full mx-auto my-40 bg-c-secondary-light p-12  px-auto rounded-md relative">
           <UserResult params={{ isVisilable, msg, clearProcedure: cancelModal }} />
           {passwordformactive ? <NewPasswordForm goback={cancelPassword} /> : undefined}
           <h1 className="font-bold text-gray-800 text-xl mx-auto mb-10 text-center">{title}</h1>
@@ -182,6 +187,19 @@ export default function OwnUserEdit() {
                     disabled={modify}
                   />
                   <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="birthDate" className="text-gray-800 font-bold">
+                    Születési idő
+                  </label>
+                  <Field
+                    type="text"
+                    name="birthDate"
+                    placeholder="Add meg a szuletési idődet"
+                    className="w-full border p-2 rounded my-1 text-gray-800"
+                    disabled={modify}
+                  />
+                  <ErrorMessage name="birthDate" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 <div className="flex justify-between gap-3 flex-col tablet:flex-row">

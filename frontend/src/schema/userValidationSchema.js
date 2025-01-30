@@ -35,6 +35,13 @@ export const userValidationSchemaForUpdateUser = Yup.object({
       'Adj meg egy érvényes telefonszámot (10-15 számjegy, opcionális + előjellel)!',
     )
     .notRequired(),
+
+  birthDate: Yup.string()
+    .matches(
+      /^(?:19|20)\d{2}-|.(?:0[1-9]|1[0-2])-|.(?:0[1-9]|[12][0-9]|3[01])$/,
+      'Hibás dátum formátum',
+    )
+    .notRequired(),
 });
 
 export const userValidationSchemaForPassword = Yup.object({
