@@ -18,6 +18,15 @@ const getOwnUser = async () => {
   }
 };
 
+const getUser = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/users/${userId}`);
+    return response.data; // Successful answer
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
 const patchOwnUser = async (user) => {
   try {
     const response = await axiosInstance.patch(`/users`, user);
@@ -36,4 +45,13 @@ const changePassword = async (data) => {
   }
 };
 
-export default { getAllUsers, getOwnUser, patchOwnUser, changePassword };
+const deleteUser = async (userId) => {
+  try {
+    const response = await axiosInstance.delete(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
+export default { getAllUsers, getOwnUser, patchOwnUser, changePassword, getUser, deleteUser };

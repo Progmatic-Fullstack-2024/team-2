@@ -9,11 +9,12 @@ import { AuthProvider } from './contexts/AuthContext';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
-import NewPerformancePage from './pages/NewPerformancePage';
+import NewPerformancePage from './pages/NewPerformancePage.jsx';
 import OwnUserPage from './pages/OwnUserPage.jsx';
 import PaymentPage from './pages/PaymentPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
+import SelectedUser from './pages/SelectedUser.jsx';
 import SignedInPage from './pages/SignedIn';
 import SinglePerformancePage from './pages/SinglePerformancePage';
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/ownuser" element={<OwnUserPage />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/payment/completion" element={<Completion />} />
+              <Route path="/userhandler" element={<SelectedUser />} />
             </Routes>
           </div>
           <Footer />
