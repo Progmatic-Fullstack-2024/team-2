@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
+import BrowsingPage from './pages/BrowsingPage.jsx'
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
@@ -14,7 +15,7 @@ import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SignedInPage from './pages/SignedIn';
 import SinglePerformancePage from './pages/SinglePerformancePage';
-import BrowsingPage from './pages/BrowsingPage.jsx'
+
 
 function App() {
   return (

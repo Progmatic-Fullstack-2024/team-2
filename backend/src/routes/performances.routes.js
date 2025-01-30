@@ -8,6 +8,7 @@ const router = express.Router();
 router.get("/all", performancesController.listAllPerformances);
 router.get("/:performanceId", performancesController.getPerformanceByID);
 router.get("/", performancesController.listPerformances);
+router.get("/genres/all", performancesController.listAllGenres);
 
 router.post(
   "/",

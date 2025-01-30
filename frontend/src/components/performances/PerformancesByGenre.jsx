@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import PerformanceCard02 from './PerformanceCard02';
 import DefaultButton from '../misc/DefaultButton';
 
-export default function PerformancesByTheaters({ performances }) {
+export default function PerformancesByGenres({ performances }) {
   const [visibleCards, setVisibleCards] = useState(5); // Alapértelmezett: 5 kártya
 
   useEffect(() => {
@@ -28,20 +28,15 @@ export default function PerformancesByTheaters({ performances }) {
   if (!performances) return null;
 
   // Csoportosítás színházak szerint
-  const performancesByTheater = performances.reduce((groups, perf) => {
-    const theaterName = perf.theater?.name || 'Ismeretlen színház'; // Színház neve
-    if (!groups[theaterName]) {
-      groups[theaterName] = [];
+  const performancesByGenre = performances.reduce((groups, perf) => {
+    // const genre = perf.genre?.[0]?.name || 'Ismeretlen műfaj'; // Műfaj neve
+    const genre = perf.genre?.map(g => g.name).join(', ') || 'Ismeretlen műfaj';
+    if (!groups[genre]) {
+      groups[genre] = [];
     }
-    groups[theaterName].push(perf);
+    groups[genre].push(perf);
     return groups;
   }, {});
-
-  // Véletlenszerű színház kiválasztása
-  const theaterNames = Object.keys(performancesByTheater);
-  const randomTheaterName =
-    theaterNames[Math.floor(Math.random() * theaterNames.length)];
-  const theaterPerformances = performancesByTheater[randomTheaterName];
 
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {
@@ -71,33 +66,35 @@ export default function PerformancesByTheaters({ performances }) {
     return widthClass;
   };
 
-  const containerRef = useRef(null);
-
   return (
     <div className="w-full my-12 space-y-12">
-      <section className="relative mb-12">
-        <h2 className="text-2xl font-bold mb-5 text-c-text">
-          Random Színház: {randomTheaterName}
-        </h2>
-        <div className="relative">
-          <div className="flex items-center justify-between">
-            <DefaultButton onClick={() => scroll('left', containerRef)} text="<" />
-            <div ref={containerRef} className="flex overflow-hidden scroll-smooth w-full">
-              {theaterPerformances.map((perf) => (
-                <div
-                  key={perf.id}
-                  className={`flex-shrink-0 transition-transform duration-700 hover:z-10 ${getWidthClass(
-                    visibleCards,
-                  )}`}
-                >
-                  <PerformanceCard02 data={perf} />
+      {Object.entries(performancesByGenre).map(([genre, genrePerformances]) => {
+        const containerRef = useRef(null);
+
+        return (
+          <section className="relative mb-12">
+            <h2 className="text-2xl font-bold mb-5 text-c-text">Műfaj: {genre}</h2>
+            <div className="relative">
+              <div className="flex items-center justify-between">
+                <DefaultButton onClick={() => scroll('left', containerRef)} text="<" />
+                <div ref={containerRef} className="flex overflow-hidden scroll-smooth w-full">
+                  {genrePerformances.map((perf) => (
+                    <div
+                      key={perf.id}
+                      className={`flex-shrink-0 transition-transform duration-700 hover:z-10 ${getWidthClass(
+                        visibleCards,
+                      )}`}
+                    >
+                      <PerformanceCard02 data={perf} />
+                    </div>
+                  ))}
                 </div>
-              ))}
+                <DefaultButton onClick={() => scroll('right', containerRef)} text=">" />
+              </div>
             </div>
-            <DefaultButton onClick={() => scroll('right', containerRef)} text=">" />
-          </div>
-        </div>
-      </section>
+          </section>
+        );
+      })}
     </div>
   );
 }

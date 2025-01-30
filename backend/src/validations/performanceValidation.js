@@ -10,19 +10,4 @@ const performanceValidationSchemaForCreate = yup.object({
     .required("Creator must be specified!"),
 });
 
-const performanceValidationSchemaForUpdate = yup.object({
-  price: yup.number().positive("Price must be a positive number!"),
-  performanceDate: yup
-    .array()
-    .of(
-      yup
-        .date()
-        .typeError("Please provide a valid date!")
-        .min(new Date(), "The date must be in the future!"),
-    ),
-});
-
-export {
-  performanceValidationSchemaForCreate,
-  performanceValidationSchemaForUpdate,
-};
+export default performanceValidationSchemaForCreate;

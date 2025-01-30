@@ -52,14 +52,21 @@ const listAll = async () => {
   const allPerformances = await prisma.performance.findMany({
     include: {
       performanceEvents: true,
-	  theater:{
-	    select: {
-		id: true,
-		name: true,	}
-},
-},	
-});
+      theater: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      genre: true,
+    },
+  });
   return allPerformances;
+};
+
+const listAllGenres = async () => {
+  const allGenres = await prisma.genre.findMany();
+  return allGenres;
 };
 
 const create = async (performanceData, poster, images, creatorsIds) => {
@@ -174,4 +181,5 @@ export default {
   getByName,
   deleteSingleImage,
   getById,
+  listAllGenres,
 };

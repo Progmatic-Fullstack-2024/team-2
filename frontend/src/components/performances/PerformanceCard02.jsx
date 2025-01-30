@@ -86,9 +86,6 @@ export default function PerformanceCard02({ data }) {
         </div>
         {isHovered && ( // Show additional details on hover
           <>
-            <span className="self-end text-3xl text-c-secondary-light font-bold mb-2">
-              {data.price} <span className="text-white text-xl">Ft/fő</span>
-            </span>
             <span>Helyszín: {data.location || 'N/A'}</span>
             <span>Közreműködők: {data.participants || 'N/A'}</span>
           </>

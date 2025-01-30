@@ -27,9 +27,18 @@ const listAll = async () => {
   }
 };
 
+const listAllGenre = async () => {
+  try {
+    const response = await axiosInstance.get(`/api/performances/genres/all`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
 
 export default {
   getById,
   list,
   listAll,
+  listAllGenre
 };

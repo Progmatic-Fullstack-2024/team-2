@@ -135,7 +135,6 @@ export default function DetailsPage() {
           </div>
 
             <p className="text-lg mb-2">{performance.description}</p>
-            <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
             <p className="text-lg mb-2">
               Időpont(ok):{' '}
               {performance.performanceEvents
