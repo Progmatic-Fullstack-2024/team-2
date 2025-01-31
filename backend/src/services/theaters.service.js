@@ -1,6 +1,6 @@
 import prisma from "../models/prisma-client.js";
 import HttpError from "../utils/HttpError.js";
-import { createFiles, deleteFiles } from "./file.service.js";
+import { createFiles, uploadSingleFile, deleteFiles } from "./file.service.js";
 
 const getTheaterIdName = async () => {
   try {
@@ -25,20 +25,26 @@ const listAll = async () => {
 };
 
 const getById = async (id) => {
-  const getTheaterById = await prisma.theater.getById({
+  const getTheaterById = await prisma.theater.findUnique({
     where: { id },
   });
   return getTheaterById;
 };
 
-const createTheater = async (theaterData, images) => {
-  const imageUrls = await createFiles(images);
+const createTheater = async (theaterData, image) => {
+  let imageURL = null;
+
+  if (image) {
+    imageURL = await uploadSingleFile(image); // 📌 Itt közvetlenül hívjuk meg az uploadSingleFile függvényt
+  }
+
   const newTheater = await prisma.theater.create({
     data: {
       ...theaterData,
-      imageURL: imageUrls,
+      imageURL,
     },
   });
+
   return newTheater;
 };
 

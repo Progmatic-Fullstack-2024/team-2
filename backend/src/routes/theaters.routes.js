@@ -15,7 +15,7 @@ router.get("/", theatersController.listAllTheaters);
 
 router.post(
   "/",
-  upload.fields([{ name: "files", maxCount: 10 }]),
+  upload.fields([{ name: "image", maxCount: 1 }]),
   theatersController.createTheater,
 );
 

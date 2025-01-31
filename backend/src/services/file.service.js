@@ -21,10 +21,16 @@ const options = {
 };
 
 // Function to upload a single file const
-const uploadSingleFile = async (file) => {
+export const uploadSingleFile = async (file) => {
   if (file) {
-    const uploadedImage = await cloudinary.uploader.upload(file.path, options);
-    return uploadedImage.secure_url;
+    try {
+      // 📌 Cloudinary feltöltés, fontos: `file.path`-ot használd
+      const uploadedImage = await cloudinary.uploader.upload(file.path);
+      return uploadedImage.secure_url;
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+      return null;
+    }
   }
   return null;
 };

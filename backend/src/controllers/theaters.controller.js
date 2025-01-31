@@ -29,21 +29,22 @@ const getTheaterById = async (req, res, next) => {
 };
 
 const createTheater = async (req, res, next) => {
-  const { name, address, email, phone, seats } = req.body;
+  const { name, address, email, phone, seatsAvailable } = req.body;
 
-  const images = req.files && res.files.files ? req.files.files : [];
+  // 📌 Helyesen hivatkozunk a feltöltött fájlra
+  const image = req.files?.image ? req.files.image[0] : null;
 
   try {
-    // Validálás
+    // 📌 Validálás
     const newTheater = await theatersService.createTheater(
       {
         name,
         address,
         email,
         phone,
-        seats: Number(seats),
+        seatsAvailable: Number(seatsAvailable),
       },
-      images,
+      image,
     );
     res.status(201).json(newTheater);
   } catch (error) {
