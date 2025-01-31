@@ -75,7 +75,7 @@ const update = async (theaterId, theaterData, image) => {
 
 const destroy = async (theaterId) => {
   const theaterToDelete = await getById(theaterId);
-  await deleteFiles(theaterToDelete.imagesURL);
+  await deleteFiles(theaterToDelete.imageURL);
   return prisma.theater.delete({ where: { id: theaterId } });
 };
 

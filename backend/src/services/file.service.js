@@ -13,18 +13,21 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-const options = {
+const optionsTheaterImg = {
   use_filename: true,
   unique_filename: true,
   overwrite: false,
-  folder: "performance-images",
+  folder: "theater-images",
 };
 
 // Function to upload a single file const
 export const uploadSingleFile = async (file) => {
   if (file) {
     try {
-      const uploadedImage = await cloudinary.uploader.upload(file.path);
+      const uploadedImage = await cloudinary.uploader.upload(
+        file.path,
+        optionsTheaterImg,
+      );
       return uploadedImage.secure_url;
     } catch (error) {
       console.error("Cloudinary upload error:", error);
