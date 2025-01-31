@@ -1,6 +1,6 @@
 import prisma from "../models/prisma-client.js";
 import HttpError from "../utils/HttpError.js";
-import { createFiles, uploadSingleFile, deleteFiles } from "./file.service.js";
+import { uploadSingleFile, deleteFiles } from "./file.service.js";
 
 const getTheaterIdName = async () => {
   try {
@@ -48,22 +48,28 @@ const createTheater = async (theaterData, image) => {
   return newTheater;
 };
 
-const update = async (theaterId, theaterData, images) => {
-  const theaterToUpdate = await getById(theaterId);
+const update = async (theaterId, theaterData, image) => {
+  const theaterToUpdate = await getById(theaterId); // Meglévő adatok betöltése
 
-  let imageUrls = theaterToUpdate.imagesURL;
-  if (images && images.length) {
-    const newImageUrls = await createFiles(images);
-    imageUrls = [...imageUrls, ...newImageUrls];
+  let imageUrl = theaterToUpdate.imageURL; // Megtartjuk a régi képet
+  if (image) {
+    const newImageUrl = await uploadSingleFile(image);
+    imageUrl = newImageUrl;
   }
+
+  // Eltávolítjuk az `undefined` értékeket
+  const filteredData = Object.fromEntries(
+    Object.entries(theaterData).filter(([value]) => value !== undefined),
+  );
 
   const updatedTheater = await prisma.theater.update({
     where: { id: theaterId },
     data: {
-      ...theaterData,
-      imagesURL: imageUrls,
+      ...filteredData, // Csak a ténylegesen küldött adatokat frissítjük
+      imageURL: imageUrl, // Ha nincs új kép, megtartjuk a régit
     },
   });
+
   return updatedTheater;
 };
 

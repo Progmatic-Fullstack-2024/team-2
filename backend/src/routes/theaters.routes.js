@@ -20,8 +20,8 @@ router.post(
 );
 
 router.patch(
-  "/theaterId",
-  upload.fields([{ name: "files", maxCount: 10 }]),
+  "/:theaterId",
+  upload.fields([{ name: "image", maxCount: 1 }]),
   theatersController.updateTheater,
 );
 
