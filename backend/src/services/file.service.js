@@ -24,7 +24,6 @@ const options = {
 export const uploadSingleFile = async (file) => {
   if (file) {
     try {
-      // 📌 Cloudinary feltöltés, fontos: `file.path`-ot használd
       const uploadedImage = await cloudinary.uploader.upload(file.path);
       return uploadedImage.secure_url;
     } catch (error) {

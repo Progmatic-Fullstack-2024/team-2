@@ -31,11 +31,10 @@ const getTheaterById = async (req, res, next) => {
 const createTheater = async (req, res, next) => {
   const { name, address, email, phone, seatsAvailable } = req.body;
 
-  // 📌 Helyesen hivatkozunk a feltöltött fájlra
   const image = req.files?.image ? req.files.image[0] : null;
 
   try {
-    // 📌 Validálás
+    // Validálás
     const newTheater = await theatersService.createTheater(
       {
         name,

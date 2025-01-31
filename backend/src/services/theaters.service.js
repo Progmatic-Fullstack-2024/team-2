@@ -35,7 +35,7 @@ const createTheater = async (theaterData, image) => {
   let imageURL = null;
 
   if (image) {
-    imageURL = await uploadSingleFile(image); // 📌 Itt közvetlenül hívjuk meg az uploadSingleFile függvényt
+    imageURL = await uploadSingleFile(image);
   }
 
   const newTheater = await prisma.theater.create({
