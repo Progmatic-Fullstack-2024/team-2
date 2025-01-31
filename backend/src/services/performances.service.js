@@ -64,9 +64,23 @@ const listAll = async () => {
   return allPerformances;
 };
 
+// const listAllGenres = async () => {
+//   const allGenres = await prisma.genre.findMany();
+//   return allGenres;
+// };
+
 const listAllGenres = async () => {
-  const allGenres = await prisma.genre.findMany();
-  return allGenres;
+  const genresWithCount = await prisma.genre.groupBy({
+    by: ['name'], // Csoportosítás műfajnév szerint
+    _count: {
+      name: true, // Megszámolja, hányszor szerepel az adott műfaj
+    },
+  });
+
+  return genresWithCount.map((g) => ({
+    name: g.name,
+    count: g._count.name,
+  }));
 };
 
 const create = async (performanceData, poster, images, creatorsIds) => {

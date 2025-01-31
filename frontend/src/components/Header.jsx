@@ -58,11 +58,11 @@ export default function Header() {
         <div className="flex justify-center h-full gap-1">
           <MenuLink text="Home" to="/" icon="star" iconSize="50" />
           <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
-          <MenuLink text="Böngészés" to="/browse" />
+          <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
         </div>
         {user ? (
           <>
-            {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
+            {user.role === 'admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" icon="addNew" iconSize="50px"/>}
             <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />
 
             <DefaultButton

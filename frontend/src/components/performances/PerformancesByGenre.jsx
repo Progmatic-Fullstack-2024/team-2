@@ -1,10 +1,11 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 import PerformanceCard02 from './PerformanceCard02';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformancesByGenres({ performances }) {
   const [visibleCards, setVisibleCards] = useState(5); // Alapértelmezett: 5 kártya
+  const containerRef = useRef({});
 
   useEffect(() => {
     const updateVisibleCards = () => {
@@ -30,13 +31,46 @@ export default function PerformancesByGenres({ performances }) {
   // Csoportosítás színházak szerint
   const performancesByGenre = performances.reduce((groups, perf) => {
     // const genre = perf.genre?.[0]?.name || 'Ismeretlen műfaj'; // Műfaj neve
-    const genre = perf.genre?.map(g => g.name).join(', ') || 'Ismeretlen műfaj';
-    if (!groups[genre]) {
-      groups[genre] = [];
-    }
-    groups[genre].push(perf);
+    // const genreNames  = perf.genre?.map(g => g.name).join(', ') || 'Ismeretlen műfaj';
+
+    const genreNames = Array.isArray(perf.genre) 
+    ? perf.genre.map(g => g.name) 
+    : ['Ismeretlen műfaj'];
+
+    genreNames.forEach((genre) => {
+      if (!groups[genre]) {
+        groups[genre] = [];
+      }
+      groups[genre].push(perf);
+    });
+  
     return groups;
   }, {});
+  
+  // Szétválasztjuk a műfajokat a darabszámuk alapján
+  const genreEntries = Object.entries(performancesByGenre);
+  const mainGenres = {};
+  const otherGenres = [];
+  
+  genreEntries.forEach(([genre, genrePerformances]) => {
+    if (genrePerformances.length >= 3) {
+      mainGenres[genre] = genrePerformances;
+    } else {
+      otherGenres.push(...genrePerformances);
+    }
+  });
+  
+  // Ha vannak "egyéb műfajok", hozzáadjuk egy kategóriaként
+  if (otherGenres.length > 0) {
+    mainGenres['Egyéb műfajok'] = otherGenres;
+  }
+
+  //   if (!groups[genre]) {
+  //     groups[genre] = [];
+  //   }
+  //   groups[genre].push(perf);
+  //   return groups;
+  // }, {});
 
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {
@@ -68,11 +102,13 @@ export default function PerformancesByGenres({ performances }) {
 
   return (
     <div className="w-full my-12 space-y-12">
-      {Object.entries(performancesByGenre).map(([genre, genrePerformances]) => {
-        const containerRef = useRef(null);
+      {Object.entries(mainGenres).map(([genre, genrePerformances]) => {
+        if (!containerRef.current[genre]) {
+          containerRef.current[genre] = React.createRef();
+        }
 
         return (
-          <section className="relative mb-12">
+          <section key={genre} className="relative mb-12">
             <h2 className="text-2xl font-bold mb-5 text-c-text">Műfaj: {genre}</h2>
             <div className="relative">
               <div className="flex items-center justify-between">
