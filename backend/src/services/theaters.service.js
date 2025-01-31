@@ -81,19 +81,28 @@ const destroy = async (theaterId) => {
 
 const deleteSingleImage = async (theaterId, imageUrl) => {
   const theaterToUpdate = await getById(theaterId);
-  const originalImagesUrl = theaterToUpdate.imagesURL;
-  if (!originalImagesUrl.includes[0]) {
-    throw new HttpError("Image URL not found in theater", 400);
-  }
-  await deleteFiles(imageUrl);
-  const updatedImagesUrl = originalImagesUrl.filter(
-    (url) => url !== imageUrl[0],
-  );
+  const originalImageUrl = theaterToUpdate.imageURL; // Ez most egyetlen string, nem tömb!
 
+  if (!originalImageUrl) {
+    throw new HttpError("No image found for this theater", 400);
+  }
+
+  if (originalImageUrl !== imageUrl) {
+    throw new HttpError(
+      "Provided image URL does not match the stored image",
+      400,
+    );
+  }
+
+  // 🔥 Töröljük a képet Cloudinary-ról
+  await deleteFiles([imageUrl]); // Cloudinary tömböt vár, ezért be kell csomagolni
+
+  // 🔥 Frissítjük az adatbázist: töröljük az `imageURL` mezőt (null-ra állítjuk)
   const updatedTheater = await prisma.theater.update({
     where: { id: theaterId },
-    data: { imagesURL: updatedImagesUrl },
+    data: { imageURL: null }, // Töröljük a képet az adatbázisból
   });
+
   return updatedTheater;
 };
 
