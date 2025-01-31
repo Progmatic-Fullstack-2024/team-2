@@ -40,7 +40,7 @@ export default function PerformancesByTheaters({ performances }) {
   // Véletlenszerű színház kiválasztása
   const theaterIds = Object.keys(performancesByTheater);
   const randomTheaterId = theaterIds[Math.floor(Math.random() * theaterIds.length)];
-  const theaterPerformances = performancesByTheater[randomTheaterId];
+  const theaterPerformances = performancesByTheater[randomTheaterId] || [];
 
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {

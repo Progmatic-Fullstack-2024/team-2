@@ -96,7 +96,7 @@ export default function Header() {
         </nav>
       </div>
 
-      {user?.role === 'Admin' && (
+      {user?.role === 'admin' && (
         <>
           <hr className="w-full border-t border-c-text/40 my-2" />
           <nav className="flex gap-4 items-center w-full justify-center py-2">
@@ -125,23 +125,23 @@ export default function Header() {
               }}
             >
               <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
-              <MenuItem onClick={() => navigate('/admin/dashboard')}>Admin Dashboard</MenuItem>
-              <MenuItem onClick={() => navigate('/user-management')}>
+              <MenuItem onClick={() => navigate('/')}>Admin Dashboard</MenuItem>
+              <MenuItem onClick={() => navigate('/')}>
                 Felhasználók kezelése
               </MenuItem>
-              <MenuItem onClick={() => navigate('/theater-management')}>
+              <MenuItem onClick={() => navigate('/')}>
                 Színházak kezelése
               </MenuItem>
-              <MenuItem onClick={() => navigate('/pay-management')}>Fizetési ügyek</MenuItem>
-              <MenuItem onClick={() => navigate('/other-management')}>Egyéb</MenuItem>
+              <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
+              <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
             </Menu>
             <div className='hidden laptop:flex gap-4'>
             <MenuLink text="Előadás létrehozás" to="/new-performance" />
-            <MenuLink text="Admin Dashboard" to="/admin/dashboard" />
-            <MenuLink text="Felhasználók kezelése" to="/user-management" />
-            <MenuLink text="Színházak kezelése" to="/theater-management" />
-            <MenuLink text="Fizetési ügyek" to="/pay-management" />
-            <MenuLink text="Egyéb" to="/other-management" />
+            <MenuLink text="Admin Dashboard" to="/" />
+            <MenuLink text="Felhasználók kezelése" to="/" />
+            <MenuLink text="Színházak kezelése" to="/" />
+            <MenuLink text="Fizetési ügyek" to="/" />
+            <MenuLink text="Egyéb" to="/" />
             </div>
           </nav>
         </>
