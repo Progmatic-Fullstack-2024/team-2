@@ -61,7 +61,7 @@ export default function Header() {
         </div>
         {user ? (
           <>
-            {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
+            {user.role === 'admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
             <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />
 
             <DefaultButton
