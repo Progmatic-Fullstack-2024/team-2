@@ -4,7 +4,9 @@ import HttpError from "../utils/HttpError.js";
 import theaterAdmin from "./theaterAdmin.service.js";
 import { getEmailExists } from "./auth.service.js";
 
-const getAllUser = async () => {
+const getAllUser = async (orderBy, direction, page, limit) => {
+  let startNumber = 0;
+  if (page && limit) startNumber = (page - 1) * limit;
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -15,6 +17,8 @@ const getAllUser = async () => {
       birthDate: true,
       role: true,
     },
+    skip: startNumber,
+    take: limit,
   });
   return users;
 };
@@ -104,6 +108,11 @@ const passwordChange = async (id, oldPassword, newPassword) => {
   return null;
 };
 
+const countUsers = async () => {
+  const userNumber = await prisma.user.count();
+  return userNumber;
+};
+
 export default {
   getAllUser,
   getUserById,
@@ -111,4 +120,5 @@ export default {
   updateUser,
   deleteUser,
   passwordChange,
+  countUsers,
 };

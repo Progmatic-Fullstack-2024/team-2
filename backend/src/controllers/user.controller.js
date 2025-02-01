@@ -2,8 +2,18 @@ import userService from "../services/user.service.js";
 import HttpError from "../utils/HttpError.js";
 
 const listUsers = async (req, res, next) => {
+  const { orderBy, direction, page } = req.query;
+  let calcLimit;
+  if (page) calcLimit = req.query.limit ? req.query.limit : 10;
+  if (direction && direction !== "asc" && direction !== "desc")
+    next(new HttpError("Bad value of direction!"), 401);
   try {
-    const users = await userService.getAllUser();
+    const users = await userService.getAllUser(
+      orderBy,
+      direction,
+      page,
+      calcLimit,
+    );
     res.json(users);
   } catch (error) {
     next(error);
@@ -83,6 +93,11 @@ const passwordChange = async (req, res, next) => {
   } else next(new HttpError("Data is incompleted", 403));
 };
 
+const countUsers = async (req, res) => {
+  const userNumber = await userService.countUsers();
+  res.status(201).json({ numberOfUsers: userNumber });
+};
+
 export default {
   listUsers,
   getUser,
@@ -90,4 +105,5 @@ export default {
   updateUser,
   deleteUser,
   passwordChange,
+  countUsers,
 };
