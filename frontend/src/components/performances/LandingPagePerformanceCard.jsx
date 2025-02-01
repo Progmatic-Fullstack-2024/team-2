@@ -1,16 +1,12 @@
-import { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import PerformanceCardEmpty02 from './PerformanceCardEmpty02';
-import AuthContext from '../../contexts/AuthContext';
-import DefaultButton from '../misc/DefaultButton';
 
-export default function PerformanceCard02({ data }) {
+export default function LandingPagePerformanceCard({ data }) {
   const rendered = useRef(false);
   const [imageReady, setImageReady] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
 
   async function fetchImageAndCache(url) {
     try {
@@ -45,8 +41,16 @@ export default function PerformanceCard02({ data }) {
     navigate(`/performances/${data.id}`);
   };
 
-  const cardContent = (
-    <>
+  return (
+    <div
+      className={`flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500 ${
+        isHovered ? 'scale-95' : 'scale-75'
+      } cursor-pointer`}
+      style={{ backgroundImage: `url(${localStorage.getItem(imageReady)})` }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
+    >
       <div
         id="top-gradient"
         className="bg-gradient-to-b from-black/80 to-transparent to-70% absolute h-1/3 w-full tablet:rounded-t-2xl"
@@ -87,39 +91,6 @@ export default function PerformanceCard02({ data }) {
             <span>Közreműködők: {data.participants || 'N/A'}</span>
           </>
         )}
-      </div>
-    </>
-  );
-
-  if (user) {
-    return (
-      <button
-        type="button"
-        onClick={handleCardClick}
-        className={`flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500 ${
-          isHovered ? 'scale-95' : 'scale-75'
-        }`}
-        style={{ backgroundImage: `url(${localStorage.getItem(imageReady)})` }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {cardContent}
-      </button>
-    );
-  }
-
-  return (
-    <div
-      className={`flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500 ${
-        isHovered ? 'scale-95' : 'scale-75'
-      }`}
-      style={{ backgroundImage: `url(${localStorage.getItem(imageReady)})` }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {cardContent}
-      <div className="relative bottom-2 flex justify-center mt-4 z-50">
-        <DefaultButton text="Bejelentkezem" onClick={() => navigate('/login')} />
       </div>
     </div>
   );
