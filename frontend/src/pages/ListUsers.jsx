@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
-import ListUserstable from '../components/ListUserstable.jsx';
 import ImageTitle from '../components/misc/ImageTitle';
 import Unautorized from '../components/Unautorized.jsx';
+import ListUserstable from '../components/users/ListUserstable.jsx';
 import AuthContext from '../contexts/AuthContext';
 
 export default function ListUsers() {

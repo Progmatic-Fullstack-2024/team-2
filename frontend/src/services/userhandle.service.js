@@ -27,7 +27,7 @@ const getUser = async (userId) => {
   }
 };
 
-const patchOwnUser = async (user) => {
+const patchUser = async (user) => {
   try {
     const response = await axiosInstance.patch(`/users`, user);
     return response.data; // Successful answer
@@ -54,7 +54,7 @@ const deleteUser = async (userId) => {
   }
 };
 
-const deleteTheaterAdmin=async(userId)=>{
+const deleteTheaterAdmin = async (userId) => {
   try {
     const response = await axiosInstance.delete(`/theaterAdmin/${userId}`);
     return response.data;
@@ -63,15 +63,23 @@ const deleteTheaterAdmin=async(userId)=>{
   }
 };
 
-const setTheaterAdmin=async(userId,theaterId)=>{
-  const data={userId,theaterId};
-  console.log(data);
+const setTheaterAdmin = async (userId, theaterId) => {
+  const data = { userId, theaterId };
   try {
-    const response = await axiosInstance.post(`/theaterAdmin/newTheaterAdmin`,data);
+    const response = await axiosInstance.post(`/theaterAdmin/newTheaterAdmin`, data);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error; // In case of error
   }
 };
 
-export default { getAllUsers, getOwnUser, patchOwnUser, changePassword, getUser, deleteUser, deleteTheaterAdmin,setTheaterAdmin };
+export default {
+  getAllUsers,
+  getOwnUser,
+  patchUser,
+  changePassword,
+  getUser,
+  deleteUser,
+  deleteTheaterAdmin,
+  setTheaterAdmin,
+};

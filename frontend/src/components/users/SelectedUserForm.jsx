@@ -2,12 +2,12 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { userValidationSchemaForUpdateUser } from '../schema/userValidationSchema';
-import DefaultButton from './misc/DefaultButton';
 import OptionList from './OptionList.jsx';
 import UserResult from './UserResult.jsx';
-import TheaterHandle from '../services/theaters.service.js';
-import UserHandle from '../services/userhandle.service.js';
+import { userValidationSchemaForUpdateUser } from '../../schema/userValidationSchema.js';
+import TheaterHandle from '../../services/theaters.service.js';
+import UserHandle from '../../services/userhandle.service.js';
+import DefaultButton from '../misc/DefaultButton.jsx';
 
 export default function SelectedUserForm() {
   const [isVisilable, setIsVisilable] = useState(false);
@@ -77,10 +77,9 @@ export default function SelectedUserForm() {
         role: handleuser.role,
       };
       if (handleuser.theaterAdmin && handleuser.theaterAdmin.theaterId)
-         initialValues.theater = handleuser.theaterAdmin.theaterId;
-      else initialValues.theater="new";
-    } 
-    else initialValues = null;
+        initialValues.theater = handleuser.theaterAdmin.theaterId;
+      else initialValues.theater = 'new';
+    } else initialValues = null;
     return initialValues;
   }
 
@@ -95,7 +94,9 @@ export default function SelectedUserForm() {
       } catch (e) {
         setMsg(e);
       }
-    } else setIsTheaterAdmin(false);
+    } else {
+      setIsTheaterAdmin(false);
+    }
   }
 
   async function loadUser() {
@@ -108,11 +109,13 @@ export default function SelectedUserForm() {
       sethandleUser(getUser);
       await loadTheater(getUser);
       if (getUser.role === 'theaterAdmin') setIsTheaterAdmin(true);
-      else setIsTheaterAdmin(false);
+      else {
+        setIsTheaterAdmin(false);
+      }
     } catch (e) {
       return <h2>User nem található</h2>;
     }
-    initialValues=inicializeForm();
+    initialValues = inicializeForm();
     return null;
   }
   useEffect(() => {
@@ -124,61 +127,64 @@ export default function SelectedUserForm() {
     loadUser();
   }, []);
 
-  const cancelHandle = () => {
+  const cancelHandle = async () => {
     setModify(true);
     setDataButton({ text: 'Adatok módosítása', click: modifyHandle, type: 'button' });
     setTitle('Felhasználó adatainak megtekintése');
     setButtonType('button');
-    loadTheater(handleuser);
   };
 
-  const handleTheaterAdmin=async(values)=>{
-    let result=false;
-    console.log(handleuser);
-    if(handleuser.role===values.role && handleuser.theaterAdmin!=null && handleuser.theaterAdmin.theaterId===values.theater) return false;
-    if (handleuser.role==="theaterAdmin" && values.role!=="theaterAdmin"){
-      try{ 
-      const answer=await UserHandle.deleteTheaterAdmin(handleuser.id);
-       console.log(answer);
-       result=true;
-      } catch(error){
+  const createNewTheater = async () => {
+    const theaterData = {
+      name: 'felveendő színház név',
+      address: 'felveendő színház cím',
+      email: 'nomail@nomail.yy',
+    };
+    const newTheater = await TheaterHandle.createThreater(theaterData);
+    return newTheater;
+  };
+
+  const handleTheaterAdmin = async (values) => {
+    let result = false;
+    if (
+      handleuser.role === values.role &&
+      handleuser.theaterAdmin != null &&
+      handleuser.theaterAdmin.theaterId === values.theater
+    )
+      return false;
+    if (handleuser.role === 'theaterAdmin' && values.role !== 'theaterAdmin') {
+      try {
+        await UserHandle.deleteTheaterAdmin(handleuser.id);
+        result = true;
+      } catch (error) {
         setMsg(error);
-        console.log("hiba. ",error);
-        result=false;
+        result = false;
       }
     }
-      if (values.role==="theaterAdmin" && values.theater) { 
+    if (values.role === 'theaterAdmin') {
       let newTheaterId;
-        console.log("Adminbam",values);
-      if (values.theater ==="new" ) {
-        const theater={
-          name:"felveendő színház név",
-          address:"felveendő színház cím",
-          email:"nomail@nomail.yy",
-        };
-        const newTheater=await TheaterHandle.createThreater(theater);
-        console.log("új színház:",newTheater);
-        if(newTheater) newTheaterId=newTheater.id;
-        else {result=false; return result;}
-      }
-      else newTheaterId = values.theater;
-        try{
-          let answer;
-          if(newTheaterId!=="new") {
-            answer=await UserHandle.setTheaterAdmin(handleuser.id,newTheaterId);
-            console.log(answer);
-          }
-        }catch(error){
-          setMsg(error);
-          result=false;
-          console.log("hiba. ",error);
+      if (values.theater === 'new') {
+        const newTheater = await createNewTheater();
+        if (newTheater) newTheaterId = newTheater.id;
+        else throw new Error('database error: creating newtheater is failed');
+      } else newTheaterId = values.theater;
+      try {
+        let answer;
+        if (newTheaterId !== 'new') {
+          answer = await UserHandle.setTheaterAdmin(handleuser.id, newTheaterId);
+          if(answer) result = true;
+          else result=false;
         }
-  }
-  return result;
+      } catch (error) {
+        setMsg(error);
+        result = false;
+      }
+    }
+    return result;
   };
 
-  const sendData = async (values, action) => {  
-    const resultHandleTheaterAdmin=await handleTheaterAdmin(values);
+  const sendData = async (values, action) => {
+    const resultHandleTheaterAdmin = await handleTheaterAdmin(values);
     const newUserData = { id: handleuser.id };
     const keys = Object.keys(values);
     keys.forEach((key) => {
@@ -195,7 +201,7 @@ export default function SelectedUserForm() {
       setButtonmsg('Tovább');
       setButtonmsg2('');
       try {
-        const answer = await UserHandle.patchOwnUser(newUserData);
+        const answer = await UserHandle.patchUser(newUserData);
 
         if (answer) setMsg('Az adatmódosítás sikeres');
         else {
@@ -203,18 +209,21 @@ export default function SelectedUserForm() {
           action.resetform();
         }
         await loadUser();
+        if (values.role !== 'theaterAdmin') {
+          setIsTheaterAdmin(false);
+        }
       } catch (error) {
         setMsg('Hiba: az adatmódosítás elutasítva.');
+        if (handleuser.role !== 'theaterAdmin') {
+          setIsTheaterAdmin(false);
+        }
         action.resetForm();
       }
       cancelHandle();
-      if (handleuser.role !== 'admin') setIsTheaterAdmin(false);
-    }
-    else if (resultHandleTheaterAdmin) {
+    } else if (resultHandleTheaterAdmin) {
       setMsg('Az adatmódosítás sikeres');
       await loadUser();
       cancelHandle();
-      
     }
   };
 
