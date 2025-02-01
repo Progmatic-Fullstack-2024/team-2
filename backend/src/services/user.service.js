@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import prisma from "../models/prisma-client.js";
 import HttpError from "../utils/HttpError.js";
+import theaterAdmin from "./theaterAdmin.service.js";
 import { getEmailExists } from "./auth.service.js";
 
 const getAllUser = async () => {
@@ -77,9 +78,11 @@ const updateUser = async (
 const deleteUser = async (id) => {
   let user = await getUserById(id);
   if (user)
-    user = await prisma.user.delete({
-      where: { id },
-    });
+    if (user.theaterAdmin != null)
+      await theaterAdmin.deleteUserFromTheaterAdmin(id);
+  user = await prisma.user.delete({
+    where: { id },
+  });
 
   return user;
 };
