@@ -60,7 +60,7 @@ export default function OwnUserEdit() {
         lastName: user.lastName,
         email: user.email,
         phone: user.phone,
-        birthDate: user.birthDate,
+        birthDate: user.birthDate ? user.birthDate:"",
       };
     } else initialValues = null;
     return initialValues;
@@ -71,6 +71,7 @@ export default function OwnUserEdit() {
   async function loadUser() {
     try {
       const getUser = await userHandle.getOwnUser();
+      if (getUser && getUser.birthDate===null) getUser.birthDate="";
       setUser(getUser);
     } catch (e) {
       return <h2>User nem található</h2>;

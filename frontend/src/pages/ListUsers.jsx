@@ -11,9 +11,9 @@ export default function ListUsers() {
     <>
       <ImageTitle title="Felhasználok listázása" description="" />
       <div className=" min-h-screen flex flex-col items-center m-0">
-        {user && user.role === 'Admin' ? (
+        {user && user.role === 'admin' ? (
           <div className="mt-28">
-            <h1 className="my-1 text-center text-2xl">Felhasználók listája</h1>
+            <h1 className="my-1 text-center text-2xl text-white">Felhasználók listája</h1>
             <ListUserstable />
           </div>
         ) : (

@@ -11,4 +11,5 @@ router.patch("/passwordChange", isAuthenticated, userController.passwordChange);
 router.patch("/", isAuthenticated, userController.updateUser);
 router.delete("/:id", isAdmin, userController.deleteUser);
 
+
 export default router;

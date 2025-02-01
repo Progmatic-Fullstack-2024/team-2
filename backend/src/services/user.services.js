@@ -1,62 +1,7 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import prisma from "../models/prisma-client.js";
-import { JWT_SECRET } from "../constants/constants.js";
 import HttpError from "../utils/HttpError.js";
-
-export const getEmailExists = async (email) => {
-  const emailExists = await prisma.user.findUnique({ where: { email } });
-  return emailExists;
-};
-
-const registration = async ({
-  lastName,
-  firstName,
-  email,
-  password,
-  phone,
-  role = "user",
-  birthDate,
-}) => {
-  const emailExists = await getEmailExists(email);
-  if (emailExists) throw new HttpError("Email already exists!", 403);
-  let birthDatedate;
-  if (birthDate) birthDatedate = new Date(birthDate);
-  const hashedPassword = await bcrypt.hash(password, 5);
-  const newUser = await prisma.user.create({
-    data: {
-      lastName,
-      firstName,
-      email,
-      password: hashedPassword,
-      phone,
-      role,
-      birthDate: birthDatedate,
-    },
-  });
-
-  return newUser;
-};
-
-const login = async ({ email, password }) => {
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) throw new HttpError("Invalid email or password!", 403);
-
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) throw new HttpError("Invalid email or password!", 403);
-
-  const payload = {
-    id: user.id,
-    email: user.email,
-    lastName: user.lastName,
-    firstName: user.firstName,
-    role: user.role,
-  };
-
-  const token = jwt.sign(payload, JWT_SECRET);
-
-  return token;
-};
+import { getEmailExists } from "./auth.service.js";
 
 const getAllUser = async () => {
   const users = await prisma.user.findMany({
@@ -76,14 +21,9 @@ const getAllUser = async () => {
 const getUserById = async (id) => {
   const user = await prisma.user.findUnique({
     where: { id },
-    select: {
-      id: true,
-      lastName: true,
-      firstName: true,
-      email: true,
-      phone: true,
-      birthDate: true,
-      role: true,
+
+    include: {
+      theaterAdmin: true,
     },
   });
   return user;
@@ -91,7 +31,9 @@ const getUserById = async (id) => {
 
 const getOwnUserById = async (id) => {
   const user = await getUserById(id);
+  if (!user) return null;
   if (user.role === "user") delete user.role;
+  delete user.theaterAdmin;
   return user;
 };
 
@@ -158,13 +100,39 @@ const passwordChange = async (id, oldPassword, newPassword) => {
   return null;
 };
 
+const isTheaterAdmin = async (userId) => {
+  const theater = await prisma.theaterAdmin.findMany({
+    where: { userId },
+  });
+  return theater;
+};
+
+const deleteUserFromTheaterAdmin = async (userId) => {
+  let theater=false;
+  const isTheater=await isTheaterAdmin(userId);
+  if(isTheater.length>0) {
+        theater = await prisma.theaterAdmin.delete({
+        where: { userId },
+        });
+  }
+  return theater;
+};
+
+const setNewUserToTheaterAdmin = async (userId, theaterId) => {
+  await deleteUserFromTheaterAdmin(userId);
+  const theaterAdmin = await prisma.theaterAdmin.create({
+    data: { userId, theaterId },
+  });
+  return theaterAdmin;
+};
+
 export default {
-  registration,
-  login,
   getAllUser,
   getUserById,
   getOwnUserById,
   updateUser,
   deleteUser,
   passwordChange,
+  setNewUserToTheaterAdmin,
+  deleteUserFromTheaterAdmin,
 };

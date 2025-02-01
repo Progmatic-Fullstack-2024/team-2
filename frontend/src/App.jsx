@@ -32,7 +32,7 @@ function App() {
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
-              <Route path="ownuser" element={<OwnUserPage />} />
+              <Route path="/ownuser" element={<OwnUserPage />} />
               <Route path="/userhandler" element={<SelectedUser />} />
             </Routes>
           </div>

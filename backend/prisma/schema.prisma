@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  user
+  theaterAdmin
+  admin
+}
+
 enum Profession {
   actor
   director
@@ -26,108 +32,154 @@ enum Theme {
 }
 
 model User {
-  id                  String        @id @default(cuid())
-  lastName            String
-  firstName           String
-  email               String        @unique
-  phone               String?
-  password            String
-  role                String
-  birthDate           DateTime?
-  userSettings        UserSetting?
-  theaterAdmin        TheaterAdmin? @relation("TheaterAdmin_User")
-  followedTheater     Theater[]     @relation("TheaterFollower_User")
-  followedPerformance Performance[] @relation("PerformanceFollower_User")
+  id        String    @id @default(cuid())
+  lastName  String
+  firstName String
+  email     String    @unique
+  phone     String?
+  password  String
+  birthDate DateTime?
+  role      Role
+
+  userSettings           UserSetting?
+  theaterAdmin           TheaterAdmin?            @relation("TheaterAdmin_User")
+  followedTheater        Theater[]                @relation("TheaterFollower_User")
+  followedPerformance    Performance[]            @relation("PerformanceFollower_User")
+  UserSeasonTicket       UserSeasonTicket[]
+  UserVisitedPerformance UserVisitedPerformance[]
 }
 
 model UserSetting {
   id     String @id @default(cuid())
   userId String @unique
-  theme  Theme
-  user   User   @relation(fields: [userId], references: [id])
+
+  theme Theme
+  user  User  @relation(fields: [userId], references: [id])
 }
 
 model Genre {
-  id          String        @id @default(cuid())
-  name        String
+  id   String @id @default(cuid())
+  name String
+
   perfomances Performance[] @relation("Performance_Genre")
 }
 
+model UserVisitedPerformance {
+  id             String @id @default(cuid())
+  qrImage        String
+  userId         String
+  performanceId  String
+  seasonTicketId String
+  seats          Int
+
+  seasonTicket SeasonTicket @relation(fields: [seasonTicketId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  performance  Performance  @relation(fields: [performanceId], references: [id])
+}
+
 model Performance {
-  id                      String              @id @default(cuid())
-  title                   String
-  theaterId               String
-  posterURL               String?
-  imagesURL               String[]            @default([])
-  description             String
-  theater                 Theater             @relation(fields: [theaterId], references: [id])
-  creators                Creator[]           @relation("Performance_Creator")
-  genre                   Genre[]             @relation("Performance_Genre")
+  id                 String   @id @default(cuid())
+  title              String
+  theaterId          String
+  posterURL          String?
+  imagesURL          String[] @default([])
+  description        String
+  performanceEventId String?  @unique
+
+  theater                 Theater                  @relation(fields: [theaterId], references: [id])
+  creators                Creator[]                @relation("Performance_Creator")
+  genre                   Genre[]                  @relation("Performance_Genre")
   targetAudience          TargetAge?
-  premierePerfomanceEvent PerformanceEvents?  @relation("premiere", fields: [performanceEventId], references: [id])
-  performanceEventId      String?             @unique
+  premierePerfomanceEvent PerformanceEvents?       @relation("premiere", fields: [performanceEventId], references: [id])
   performanceEvents       PerformanceEvents[]
   futurePerformance       FuturePerformances?
-  performanceFollowers    User[]              @relation("PerformanceFollower_User")
+  performanceFollowers    User[]                   @relation("PerformanceFollower_User")
+  UserVisitedPerformance  UserVisitedPerformance[]
 }
 
 model PerformanceEvents {
-  id              String       @id @default(cuid())
-  performanceDate DateTime   @default(now())
+  id              String   @id @default(cuid())
+  performanceDate DateTime @default(now())
   spots           Int
-  soldSpots       Int          @default(0)
-  premiere        Performance? @relation("premiere")
+  soldSpots       Int      @default(0)
   performanceId   String
-  performance     Performance  @relation(fields: [performanceId], references: [id])
+
+  premiere    Performance? @relation("premiere")
+  performance Performance  @relation(fields: [performanceId], references: [id])
 }
 
 model FuturePerformances {
-  id                String      @id @default(cuid())
+  id                String @id @default(cuid())
   targetBudgetIdeal Int // --- ez egy olyan összeg, ami a legideálisabb költségvetést tartalmazza (itt alkotói díjak, rendes jelmez és díszlet pénz, és márketing költség is van.) pl: 5.000.000 - (4 színész, 1 rendező, 1 asszisztens, 1 látvány, talán még egy színész és/vagy 1.000.000/1.500.000 díszlet-jelmez, marketing. )
   targetBudget      Int // --- ez a még nem ideális, de nem is a minimális összeg (itt az alkotók honorja mellett még jelmez és díszlet is van, minimális pénz.) pl: 4.000.000 - (3 színész, 1 rendező, 1 asszisztens, 1 látványtervező, esetleg még egy színész és 500.000 a díszlet, jelmezre)
   minimumBudget     Int // --- ez a minimum, ami ahhoz kell, hogy az adott előadás bemutatható legyen(általában az alkotók tisztelet-díja.) pl: 2.000.000 - (3 színész és egy rendező)
   actualBudget      Int // --- mennyi pénze van az adott projektnek eddig (ennek nem kell 0-nak lenni, mert lehet van máshonnan pénz)
   gift              String //    --- mit ajánl fel az adott csapat az adományozóinak (2 jegy a bemutatóra, pl. --- amúgy később ebből lehetne egy külön táblát csinálni, ahol a különböző giftek vannak felvezetve, összegekkel párosítva(pl: 2 jegy a premierre - 10.000 Ft adománynál, de mondjuk 50.000 Ft adománynál már exkluzív vacsora a társulattal, stb, amit kitalálnak, s akkor ezt egy kapcsoló táblával lehetne összekötni a megfelelő user-rel. De ez next level.))
-  performanceId     String      @unique
-  performance       Performance @relation(fields: [performanceId], references: [id])
+  performanceId     String @unique
+
+  performance Performance @relation(fields: [performanceId], references: [id])
 }
 
 model Company {
-  id       String    @id @default(cuid())
-  name     String
+  id   String @id @default(cuid())
+  name String
+
   creators Creator[] @relation("Company_Creator")
 }
 
 model Creator {
-  id            String        @id @default(cuid())
+  id            String  @id @default(cuid())
   name          String
   imageURL      String?
-  performances  Performance[] @relation("Performance_Creator")
-  profession    Profession[]
   awards        String?
   introductions String?
-  company       Company[]     @relation("Company_Creator")
+
+  performances Performance[] @relation("Performance_Creator")
+  profession   Profession[]
+  company      Company[]     @relation("Company_Creator")
 }
 
 model Theater {
-  id             String         @id @default(cuid())
+  id             String  @id @default(cuid())
   name           String
   address        String
   email          String
   imageURL       String?
   phone          String?
   seatsAvailable Int?
-  performances   Performance[]
-  admins         TheaterAdmin[] @relation("TheaterAdmin_Theater")
-  followers      User[]         @relation("TheaterFollower_User")
+
+  performances Performance[]
+  admins       TheaterAdmin[] @relation("TheaterAdmin_Theater")
+  followers    User[]         @relation("TheaterFollower_User")
   // campaigns    String/Campaigns[]  EZ LEKÉRDEWZHETŐ   --- ez még nagyon a jövő zenéje, de lehetne majd csinálni egy kapcsoló táblát, ami összeköti az adott színházat a különböző típusú adománygyűjtő kampánnyal, addig meg csak egy url, vag egy leírás lehet itt, de ez nagyon jövő zene 
 }
 
 model TheaterAdmin {
-  userId    String  @id @unique
+  userId    String @id
   theaterId String
-  user      User    @relation("TheaterAdmin_User", fields: [userId], references: [id])
-  theater   Theater @relation("TheaterAdmin_Theater", fields: [theaterId], references: [id])
 
-  @@unique([userId, theaterId])
+  user    User    @relation("TheaterAdmin_User", fields: [userId], references: [id])
+  theater Theater @relation("TheaterAdmin_Theater", fields: [theaterId], references: [id])
 }
+
+model UserSeasonTicket {
+  id             String   @id @default(cuid())
+  userId         String
+  seasonTicketId String
+  created        DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  seasonTicket SeasonTicket @relation(fields: [seasonTicketId], references: [id])
+}
+
+model SeasonTicket {
+  id           String @id @unique @default(cuid())
+  name         String
+  price        Int
+  durationDay  Int
+  seatQuantity Int
+
+  UserSeasonTicket       UserSeasonTicket[]
+  UserVisitedPerformance UserVisitedPerformance[]
+}
+

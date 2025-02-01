@@ -6,7 +6,7 @@ import { userValidationSchemaForUpdateUser } from '../schema/userValidationSchem
 import DefaultButton from './misc/DefaultButton';
 import OptionList from './OptionList.jsx';
 import UserResult from './UserResult.jsx';
-import TheatreHandle from '../services/theaters.service.js';
+import TheaterHandle from '../services/theaters.service.js';
 import UserHandle from '../services/userhandle.service.js';
 
 export default function SelectedUserForm() {
@@ -32,15 +32,15 @@ export default function SelectedUserForm() {
   const [buttonmsg2, setButtonmsg2] = useState('');
   const [isUserDeleting, setIsUserDeleting] = useState(false);
   const [navigate, setNavigate] = useState(undefined);
-  const [theatre, setTheatre] = useState([{ id: '-', name: 'Nincs megadva' }]);
-  const [isTheatreAdmin, setIsTheatreAdmin] = useState(false);
+  const [theater, setTheater] = useState([{ id: '-', name: 'Nincs megadva' }]);
+  const [isTheaterAdmin, setIsTheaterAdmin] = useState(false);
   const locationData = useLocation();
 
   const sendDeleteUser = async () => {
     try {
       const answer = await UserHandle.deleteUser(handleuser.id);
       if (answer.mesaage === 'User deleted');
-      setMsg('A felhasználó törklése megtörtént.');
+      setMsg('A felhasználó törlése megtörtént.');
       setNavigate('../userlist');
     } catch (error) {
       setMsg('Hiba: a felhasználó törlése sikertelen');
@@ -73,26 +73,29 @@ export default function SelectedUserForm() {
         lastName: handleuser.lastName,
         email: handleuser.email,
         phone: handleuser.phone,
-        birthDate: handleuser.birthDate,
+        birthDate: handleuser.birthDate ? handleuser.birthDate : '',
         role: handleuser.role,
       };
-    } else initialValues = null;
+      if (handleuser.theaterAdmin && handleuser.theaterAdmin.theaterId)
+         initialValues.theater = handleuser.theaterAdmin.theaterId;
+      else initialValues.theater="new";
+    } 
+    else initialValues = null;
     return initialValues;
   }
 
-  const initialValues = inicializeForm();
+  let initialValues = inicializeForm();
 
-  async function theatreLoader(newUser) {
-    if (newUser.role === 'theatreAdmin') {
+  async function loadTheater(newUser) {
+    if (newUser.role === 'theaterAdmin') {
       try {
-        const getTheatre = await TheatreHandle();
-        getTheatre.unshift({ id: 'new', name: 'Új felveendő színház' });
-        setTheatre(getTheatre);
+        const getTheater = await TheaterHandle.getTheaters();
+        getTheater.unshift({ id: 'new', name: 'Új felveendő színház' });
+        setTheater(getTheater);
       } catch (e) {
         setMsg(e);
       }
-      setIsTheatreAdmin(true);
-    } else setIsTheatreAdmin(false);
+    } else setIsTheaterAdmin(false);
   }
 
   async function loadUser() {
@@ -101,11 +104,15 @@ export default function SelectedUserForm() {
 
       if (!userId) throw Error();
       const getUser = await UserHandle.getUser(userId);
+      if (getUser && getUser.birthDate === null) getUser.birthDate = '';
       sethandleUser(getUser);
-      theatreLoader(getUser);
+      await loadTheater(getUser);
+      if (getUser.role === 'theaterAdmin') setIsTheaterAdmin(true);
+      else setIsTheaterAdmin(false);
     } catch (e) {
       return <h2>User nem található</h2>;
     }
+    initialValues=inicializeForm();
     return null;
   }
   useEffect(() => {
@@ -122,15 +129,65 @@ export default function SelectedUserForm() {
     setDataButton({ text: 'Adatok módosítása', click: modifyHandle, type: 'button' });
     setTitle('Felhasználó adatainak megtekintése');
     setButtonType('button');
-    theatreLoader(handleuser);
+    loadTheater(handleuser);
   };
 
-  const sendData = async (values, action) => {
+  const handleTheaterAdmin=async(values)=>{
+    let result=false;
+    console.log(handleuser);
+    if(handleuser.role===values.role && handleuser.theaterAdmin!=null && handleuser.theaterAdmin.theaterId===values.theater) return false;
+    if (handleuser.role==="theaterAdmin" && values.role!=="theaterAdmin"){
+      try{ 
+      const answer=await UserHandle.deleteTheaterAdmin(handleuser.id);
+       console.log(answer);
+       result=true;
+      } catch(error){
+        setMsg(error);
+        console.log("hiba. ",error);
+        result=false;
+      }
+    }
+      if (values.role==="theaterAdmin" && values.theater) { 
+      let newTheaterId;
+        console.log("Adminbam",values);
+      if (values.theater ==="new" ) {
+        const theater={
+          name:"felveendő színház név",
+          address:"felveendő színház cím",
+          email:"nomail@nomail.yy",
+        };
+        const newTheater=await TheaterHandle.createThreater(theater);
+        console.log("új színház:",newTheater);
+        if(newTheater) newTheaterId=newTheater.id;
+        else {result=false; return result;}
+      }
+      else newTheaterId = values.theater;
+        try{
+          let answer;
+          if(newTheaterId!=="new") {
+            answer=await UserHandle.setTheaterAdmin(handleuser.id,newTheaterId);
+            console.log(answer);
+          }
+        }catch(error){
+          setMsg(error);
+          result=false;
+          console.log("hiba. ",error);
+        }
+  }
+  return result;
+  };
+
+  const sendData = async (values, action) => {  
+    const resultHandleTheaterAdmin=await handleTheaterAdmin(values);
     const newUserData = { id: handleuser.id };
     const keys = Object.keys(values);
     keys.forEach((key) => {
       if (handleuser[key] !== values[key]) newUserData[key] = values[key];
     });
+    Object.keys(newUserData).forEach(
+      (data) => newUserData[data] === '' && delete newUserData[data],
+    );
+    if (newUserData.theater) delete newUserData.theater;
     if (Object.keys(newUserData).length > 1) {
       if (newUserData.birthDate) newUserData.birthDate = newUserData.birthDate.replaceAll('.', '-');
       setIsVisilable(true);
@@ -139,18 +196,25 @@ export default function SelectedUserForm() {
       setButtonmsg2('');
       try {
         const answer = await UserHandle.patchOwnUser(newUserData);
+
         if (answer) setMsg('Az adatmódosítás sikeres');
         else {
           setMsg('Az adatmódosítás sikertelen');
           action.resetform();
         }
-
-        loadUser();
+        await loadUser();
       } catch (error) {
         setMsg('Hiba: az adatmódosítás elutasítva.');
         action.resetForm();
       }
       cancelHandle();
+      if (handleuser.role !== 'admin') setIsTheaterAdmin(false);
+    }
+    else if (resultHandleTheaterAdmin) {
+      setMsg('Az adatmódosítás sikeres');
+      await loadUser();
+      cancelHandle();
+      
     }
   };
 
@@ -163,10 +227,11 @@ export default function SelectedUserForm() {
   };
 
   const roleHandle = (e) => {
-    if (e.target.value === 'theatreAdmin') {
+    if (e.target.value === 'theaterAdmin') {
       const newUser = { ...handleuser, role: e.target.value };
-      theatreLoader(newUser);
-    } else setIsTheatreAdmin(false);
+      setIsTheaterAdmin(true);
+      loadTheater(newUser);
+    } else setIsTheaterAdmin(false);
   };
 
   return (
@@ -200,7 +265,7 @@ export default function SelectedUserForm() {
                   <Field
                     type="text"
                     name="lastName"
-                    placeholder="Add meg a vezetéknevedet"
+                    placeholder="Add meg a vezetéknevet"
                     className="w-full border p-2 rounded my-1 text-gray-800"
                     disabled={modify}
                   />
@@ -213,7 +278,7 @@ export default function SelectedUserForm() {
                   <Field
                     type="text"
                     name="firstName"
-                    placeholder="Add meg a keresztnevedet"
+                    placeholder="Add meg a keresztnevet"
                     className="w-full border p-2 rounded my-1 text-gray-800"
                     disabled={modify}
                   />
@@ -226,7 +291,7 @@ export default function SelectedUserForm() {
                   <Field
                     type="email"
                     name="email"
-                    placeholder="Add meg az e-mail címedet"
+                    placeholder="Add meg az e-mail címet"
                     className="w-full border p-2 rounded my-1 text-gray-800"
                     disabled={modify}
                   />
@@ -239,7 +304,7 @@ export default function SelectedUserForm() {
                   <Field
                     type="text"
                     name="phone"
-                    placeholder="Add meg a telefonszámodat"
+                    placeholder="Add meg a telefonszámot"
                     className="w-full border p-2 rounded my-1 text-gray-800"
                     disabled={modify}
                   />
@@ -252,7 +317,7 @@ export default function SelectedUserForm() {
                   <Field
                     type="text"
                     name="birthDate"
-                    placeholder="Add meg a születési dátumod"
+                    placeholder="Add meg a születési dátumot"
                     className="w-full border p-2 rounded my-1 text-gray-800"
                     disabled={modify}
                   />
@@ -269,20 +334,20 @@ export default function SelectedUserForm() {
                       setFieldValue('role', e.target.value);
                     }}
                   >
-                    <option value="user">User</option>
-                    <option value="theatreAdmin">SzínházAdmin</option>
-                    <option value="Admin">Admin</option>
+                    <option value="user">Felhasználó</option>
+                    <option value="theaterAdmin">Színházi adminisztrátor</option>
+                    <option value="admin">Főadminisztrátor</option>
                   </Field>
                 </div>
-                {isTheatreAdmin && (
+                {isTheaterAdmin && (
                   <div className="mb-4">
                     <Field
-                      name="theatre"
+                      name="theater"
                       as="select"
                       className="w-full border p-2 rounded my-1 text-gray-800"
                       disabled={modify}
                     >
-                      <OptionList list={theatre} />
+                      <OptionList list={theater} />
                     </Field>
                   </div>
                 )}

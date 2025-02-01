@@ -11,7 +11,7 @@ export default function selectedUser() {
     <>
       <ImageTitle title="Kért felhasználó kezelése" description="" />
       <div className=" min-h-screen flex flex-col items-center m-0">
-        {user && user.role === 'Admin' ? (
+        {user && user.role === 'admin' ? (
           <div className="mt-28">
             <SelectedUserForm />
           </div>
