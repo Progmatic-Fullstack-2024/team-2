@@ -1,4 +1,6 @@
+import { Menu, MenuItem } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
+import { FiMenu } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
@@ -36,7 +38,7 @@ export default function Header() {
 
   const handleLogout = () => {
     logout();
-    return navigate('/');
+    navigate('/');
   };
 
   
@@ -48,68 +50,53 @@ export default function Header() {
   return (
     <>
       <header className={headerClass}>
+        <div className="flex w-full justify-between items-center">
         <div className="flex gap-4 px-3 py-2 text-xl font-bold">
-          <Link to="/" className="min-w-[58]">
-            <SvgIcon
-              icon="masks"
-              stroke="c-text"
-              size="50px"
-              fill="white"
-              className="cursor-pointer hover:scale-110 transition-transform duration-100"
-            />
-          </Link>
+            <Link to="/" className="min-w-[58]">
+              <SvgIcon
+                icon="masks"
+                stroke="c-text"
+                size="50px"
+                fill="white"
+                className="cursor-pointer hover:scale-110 transition-transform duration-100"
+              />
+            </Link>
 
-          {user && (
-            <div className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default mx-5 my-auto">
-              {`${user.firstName}`}
-            </div>
-          )}
-        </div>
-        <nav className="flex laptop:gap-4 items-center">
-          <div className="flex justify-center h-full gap-1">
-            <MenuLink text="Home" to="/" icon="star" iconSize="50" />
-            <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
+        {user && (
+          <div className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default mx-5 my-auto">
+            {`${user.firstName}`}
           </div>
-          {user ? (
-            <>
-              {user.role === 'admin' && (
-                <MenuLink text="Előadás létrehozás" to="/new-performance" />
-              )}
-              <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />
+        )}
+      </div>
+      <nav className="flex laptop:gap-4 items-center">
+        <div className="flex justify-center h-full gap-1">
+          <MenuLink text="Home" to="/" icon="star" iconSize="50" />
+          <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
+        </div>
+        {user ? (
+          <>
+            {user.role === 'Admin' && <MenuLink text="Előadás létrehozás" to="/new-performance" />}
+            <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />
 
-              <DefaultButton
-                text="Kijelentkezés"
-                color="c-warning"
-                buttonStyle="outline"
-                height="11"
-                onClick={handleLogout}
-                icon="logout"
-              />
-            </>
-          ) : (
-            <>
-              <DefaultButton
-                text="Bejelentkezés"
-                buttonStyle="outline"
-                height="11"
-                onClick={() => openAuthModal('login')}
-                icon="login"
-              />
-              <DefaultButton
-                text="Regisztráció"
-                buttonStyle="outline"
-                height="11"
-                onClick={() => openAuthModal('register')}
-              />
-            </>
-          )}
-        </nav>
-      </header>
-
-      
-      {showAuthModal && (
-        <AuthModal defaultForm={modalForm} onClose={() => setShowAuthModal(false)} />
-      )}
-    </>
+            <DefaultButton
+              text="Kijelentkezés"
+              color="c-warning"
+              buttonStyle="outline"
+              height="11"
+              onClick={handleLogout}
+              icon="logout"
+            />
+          </>
+        ) : (
+          <DefaultButton
+            text="Bejelentkezés"
+            buttonStyle="outline"
+            height="11"
+            onClick={() => navigate('/login')}
+            icon="login"
+          />
+        )}
+      </nav>
+    </header>
   );
 }
