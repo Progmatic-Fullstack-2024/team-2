@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import PerformanceCardEmpty02 from './PerformanceCardEmpty02';
 
 export default function LandingPagePerformanceCard({ data }) {
@@ -50,6 +51,13 @@ export default function LandingPagePerformanceCard({ data }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleCardClick();
+        }
+      }}
     >
       <div
         id="top-gradient"
