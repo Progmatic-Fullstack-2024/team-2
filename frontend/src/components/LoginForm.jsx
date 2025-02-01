@@ -7,7 +7,7 @@ import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
 import DefaultButton from './misc/DefaultButton';
 
-export default function LoginForm() {
+export default function LoginForm({ onSwitch }) {
   const { login, showAuthMsg, authMsg } = useContext(AuthContext);
   const initialValues = { email: '', password: '' };
 
@@ -54,12 +54,22 @@ export default function LoginForm() {
           </Formik>
           <div className="flex justify-center mt-5">
             Nem vagy regisztrálva?
-            <Link
-              to="/register"
-              className="text-gray-500 hover:underline pl-2 hover:scale-110 hover:text-blue-800 transition duration-700"
-            >
-              Regisztrálj
-            </Link>
+            {onSwitch ? (
+              <button
+                type="button"
+                onClick={() => onSwitch('register')}
+                className="text-gray-500 hover:underline pl-2 hover:scale-110 hover:text-blue-800 transition duration-700"
+              >
+                Regisztrálj
+              </button>
+            ) : (
+              <Link
+                to="/register"
+                className="text-gray-500 hover:underline pl-2 hover:scale-110 hover:text-blue-800 transition duration-700"
+              >
+                Regisztrálj
+              </Link>
+            )}
           </div>
         </>
       )}
