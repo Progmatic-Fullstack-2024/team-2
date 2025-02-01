@@ -2,7 +2,8 @@ import authService from "../services/auth.service.js";
 import userValidationSchemaForLogin from "../validations/userValidationSchema.js";
 
 const registration = async (req, res, next) => {
-  const { firstName, lastName, email, password, phone, role,birthDate } = req.body;
+  const { firstName, lastName, email, password, phone, role, birthDate } =
+    req.body;
 
   try {
     const newUser = await authService.registration({
@@ -31,6 +32,4 @@ const login = async (req, res, next) => {
   }
 };
 
-
-export default {registration, login,};
-
+export default { registration, login };

@@ -31,7 +31,7 @@ export const isAdmin = (req, res, next) => {
   }
 };
 
-export const isTheaterAdmin=(req,res,next) => {
+export const isTheaterAdmin = (req, res, next) => {
   if (req.user && req.user.role === "theaterAdmin") {
     next();
   } else {

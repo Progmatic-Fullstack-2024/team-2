@@ -1,4 +1,4 @@
-import userService from "../services/user.services.js";
+import userService from "../services/user.service.js";
 import HttpError from "../utils/HttpError.js";
 
 const listUsers = async (req, res, next) => {
@@ -83,34 +83,6 @@ const passwordChange = async (req, res, next) => {
   } else next(new HttpError("Data is incompleted", 403));
 };
 
-const newTheaterAdmin=async (req,res,next) =>{
-    const {userId,theaterId}=req.body; 
-    if(userId && theaterId) {
-      try{
-      const answer=await userService.setNewUserToTheaterAdmin(userId,theaterId);
-      res.status(201).json({Message:answer});
-      }catch(error){
-        next(error);
-      }
-    }
-    else next(new HttpError("TheaterAdmin data is incompleted", 403))
-};
-
-const deleteTheaterAdmin=async(req,res,next) =>{
-  const { id } = req.params;
-  console.log("törlenő Id",id)
-  try{
-    const answer= await userService.deleteUserFromTheaterAdmin(id);
-    console.log(answer);
-    if(answer)
-       res.status(201).json({mesage:"TheaterAdmin is deleted"});
-    else next(new HttpError("TheaterAdmin is not Found", 404)); 
-  }
-  catch(error){
-    next(error);
-  }
-};
-
 export default {
   listUsers,
   getUser,
@@ -118,6 +90,4 @@ export default {
   updateUser,
   deleteUser,
   passwordChange,
-  newTheaterAdmin,
-  deleteTheaterAdmin,
 };
