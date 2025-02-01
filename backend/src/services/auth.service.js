@@ -56,6 +56,7 @@ const getAllUser = async () => {
       firstName: true,
       email: true,
       phone: true,
+      birthDate: true,
       role: true,
     },
   });
@@ -71,6 +72,7 @@ const getUserById = async (id) => {
       firstName: true,
       email: true,
       phone: true,
+      birthDate: true,
       role: true,
     },
   });
@@ -89,19 +91,32 @@ const updateUser = async (
   lastName,
   email,
   phone,
+  birthDate,
   role,
   password,
 ) => {
   let hashedPassword;
+  let birthDate1;
   if (password) hashedPassword = await bcrypt.hash(password, 5);
   if (email) {
     const existEmail = await getEmailExists(email);
     if (existEmail && existEmail.id !== id)
       throw new HttpError("Email already exists!", 403);
   }
+  if (birthDate) {
+    birthDate1 = new Date(birthDate);
+  }
   const user = await prisma.user.update({
     where: { id },
-    data: { firstName, lastName, email, phone, role, password: hashedPassword },
+    data: {
+      firstName,
+      lastName,
+      email,
+      phone,
+      birthDate: birthDate1,
+      role,
+      password: hashedPassword,
+    },
   });
   return user;
 };

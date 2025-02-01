@@ -17,7 +17,7 @@ export default function DropdownButton({
   );
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
 
-  const dropdownMenuClass = `absolute w-${width} z-20 bg-c-background justify-self-end`;
+  const dropdownMenuClass = `absolute w-${width} z-20 bg-c-background justify-self-end  border border-gray-500/50`;
   const buttonClass = `w-${width} text-${textColor} bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none font-semibold ${dropdownMenuOpen ? 'rounded-t-lg' : 'rounded-lg'} text-sm p-2 px-4 text-center inline-flex items-center`;
 
   const toggleMenu = () => {
@@ -60,7 +60,7 @@ export default function DropdownButton({
               <li key={value}>
                 <button
                   type="button"
-                  className="w-full mt-0.5 block px-4 py-1 select-none text-c-secondary hover:text-c-accent hover:ring-1 hover:ring-c-accent cursor-pointer border border-gray-500"
+                  className="w-full mt-0.5 block px-4 py-1 select-none text-c-text hover:text-c-accent hover:underline cursor-pointer "
                   onClick={() => handleClick(value)}
                 >
                   {value}
