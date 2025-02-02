@@ -31,8 +31,20 @@ export default function PerformancesBrowse({ params }) {
     return () => window.removeEventListener('resize', updateVisibleCards);
   }, []);
 
-  const getPerformances = async () => {
-    const data = await performancesService.listAll({ params });
+  const getPerformances = async () => { 
+    const defaultParams = {
+      limit: 10
+    };
+  
+    // add orderBy if date is in params 
+    if (params.startDate || params.endDate) {
+      defaultParams.orderBy = 'date';
+    }
+  
+    const data = await performancesService.listAll({ 
+      params: { ...defaultParams, ...params } 
+    });
+  
     setPerformances(data);
   };
 
