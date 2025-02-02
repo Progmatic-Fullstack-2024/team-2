@@ -1,11 +1,19 @@
 export default function paginate(query, defaultLimit = 12, defaultPage = 1) {
   const {
-    page = defaultPage,
-    limit = defaultLimit,
+    page = defaultPage ,
+    limit = defaultLimit ,
 
     price,
     orderBy,
     sort,
+    //genre
+    //groupByGenre {genre: [performance] } true/null
+    //theater
+    //groupByTheater {theater: [theaterId, theaterName] } true/null
+    //creator
+    //date
+    //endDate
+    //targetAudience
   } = query;
   const pagination = {
     skip: (page - 1) * limit,
