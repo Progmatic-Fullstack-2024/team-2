@@ -26,4 +26,18 @@ const setNewUserToTheaterAdmin = async (userId, theaterId) => {
   return theaterAdmin;
 };
 
-export default { setNewUserToTheaterAdmin, deleteUserFromTheaterAdmin };
+const getByUserId = async (userId) => {
+  const theaterAdminByUserId = await prisma.theaterAdmin.findUnique({
+    where: { userId },
+    include: {
+      theater: true,
+    },
+  });
+  return theaterAdminByUserId;
+};
+
+export default {
+  setNewUserToTheaterAdmin,
+  deleteUserFromTheaterAdmin,
+  getByUserId,
+};

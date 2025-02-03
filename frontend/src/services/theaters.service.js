@@ -18,4 +18,22 @@ const createThreater = async (theater) => {
   }
 };
 
-export default { getTheaters, createThreater };
+const getById = async (theaterId) => {
+  try {
+    const response = await axiosInstance.get(`/api/theater/${theaterId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+const getTheaterByUserId = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/theaterAdmin/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { getTheaters, createThreater, getById, getTheaterByUserId };

@@ -7,7 +7,7 @@ const create = async (req, res, next) => {
     try {
       const answer = await theaterAdminService.setNewUserToTheaterAdmin(
         userId,
-        theaterId,
+        theaterId
       );
       res.status(201).json({ Message: answer });
     } catch (error) {
@@ -29,4 +29,14 @@ const deleteTheaterAdmin = async (req, res, next) => {
   }
 };
 
-export default { create, deleteTheaterAdmin };
+const getByUserId = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    const theaterAdminByUserId = await theaterAdminService.getByUserId(userId);
+    res.status(200).json(theaterAdminByUserId);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { create, deleteTheaterAdmin, getByUserId };
