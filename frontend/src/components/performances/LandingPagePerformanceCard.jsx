@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import PerformanceCardEmpty02 from './PerformanceCardEmpty02';
 
@@ -7,7 +7,6 @@ export default function LandingPagePerformanceCard({ data }) {
   const rendered = useRef(false);
   const [imageReady, setImageReady] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate();
 
   async function fetchImageAndCache(url) {
     try {
@@ -38,26 +37,15 @@ export default function LandingPagePerformanceCard({ data }) {
 
   if (imageReady === false) return <PerformanceCardEmpty02 />;
 
-  const handleCardClick = () => {
-    navigate(`/performances/${data.id}`);
-  };
-
   return (
-    <div
+    <Link
+      to={`/performances/${data.id}`}
       className={`flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500 ${
         isHovered ? 'scale-95' : 'scale-75'
       } cursor-pointer`}
       style={{ backgroundImage: `url(${localStorage.getItem(imageReady)})` }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={handleCardClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          handleCardClick();
-        }
-      }}
     >
       <div
         id="top-gradient"
@@ -100,6 +88,6 @@ export default function LandingPagePerformanceCard({ data }) {
           </>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
