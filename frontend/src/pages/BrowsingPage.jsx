@@ -32,8 +32,8 @@ export default function BrowsingPage() {
     if (!rendered.current) {
       rendered.current = true;
       localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
-      getGenres();
     }
+    getGenres();
   }, []);
 
   // Separation of genres into those with more than 3 performances and other categories
@@ -58,14 +58,14 @@ export default function BrowsingPage() {
           key={genre.name}
           className="w-full max-w-screen-desktop flex flex-col items-center mx-auto"
         >
-          <PerformanceBrowse params={{ genres: [genre.name] }} />
+          <PerformanceBrowse params={{ genre: genre.name ? [genre.name] : [] }} />
         </div>
       ))}
 
       {/* Other genres */}
       {rareGenres.length > 0 && (
         <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto">
-          <PerformanceBrowse params={{ genres: rareGenres.map((genre) => genre.name) }} />
+          <PerformanceBrowse params={{ genre: rareGenres.map((genre) => genre.name) }} />
         </div>
       )}
     </>

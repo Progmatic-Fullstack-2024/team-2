@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import PerformanceCard02 from './PerformanceCard02';
 import DefaultButton from '../misc/DefaultButton';
+import performancesService from '../../services/performances.service';
 
 export default function PerformancesBrowse({ params }) {
   const [visibleCards, setVisibleCards] = useState(5); // Alapértelmezett: 5 kártya
@@ -11,6 +12,9 @@ export default function PerformancesBrowse({ params }) {
   // Identify if date or array is in the params
   const isDateSearch = params.startDate !== undefined;
   const genres = params.genres || [];
+
+  console.log("isDateSearch: " + isDateSearch);
+  console.log("genres: " + genres);
 
   useEffect(() => {
     const updateVisibleCards = () => {
@@ -32,6 +36,8 @@ export default function PerformancesBrowse({ params }) {
   }, []);
 
   const getPerformances = async () => { 
+    console.log("params: " + params);
+
     const defaultParams = {
       limit: 10
     };
@@ -41,16 +47,19 @@ export default function PerformancesBrowse({ params }) {
       defaultParams.orderBy = 'date';
     }
   
-    const data = await performancesService.listAll({ 
+    const data = await performancesService.list({ 
       params: { ...defaultParams, ...params } 
     });
   
-    setPerformances(data);
+    // setPerformances(data);
+    setPerformances(Array.isArray(data) ? data : []);
   };
 
   useEffect(() => {
     getPerformances();
   }, [params]);
+
+  console.log("performances isArray? " + Array.isArray(performances));
 
   if (!performances) return null;
 
@@ -90,13 +99,15 @@ export default function PerformancesBrowse({ params }) {
         </h2>
       ) : (
         <h2 className="text-2xl font-bold mb-5 text-c-text">
-          Műfaj: {genres.length > 0 ? genres.join(', ') : null}
+          {/* Műfaj: {genres.length > 0 ? genres.join(', ') : "Egyéb műfajok"} */}
+          Műfaj: {genres.length === 1 ? genres[0] : "Egyéb műfajok"}
         </h2>
       )}
       <div className="relative">
         <div className="flex items-center justify-between">
           <DefaultButton onClick={() => scroll('left', containerRef)} text="<" />
-          <div ref={containerRef} className="flex overflow-hidden scroll-smooth w-full">
+          <div ref={containerRef} className="flex overflow-hidden scroll-smooth w-full max-w-screen-desktop">
+
             {performances.map((perf) => (
               <div
                 key={perf.id}

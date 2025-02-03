@@ -5,7 +5,7 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
-import BrowsingPage from './pages/BrowsingPage_old.jsx'
+import BrowsingPage from './pages/BrowsingPage.jsx'
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';

@@ -12,6 +12,8 @@ export default function PerformanceCard02({ data }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
+  console.log("card02 data: " + data);
+
   async function fetchImageAndCache(url) {
     try {
       const res = await fetch(url);
