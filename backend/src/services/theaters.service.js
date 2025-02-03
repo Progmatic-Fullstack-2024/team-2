@@ -14,7 +14,7 @@ const getTheaterIdName = async () => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to load theaters",
-      error.status || 500
+      error.status || 500,
     );
   }
 };
@@ -64,7 +64,7 @@ const update = async (theaterId, theaterData, image) => {
 
   // Eltávolítjuk az `undefined` értékeket
   const filteredData = Object.fromEntries(
-    Object.entries(theaterData).filter(([value]) => value !== undefined)
+    Object.entries(theaterData).filter(([value]) => value !== undefined),
   );
 
   const updatedTheater = await prisma.theater.update({
@@ -100,7 +100,7 @@ const deleteSingleImage = async (theaterId, imageUrl) => {
   if (originalImageUrl !== imageUrl) {
     throw new HttpError(
       "Provided image URL does not match the stored image",
-      400
+      400,
     );
   }
 
