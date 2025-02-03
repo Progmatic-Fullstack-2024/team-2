@@ -114,10 +114,4 @@ export default {
   updateTheater,
   destroyTheater,
   deleteImage,
-  listAllTheaters,
-  getTheaterById,
-  createTheater,
-  updateTheater,
-  destroyTheater,
-  deleteImage,
 };

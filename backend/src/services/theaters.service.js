@@ -29,7 +29,17 @@ const getById = async (id) => {
     where: { id },
     include: {
       performances: true,
-      admins: true,
+      admins: {
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+          theater: true,
+        },
+      },
       followers: true,
     },
   });
