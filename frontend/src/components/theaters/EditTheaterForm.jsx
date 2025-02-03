@@ -3,13 +3,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import updateTheaterById from '../../services/theaters.service';
+import theatersService from '../../services/theaters.service';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function TheaterForm({ theater }) {
   const navigate = useNavigate();
 
   const [posterPreview, setPosterPreview] = useState(theater?.imageURL || null);
+  const [isImageDeleted, setIsImageDeleted] = useState(false); // Jelöli, hogy törölni kell-e a képet
 
   const initialValues = {
     name: theater?.name || '',
@@ -31,17 +32,20 @@ export default function TheaterForm({ theater }) {
     if (values.imageURL instanceof File) {
       formData.append('image', values.imageURL);
     }
-
-    console.log('Küldött adatok:', Object.fromEntries(formData.entries())); // Ellenőrizd a konzolban
-
+    console.log(theater.imageURL);
+    console.log(theater.id);
     try {
-      const response = await updateTheaterById.updateTheaterById(theater.id, formData);
+      // 🔹 Ha a kép előnézetet törölte a felhasználó, de nem töltött fel újat, akkor API hívással töröljük az adatbázisból is
+      if (isImageDeleted) {
+        await theatersService.deleteTheaterImage(theater.id, theater.imageURL);
+        console.log(`Törölt kép az adatbázisból: ${theater.imageURL}`);
+      }
 
+      // 🔹 Színház adatok módosítása
+      const response = await theatersService.updateTheaterById(theater.id, formData);
       if (!response) throw new Error('Hiba történt a színház módosításakor.');
 
       toast.success('Színház sikeresen módosítva!');
-
-      // 🔹 1 másodperces késleltetés, hogy biztosan frissüljön a state
       setTimeout(() => {
         navigate('/theater-admin');
       }, 1000);
@@ -57,6 +61,13 @@ export default function TheaterForm({ theater }) {
     const file = event.target.files[0];
     setFieldValue('imageURL', file);
     setPosterPreview(URL.createObjectURL(file)); // Frissíti a preview-t az új képre
+    setIsImageDeleted(false); // Ha új képet töltünk fel, akkor ne törölje az adatbázisból az előzőt
+  };
+
+  const handleRemoveImage = (setFieldValue) => {
+    setFieldValue('imageURL', null);
+    setPosterPreview(null);
+    setIsImageDeleted(true); // Jelöljük meg, hogy a képet törölni kell
   };
 
   return (
@@ -93,7 +104,7 @@ export default function TheaterForm({ theater }) {
               <ErrorMessage name="address" component="div" className="text-red-500 text-sm" />
             </div>
 
-            {/* Színház email címe */}
+            {/* Színház email */}
             <div className="mb-4">
               <label htmlFor="email" className="text-gray-800 font-bold">
                 Email
@@ -139,13 +150,13 @@ export default function TheaterForm({ theater }) {
               />
             </div>
 
-            {/* Poszter feltöltés */}
+            {/* Kép feltöltés */}
             <div className="mb-4">
               <label htmlFor="imageURL" className="text-gray-800 font-bold block mb-2">
                 Színház képe
               </label>
               <DefaultButton
-                text="Fájl kiválasztása"
+                text="Kép módosítása"
                 type="button"
                 onClick={() => document.getElementById('imageURL').click()}
               />
@@ -157,7 +168,7 @@ export default function TheaterForm({ theater }) {
                 className="hidden"
               />
 
-              {/* Kép előnézet megjelenítése */}
+              {/* Kép előnézet */}
               {posterPreview && (
                 <div className="my-2 relative">
                   <img
@@ -167,10 +178,7 @@ export default function TheaterForm({ theater }) {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      setFieldValue('imageURL', null);
-                      setPosterPreview(null);
-                    }}
+                    onClick={() => handleRemoveImage(setFieldValue)}
                     className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
                   >
                     &times;

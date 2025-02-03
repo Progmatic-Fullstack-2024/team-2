@@ -52,4 +52,24 @@ const updateTheaterById = async (id, formData) => {
   }
 };
 
-export default { getTheaters, createThreater, getById, getTheaterByUserId, updateTheaterById };
+const deleteTheaterImage = async (id, imageUrl) => {
+  try {
+    const response = await axiosInstance.patch(`/api/theater/${id}/image`, {
+      imageUrl, // A törlendő kép URL-je
+    });
+    console.log('Kép sikeresen törölve:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Hiba a kép törlésekor:', error);
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default {
+  getTheaters,
+  createThreater,
+  getById,
+  getTheaterByUserId,
+  updateTheaterById,
+  deleteTheaterImage,
+};
