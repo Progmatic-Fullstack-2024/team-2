@@ -27,7 +27,7 @@ export default function SeasonTicketsCard({ data, index }) {
           <span>nap</span>
           <span className="col-span-3">Ülések:</span>
           <span className="me-2 col-span-2 text-end">{seatQuantity}</span>
-          <span></span>
+          <span />
         </div>
       </div>
     </Link>

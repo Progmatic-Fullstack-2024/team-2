@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Spinner from '../misc/Spinner';
 // payment_intent=pi_3QoT9zGdxLWFMrcP0SxyeeUd&payment_intent_client_secret=pi_3QoT9zGdxLWFMrcP0SxyeeUd_secret_pLfg0pybzJAuil8QBnwyFPL6y&redirect_status=succeeded
 
-export default function CheckoutForm({ price }) {
+export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
 
