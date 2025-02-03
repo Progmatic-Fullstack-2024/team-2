@@ -172,8 +172,8 @@ export default function SelectedUserForm() {
         let answer;
         if (newTheaterId !== 'new') {
           answer = await UserHandle.setTheaterAdmin(handleuser.id, newTheaterId);
-          if(answer) result = true;
-          else result=false;
+          if (answer) result = true;
+          else result = false;
         }
       } catch (error) {
         setMsg(error);

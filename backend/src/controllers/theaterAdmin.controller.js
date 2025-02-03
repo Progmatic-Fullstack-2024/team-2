@@ -7,7 +7,7 @@ const create = async (req, res, next) => {
     try {
       const answer = await theaterAdminService.setNewUserToTheaterAdmin(
         userId,
-        theaterId
+        theaterId,
       );
       res.status(201).json({ Message: answer });
     } catch (error) {
