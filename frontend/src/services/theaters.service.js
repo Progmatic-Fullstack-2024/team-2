@@ -36,4 +36,20 @@ const getTheaterByUserId = async (id) => {
   }
 };
 
-export default { getTheaters, createThreater, getById, getTheaterByUserId };
+const updateTheaterById = async (id, formData) => {
+  try {
+    const response = await axiosInstance.patch(`/api/theater/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('API válasza:', response.data); // Ellenőrizd, mit válaszol a szerver
+    return response.data;
+  } catch (error) {
+    console.error('Hiba történt az API hívás során:', error);
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { getTheaters, createThreater, getById, getTheaterByUserId, updateTheaterById };

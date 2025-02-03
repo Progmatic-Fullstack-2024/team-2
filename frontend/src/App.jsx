@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
+import EditTheaterPage from './pages/EditTheaterPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
@@ -30,6 +31,7 @@ function App() {
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/signedIn" element={<SignedInPage />} />
               <Route path="/theater-admin" element={<TheaterAdminPage />} />
+              <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />

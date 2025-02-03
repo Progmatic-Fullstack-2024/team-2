@@ -1,6 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+
 import DefaultButton from '../misc/DefaultButton';
 
 export default function TheaterForTheaterAdmin({ theater }) {
+  const navigate = useNavigate();
+
   if (!theater || !theater.theater) {
     return (
       <div className="min-h-screen flex items-center justify-center text-lg font-bold">
@@ -9,7 +13,7 @@ export default function TheaterForTheaterAdmin({ theater }) {
     );
   }
 
-  const { name, address, email, imageURL, phone, seatsAvailable } = theater.theater;
+  const { id, name, address, email, imageURL, phone, seatsAvailable } = theater.theater;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-10">
@@ -35,8 +39,9 @@ export default function TheaterForTheaterAdmin({ theater }) {
             : 'Nincs megadva ülőhelykapacitás'}
         </p>
 
+        {/* Szerkesztés gomb */}
         <div className="flex justify-center mt-5">
-          <DefaultButton text="Szerkesztés" />
+          <DefaultButton text="Szerkesztés" onClick={() => navigate(`/edit-theater/${id}`)} />
         </div>
       </div>
     </div>
