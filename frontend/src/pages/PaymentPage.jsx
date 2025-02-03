@@ -21,7 +21,11 @@ export default function PaymentPage() {
 
   const getStripeData = async ({ price }) => {
     const publicKey = await paymentService.getConfig();
-    stripeData.clientSecret = await paymentService.createPaymentIntent();
+
+    stripeData.clientSecret = await paymentService.createPaymentIntent({
+      currency: 'HUF',
+      amount: price * 100,
+    });
 
     stripeData.price = price;
     stripeData.promise = loadStripe(publicKey);

@@ -9,10 +9,11 @@ const getConfig = async () => {
   }
 };
 
-const createPaymentIntent = async () => {
+const createPaymentIntent = async (params) => {
+  const { currency, amount } = params;
   try {
     const intent = await axiosInstance.post('/api/payment/create-payment-intent', {
-      body: JSON.stringify({}),
+      data: { currency, amount },
     });
     return intent.data;
   } catch (error) {
