@@ -149,18 +149,6 @@ model UserSeasonTicket {
   User           User         @relation(fields: [userId], references: [id])
 }
 
-model UserVisitedPerformance {
-  id             String       @id
-  qrImage        String
-  userId         String
-  performanceId  String
-  seasonTicketId String
-  seats          Int
-  Performance    Performance  @relation(fields: [performanceId], references: [id])
-  SeasonTicket   SeasonTicket @relation(fields: [seasonTicketId], references: [id])
-  User           User         @relation(fields: [userId], references: [id])
-}
-
 enum Profession {
   actor
   director
@@ -185,14 +173,4 @@ enum Role {
   admin
 }
 
-model SeasonTicket {
-  id           String @id @unique @default(cuid())
-  name         String
-  price        Int
-  durationDay  Int
-  seatQuantity Int
-
-  UserSeasonTicket       UserSeasonTicket[]
-  UserVisitedPerformance UserVisitedPerformance[]
-}
 

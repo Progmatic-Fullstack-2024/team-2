@@ -1,7 +1,6 @@
 import prisma from "../models/prisma-client.js";
 import HttpError from "../utils/HttpError.js";
 import { uploadSingleFile, deleteFiles } from "./file.service.js";
-import { uploadSingleFile, deleteFiles } from "./file.service.js";
 
 const getTheaterIdName = async () => {
   try {
