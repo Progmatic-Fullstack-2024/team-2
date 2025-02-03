@@ -23,7 +23,6 @@ export default function Header() {
   const handleScroll = () => setTransparentHeader(isYPositionInLimit());
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -58,6 +57,7 @@ export default function Header() {
         <div className="flex justify-center h-full gap-1">
           <MenuLink text="Home" to="/" icon="star" iconSize="50" />
           <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
+          <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="camera" iconSize="50px" />
           <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
         </div>
         {user ? (

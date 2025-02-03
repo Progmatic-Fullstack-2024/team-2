@@ -43,7 +43,7 @@ export default function NewPasswordForm({ goback }) {
   return (
     <>
       <UserResult params={{ isVisilable, msg, clearProcedure: cancelModal }} />
-      <div className="absolute top-10 mx-auto  bg-c-primary-light p-12 rounded-md">
+      <div className="absolute inset-11 bg-c-primary-light p-12 rounded-md">
         <Formik
           initialValues={initialValues}
           enableReinitialize

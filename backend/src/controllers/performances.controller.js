@@ -1,14 +1,17 @@
 import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
-import paginate from "../utils/pagination.js";
-import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
+import queryFilter from "../utils/queryFilter.js";
+import {
+  performanceValidationSchemaForCreate,
+  performanceValidationSchemaForUpdate,
+} from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
 
   try {
     const performances = await performancesService.list({
-      pagination: paginate(req.query),
+      filter: queryFilter(req.query),
       search,
     });
     res.status(200).send(performances);
