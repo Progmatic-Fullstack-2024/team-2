@@ -64,7 +64,14 @@ export default function Header() {
             {user.role === 'admin' && (
               <>
                 <MenuLink text="Előadás létrehozás" to="/new-performance" />
+                <MenuLink text="Theater Admin" to="/theater-admin" />
                 <MenuLink text="felhasználók listázása" to="/userlist" />
+              </>
+            )}
+            {user.role === 'theaterAdmin' && (
+              <>
+                <MenuLink text="Előadás létrehozás" to="/new-performance" />
+                <MenuLink text="Theater Admin" to="/theater-admin" />
               </>
             )}
             <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />

@@ -15,6 +15,7 @@ import RegistrationPage from './pages/RegistrationPage';
 import SelectedUser from './pages/SelectedUser.jsx';
 import SignedInPage from './pages/SignedIn';
 import SinglePerformancePage from './pages/SinglePerformancePage';
+import TheaterAdminPage from './pages/TheaterAdminPage.jsx';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/signedIn" element={<SignedInPage />} />
+              <Route path="/theater-admin" element={<TheaterAdminPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
