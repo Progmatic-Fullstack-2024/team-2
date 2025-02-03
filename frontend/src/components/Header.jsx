@@ -74,7 +74,7 @@ export default function Header() {
 
           {user ? (
             <>
-              <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />
+              <MenuLink text="Profilom" to="/ownUser" icon="user" iconSize="50" />
               <DefaultButton
                 text="Kijelentkezés"
                 color="c-warning"
