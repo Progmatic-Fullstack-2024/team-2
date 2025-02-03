@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
 import ImageTitle from '../components/misc/ImageTitle';
-import OwnUserEdit from '../components/OwnUserEdit.jsx';
 import Unautorized from '../components/Unautorized.jsx';
+import OwnUserEdit from '../components/users/OwnUserEdit.jsx';
 import AuthContext from '../contexts/AuthContext';
 
 export default function OwnUser() {

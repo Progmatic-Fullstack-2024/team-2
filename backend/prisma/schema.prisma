@@ -27,14 +27,29 @@ model User {
 model UserSetting {
   id     String @id @default(cuid())
   userId String @unique
-  theme  Theme
-  user   User   @relation(fields: [userId], references: [id])
+
+  theme Theme
+  user  User  @relation(fields: [userId], references: [id])
 }
 
 model Genre {
-  id          String        @id @default(cuid())
-  name        String
+  id   String @id @default(cuid())
+  name String
+
   perfomances Performance[] @relation("Performance_Genre")
+}
+
+model UserVisitedPerformance {
+  id             String @id @default(cuid())
+  qrImage        String
+  userId         String
+  performanceId  String
+  seasonTicketId String
+  seats          Int
+
+  seasonTicket SeasonTicket @relation(fields: [seasonTicketId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  performance  Performance  @relation(fields: [performanceId], references: [id])
 }
 
 model Performance {
@@ -78,13 +93,14 @@ model FuturePerformances {
 }
 
 model Company {
-  id       String    @id @default(cuid())
-  name     String
+  id   String @id @default(cuid())
+  name String
+
   creators Creator[] @relation("Company_Creator")
 }
 
 model Creator {
-  id            String        @id @default(cuid())
+  id            String  @id @default(cuid())
   name          String
   imageURL      String?
   profession    Profession[]
@@ -95,7 +111,7 @@ model Creator {
 }
 
 model Theater {
-  id             String         @id @default(cuid())
+  id             String  @id @default(cuid())
   name           String
   address        String
   email          String
@@ -168,3 +184,15 @@ enum Role {
   theaterAdmin
   admin
 }
+
+model SeasonTicket {
+  id           String @id @unique @default(cuid())
+  name         String
+  price        Int
+  durationDay  Int
+  seatQuantity Int
+
+  UserSeasonTicket       UserSeasonTicket[]
+  UserVisitedPerformance UserVisitedPerformance[]
+}
+

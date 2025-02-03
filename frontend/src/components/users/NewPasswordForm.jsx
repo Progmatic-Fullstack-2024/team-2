@@ -1,11 +1,12 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useContext, useState } from 'react';
 
-import { userValidationSchemaForPassword } from '../schema/userValidationSchema';
-import userHandle from '../services/userhandle.service.js';
-import DefaultButton from './misc/DefaultButton';
 import UserResult from './UserResult.jsx';
-import AuthContext from '../contexts/AuthContext';
+import AuthContext from '../../contexts/AuthContext.jsx';
+import { userValidationSchemaForPassword } from '../../schema/userValidationSchema.js';
+import userHandle from '../../services/userhandle.service.js';
+import DefaultButton from '../misc/DefaultButton.jsx';
+
 
 export default function NewPasswordForm({ goback }) {
   const initialValues = {
@@ -43,7 +44,7 @@ export default function NewPasswordForm({ goback }) {
   return (
     <>
       <UserResult params={{ isVisilable, msg, clearProcedure: cancelModal }} />
-      <div className="absolute top-10 mx-auto  bg-c-primary-light p-12 rounded-md">
+      <div className="absolute inset-11 bg-c-primary-light p-12 rounded-md">
         <Formik
           initialValues={initialValues}
           enableReinitialize

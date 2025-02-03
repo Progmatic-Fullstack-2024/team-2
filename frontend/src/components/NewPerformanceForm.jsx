@@ -7,7 +7,7 @@ import DefaultButton from './misc/DefaultButton';
 import performanceValidationSchema from '../schema/performanceValidationSchema';
 import getCreators from '../services/creators.service';
 import createPerformance from '../services/performance.service';
-import getTheaters from '../services/theaters.service';
+import theaterHandle from '../services/theaters.service';
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
@@ -84,7 +84,7 @@ export default function NewPerformanceForm({ lecture }) {
   const fetchTheaters = async () => {
     if (theaterOptions.length === 0) {
       try {
-        const theaters = await getTheaters();
+        const theaters = await theaterHandle.getTheaters();
         setTheaterOptions(theaters);
       } catch (error) {
         toast.error('Hiba történt a színházak betöltésekor.');
