@@ -1,46 +1,49 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react';
-
-import Spinner from '../components/misc/Spinner';
+import { useSearchParams } from 'react-router-dom';
 import CheckoutForm from '../components/payment/CheckoutForm';
 import paymentService from '../services/payment.service';
+import StartPaymentIntent from '../components/payment/StartPaymentIntent';
 
 // test card number : 4242424242424242;
-
+let stripeData = { ready: false, promise: '', clientSecret: '' };
 export default function PaymentPage() {
-  const [stripePromise, setStripePrmise] = useState(null);
-  const [clientSecret, setClientSecret] = useState('');
-
-  async function getPublicKey() {
-    const publicKey = await paymentService.getConfig();
-    setStripePrmise(loadStripe(publicKey));
-  }
-
-  async function getSecretKey() {
-    const secretKey = await paymentService.createPaymentIntent();
-    setClientSecret(secretKey);
-  }
+  const [searchParams] = useSearchParams();
+  const [renderStripe, setRenderStripe] = useState(stripeData.ready);
 
   useEffect(() => {
-    getPublicKey();
-    getSecretKey();
-  }, []);
+    if (stripeData.ready) {
+      stripeData = { ready: false, promise: '', clientSecret: '' };
+      setRenderStripe(false);
+    }
+  }, [searchParams]);
+
+  const getStripeData = async ({ price }) => {
+    const publicKey = await paymentService.getConfig();
+    stripeData.clientSecret = await paymentService.createPaymentIntent();
+
+    stripeData.price = price;
+    stripeData.promise = loadStripe(publicKey);
+    stripeData.ready = true;
+    setRenderStripe(true);
+  };
 
   return (
-    <div className="text-c-text tablet:p-20 pt-[100px] w-full h-full flex justify-center items-center">
-      <div className="w-fit h-fit max-w-[400px] min-h-80 min-w-80 bg-c-secondary p-10 flex flex-col gap-5 ">
-        <h1 className="text-c-background text-2xl font-bold">Fizetés</h1>
-        {(clientSecret && stripePromise && (
-          <Elements stripe={stripePromise} options={clientSecret}>
+    <div className="text-c-text tablet:p-20 pt-[100px] w-full min-h-svh flex justify-center items-center">
+      {!renderStripe ? (
+        <StartPaymentIntent searchParams={searchParams} getStripeData={getStripeData} />
+      ) : (
+        <div className="w-fit h-fit max-w-[400px] min-h-80 min-w-80 bg-c-secondary p-10 flex flex-col gap-5 ">
+          <h2 className="text-c-background text-2xl font-bold">
+            Fizetendő összeg:
+            <span className="text-c-primary-dark font-bold text-3xl"> {stripeData.price}</span> Ft
+          </h2>
+          <Elements stripe={stripeData.promise} options={stripeData.clientSecret}>
             <CheckoutForm />
           </Elements>
-        )) || (
-          <div className="w-full min-h-52 flex justify-center items-center">
-            <Spinner />
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

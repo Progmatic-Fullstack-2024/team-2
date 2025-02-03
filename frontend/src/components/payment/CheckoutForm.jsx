@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import Spinner from '../misc/Spinner';
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ price }) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -49,10 +49,11 @@ export default function CheckoutForm() {
         <span id="button-text" className="flex gap-2 items-center">
           {isProcessing ? (
             <>
-              <Spinner size={6} /> Processing...
+              <Spinner size={6} />
+              Feldolgozás...
             </>
           ) : (
-            'Pay now'
+            'Fizet'
           )}
         </span>
       </button>
