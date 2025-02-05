@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 // Components
@@ -9,11 +9,13 @@ import PerformancesList from '../components/performances/PerformancesList';
 import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
 
+localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
+
+let renderedParams = null;
+
 export default function PerformancesPage() {
   const [performances, setPerformances] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const rendered = useRef(false); // stops unnecessary rerender of performances state
 
   const getPeformances = async (params) => {
     const data = await performancesService.list(params);
@@ -21,15 +23,10 @@ export default function PerformancesPage() {
   };
 
   useEffect(() => {
-    if (!rendered.current) {
-      rendered.current = true;
-      localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
+    if (renderedParams !== searchParams) {
+      renderedParams = searchParams;
       getPeformances(searchParams);
     }
-  }, []);
-
-  useEffect(() => {
-    getPeformances(searchParams);
   }, [searchParams]);
 
   return (

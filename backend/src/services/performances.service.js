@@ -21,25 +21,28 @@ const getByName = async (title) => {
   return performance.id;
 };
 
-const list = async ({ pagination, search }) => {
-  const { orderBy, where } = pagination;
+const list = async ({ filter, search }) => {
+  const { orderBy, where } = filter;
 
   const performances = await prisma.performance.findMany({
-    orderBy,
     where: {
       ...where,
       title: { contains: search, mode: "insensitive" },
     },
     include: {
       performanceEvents: true,
+      genre: !!filter.genre,
+      creators: !!filter.creators,
     },
+    orderBy,
   });
   if (!performances) throw new HttpError("Performances not found", 404);
   // custom skip and take
+  // console.log(performances);
   const filteredPerformances = performances.filter(
-    (item, index) =>
-      index >= pagination.skip && index < pagination.skip + pagination.take,
+    (item, index) => index >= filter.skip && index < filter.skip + filter.take,
   );
+
   return { data: filteredPerformances, maxSize: performances.length };
 };
 

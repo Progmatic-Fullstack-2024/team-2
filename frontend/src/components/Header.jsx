@@ -27,7 +27,6 @@ export default function Header() {
   const handleScroll = () => setTransparentHeader(isYPositionInLimit());
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -74,7 +73,8 @@ export default function Header() {
 
           {user ? (
             <>
-              <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />
+              <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="camera" iconSize="50px" />
+              <MenuLink text="Profilom" to="/ownUser" icon="user" iconSize="50" />
               <DefaultButton
                 text="Kijelentkezés"
                 color="c-warning"
@@ -126,22 +126,18 @@ export default function Header() {
             >
               <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Admin Dashboard</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>
-                Felhasználók kezelése
-              </MenuItem>
-              <MenuItem onClick={() => navigate('/')}>
-                Színházak kezelése
-              </MenuItem>
+              <MenuItem onClick={() => navigate('/')}>Felhasználók kezelése</MenuItem>
+              <MenuItem onClick={() => navigate('/')}>Színházak kezelése</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
             </Menu>
-            <div className='hidden laptop:flex gap-4'>
-            <MenuLink text="Előadás létrehozás" to="/new-performance" />
-            <MenuLink text="Admin Dashboard" to="/" />
-            <MenuLink text="Felhasználók kezelése" to="/" />
-            <MenuLink text="Színházak kezelése" to="/" />
-            <MenuLink text="Fizetési ügyek" to="/" />
-            <MenuLink text="Egyéb" to="/" />
+            <div className="hidden laptop:flex gap-4">
+              <MenuLink text="Előadás létrehozás" to="/new-performance" />
+              <MenuLink text="Admin Dashboard" to="/" />
+              <MenuLink text="Felhasználók kezelése" to="/" />
+              <MenuLink text="Színházak kezelése" to="/" />
+              <MenuLink text="Fizetési ügyek" to="/" />
+              <MenuLink text="Egyéb" to="/" />
             </div>
           </nav>
         </>
