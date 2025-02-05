@@ -10,4 +10,4 @@ const performanceValidationSchemaForCreate = yup.object({
     .required("Creator must be specified!"),
 });
 
-export default performanceValidationSchemaForCreate;
+export default { performanceValidationSchemaForCreate };

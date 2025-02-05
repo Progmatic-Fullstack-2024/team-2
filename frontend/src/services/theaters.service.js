@@ -9,4 +9,4 @@ const getTheaters = async () => {
   }
 };
 
-export default getTheaters;
+export default { getTheaters };

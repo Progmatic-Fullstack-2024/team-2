@@ -27,14 +27,6 @@ const listAll = async () => {
   }
 };
 
-const listAllGenre = async () => {
-  try {
-    const response = await axiosInstance.get(`/api/performances/genres/all`);
-    return response.data;
-  } catch (error) {
-    throw error.response ? error.response.data : error;
-  }
-};
 
 const createPerformance = async (performanceData) => {
   try {
@@ -49,6 +41,5 @@ export default {
   getById,
   list,
   listAll,
-  listAllGenre,
   createPerformance
 };

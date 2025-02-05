@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-// Components
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Completion from './components/payment/Completion.jsx';
-// Pages
+import { AuthProvider } from './contexts/AuthContext';
+
 import BrowsingPage from './pages/BrowsingPage.jsx'
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
@@ -14,9 +13,9 @@ import OwnUserPage from './pages/OwnUserPage.jsx';
 import PaymentPage from './pages/PaymentPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
+import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 import SelectedUser from './pages/SelectedUser.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
-import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 
 function App() {
   return (

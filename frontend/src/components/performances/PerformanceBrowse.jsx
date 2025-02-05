@@ -1,20 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import PerformanceCard02 from './PerformanceCard02';
-import DefaultButton from '../misc/DefaultButton';
 import performancesService from '../../services/performances.service';
+import DefaultButton from '../misc/DefaultButton';
 
-export default function PerformancesBrowse({ params }) {
-  const [visibleCards, setVisibleCards] = useState(5); // Alapértelmezett: 5 kártya
+export default function PerformancesBrowse({ params, title }) {
   const [performances, setPerformances] = useState([]);
+
   const containerRef = useRef({});
 
   // Identify if date or array is in the params
   const isDateSearch = params.startDate !== undefined;
-  const genres = params.genres || [];
+  const genre = params.genre || [];
+  const theater = params.theater;
 
-  console.log("isDateSearch: " + isDateSearch);
-  console.log("genres: " + genres);
+  const [visibleCards, setVisibleCards] = useState(5); // Alapértelmezett: 5 kártya
 
   useEffect(() => {
     const updateVisibleCards = () => {
@@ -35,35 +35,41 @@ export default function PerformancesBrowse({ params }) {
     return () => window.removeEventListener('resize', updateVisibleCards);
   }, []);
 
-  const getPerformances = async () => { 
-    console.log("params: " + params);
 
-    const defaultParams = {
-      limit: 10
-    };
-  
-    // add orderBy if date is in params 
-    if (params.startDate || params.endDate) {
-      defaultParams.orderBy = 'date';
+  const getPerformances = async () => {
+    let allPerformances = [];
+  console.log(params);
+    try {
+      if (genre.length > 0) {
+        // Ha genre van a params-ban, akkor műfaj szerint keresünk
+        const results = await Promise.all(
+          genre.map((g) =>
+            performancesService.list(new URLSearchParams({ ...params, genre: genre }))
+          )
+        );
+        allPerformances = results.flatMap((result) => result.data);
+      } else if (theater) {
+        // Ha theater id van a params-ban, akkor színház szerint keresünk
+        const data = await performancesService.list(
+          new URLSearchParams({ ...params, theater: theater })
+        );
+        allPerformances = data.data;
+      }
+    } catch (error) {
+      throw error.response ? error.response.data : error;
     }
   
-    const data = await performancesService.list({ 
-      params: { ...defaultParams, ...params } 
-    });
-  
-    // setPerformances(data);
-    setPerformances(Array.isArray(data) ? data : []);
+    setPerformances(allPerformances);
   };
+  
 
   useEffect(() => {
     getPerformances();
-  }, [params]);
+  }, []);
 
-  console.log("performances isArray? " + Array.isArray(performances));
+  // if (performances.length < 3) return null;
 
-  if (!performances) return null;
-
-  const scroll = (direction, containerRef) => {
+  const scroll = (direction) => {
     if (containerRef.current) {
       const scrollAmount = containerRef.current.offsetWidth / visibleCards;
       containerRef.current.scrollBy({
@@ -73,53 +79,33 @@ export default function PerformancesBrowse({ params }) {
     }
   };
 
-  const getWidthClass = (cardsCount) => {
-    let widthClass;
-    switch (cardsCount) {
-      case 1:
-        widthClass = 'w-full';
-        break;
-      case 2:
-        widthClass = 'w-1/2';
-        break;
-      case 3:
-        widthClass = 'w-1/3';
-        break;
-      default:
-        widthClass = 'w-1/5';
-    }
-    return widthClass;
-  };
-
+  console.log("params in performancebrowse: ", params);
   return (
     <section className="relative mb-12">
-      {isDateSearch ? (
-        <h2 className="text-2xl font-bold mb-5 text-c-text">
-          Boldog szülinapot! Nézd meg ma milyen előadások várnak:
-        </h2>
-      ) : (
-        <h2 className="text-2xl font-bold mb-5 text-c-text">
-          {/* Műfaj: {genres.length > 0 ? genres.join(', ') : "Egyéb műfajok"} */}
-          Műfaj: {genres.length === 1 ? genres[0] : "Egyéb műfajok"}
-        </h2>
-      )}
+      
+        <h2 className="text-2xl font-bold mb-5 text-c-text">{title}</h2>
+    
       <div className="relative">
         <div className="flex items-center justify-between">
-          <DefaultButton onClick={() => scroll('left', containerRef)} text="<" />
-          <div ref={containerRef} className="flex overflow-hidden scroll-smooth w-full max-w-screen-desktop">
-
+          {performances.length <= 5 ? null :<DefaultButton onClick={() => scroll('left', containerRef)} text="<" />}
+          <div
+            ref={containerRef}
+            className="flex overflow-hidden scroll-smooth w-full max-w-screen-desktop"
+            // className="grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-5 gap-4"
+          >
             {performances.map((perf) => (
               <div
-                key={perf.id}
-                className={`flex-shrink-0 transition-transform duration-700 hover:z-10 ${getWidthClass(
-                  visibleCards,
-                )}`}
+                className="w-full tablet:w-1/2 laptop:w-1/3 desktop:w-1/5 flex-shrink-0 transition-transform duration-700 hover:z-10 hover:scale-95"
+                // key={perf.id}
+                // className={`flex-shrink-0 transition-transform duration-700 hover:z-10 ${getWidthClass(
+                //   visibleCards,
+                // )}`}
               >
-                <PerformanceCard02 data={perf} />
+                <PerformanceCard02 key={perf.id} data={perf} />
               </div>
             ))}
           </div>
-          <DefaultButton onClick={() => scroll('right', containerRef)} text=">" />
+          {performances.length <= 5 ? null :<DefaultButton onClick={() => scroll('right', containerRef)} text=">" />}
         </div>
       </div>
     </section>

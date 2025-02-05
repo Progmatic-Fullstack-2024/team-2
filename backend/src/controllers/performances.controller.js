@@ -1,10 +1,7 @@
 import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import queryFilter from "../utils/queryFilter.js";
-import {
-  performanceValidationSchemaForCreate,
-  performanceValidationSchemaForUpdate,
-} from "../validations/performanceValidation.js";
+import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
@@ -24,15 +21,6 @@ const listAllPerformances = async (req, res, next) => {
   try {
     const allPerformances = await performancesService.listAll();
     res.status(200).send(allPerformances);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const listAllGenres = async (req, res, next) => {
-  try {
-    const allGenres = await performancesService.listAllGenres();
-    res.status(200).send(allGenres);
   } catch (error) {
     next(error);
   }
@@ -179,5 +167,4 @@ export default {
   listAllPerformances,
   getPerformanceByID,
   deleteImage,
-  listAllGenres,
 };

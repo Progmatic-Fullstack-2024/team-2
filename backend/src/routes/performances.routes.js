@@ -8,10 +8,10 @@ const router = express.Router();
 router.get("/all", performancesController.listAllPerformances);
 router.get("/:performanceId", performancesController.getPerformanceByID);
 router.get("/", performancesController.listPerformances);
-router.get("/genres/all", performancesController.listAllGenres);
 
 router.post(
   "/",
+  isAdmin,
   upload.fields([
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },

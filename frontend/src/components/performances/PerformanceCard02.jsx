@@ -11,9 +11,7 @@ export default function PerformanceCard02({ data }) {
   const [isHovered, setIsHovered] = useState(false); // Hover state
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-
-  console.log("card02 data: " + data);
-
+ 
   async function fetchImageAndCache(url) {
     try {
       const res = await fetch(url);
@@ -45,9 +43,12 @@ export default function PerformanceCard02({ data }) {
 
   return (
     <div
-      className={`flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500 ${
-        isHovered ? 'scale-95' : 'scale-75'
-      }`}
+      className="flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500
+        scale-75 hover:scale-95 hover:z-10 hover:shadow-lg hover:shadow-c-primary/50 hover:bg-black/50"
+      
+      // className="w-full tablet:w-1/2 laptop:w-1/3 desktop:w-1/5 h-96 bg-cover border border-c-secondary 
+      //        transform transition-transform duration-500 scale-75 hover:scale-95 hover:z-10 
+      //        hover:shadow-lg hover:shadow-c-primary/50 hover:bg-black/50"
       style={{
         backgroundImage: `url(${localStorage.getItem(imageReady)})`,
       }}
