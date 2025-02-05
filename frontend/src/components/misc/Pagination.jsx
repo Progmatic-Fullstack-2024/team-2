@@ -28,7 +28,7 @@ export default function Pagination({ params }) {
       setSearchParams(searchParams);
     }
   };
-  console.log('ref current  ', focusState);
+
   return (
     <nav>
       <ul className="flex items-center  my-1">

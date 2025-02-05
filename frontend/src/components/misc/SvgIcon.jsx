@@ -1,5 +1,11 @@
-export default function SvgIcon({ icon = 'login', size = '30', color = 'white', className = '' }) {
-  const svgClass = `stroke-${color} fill-${color} ${className}`;
+export default function SvgIcon({
+  icon = 'login',
+  size = '30',
+  color = 'white',
+  hoverColor,
+  className = '',
+}) {
+  const svgClass = `stroke-${color} fill-${color} ${className} hover:stroke-${hoverColor || color}`;
 
   switch (icon) {
     case 'creator':

@@ -65,11 +65,9 @@ export default function Header() {
           )}
         </div>
 
-        <nav className="flex laptop:gap-4 items-center">
-          <div className="flex justify-center h-full gap-1">
-            <MenuLink text="Home" to="/" icon="star" iconSize="50" />
-            <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
-          </div>
+        <nav className="flex laptop:gap-2 items-center h-16">
+          <MenuLink text="Home" to="/" icon="star" iconSize="50" />
+          <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
 
           {user ? (
             <>
