@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import OptionList from './OptionList.jsx';
 import UserResult from './UserResult.jsx';
@@ -35,6 +35,7 @@ export default function SelectedUserForm() {
   const [theater, setTheater] = useState([{ id: '-', name: 'Nincs megadva' }]);
   const [isTheaterAdmin, setIsTheaterAdmin] = useState(false);
   const locationData = useLocation();
+  const navigateTo = useNavigate();
 
   const sendDeleteUser = async () => {
     try {
@@ -243,6 +244,10 @@ export default function SelectedUserForm() {
     } else setIsTheaterAdmin(false);
   };
 
+  const backHandler = () => {
+    navigateTo('/userlist');
+  };
+
   return (
     <div>
       {handleuser ? (
@@ -371,7 +376,7 @@ export default function SelectedUserForm() {
                     />
                   </div>
 
-                  <div className="flex justify-between flex-col tablet:flex-row">
+                  <div className="flex justify-center">
                     {buttonType === 'reset' ? (
                       <button
                         type="button"
@@ -392,6 +397,11 @@ export default function SelectedUserForm() {
                     )}
                   </div>
                 </div>
+                {modify && (
+                  <div className="flex justify-center mt-5">
+                    <DefaultButton text="Vissza" type="button" onClick={backHandler} />
+                  </div>
+                )}
               </Form>
             )}
           </Formik>

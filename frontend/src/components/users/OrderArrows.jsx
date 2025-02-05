@@ -28,7 +28,11 @@ export default function OrderArrow({ selected, direction, func = () => {}, colum
       <button type="button" className={styleClassUp} onClick={() => allowedUp && handleClick(-1)}>
         {arrowUp}
       </button>
-      <button type="button" className={styleClassDown} onClick={() => allowedDown && handleClick(1)}>
+      <button
+        type="button"
+        className={styleClassDown}
+        onClick={() => allowedDown && handleClick(1)}
+      >
         {arrowDown}
       </button>
     </div>
