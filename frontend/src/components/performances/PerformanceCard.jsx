@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
@@ -15,8 +15,9 @@ function converDate(date) {
   return newDate;
 }
 
+let previousId = null;
+
 export default function PerformanceCard({ data }) {
-  const rendered = useRef(false); // stops unnecessary rerender of imageReady state
   const [imageReady, setImageReady] = useState(false);
 
   async function fetchImageAndCache(url) {
@@ -32,8 +33,8 @@ export default function PerformanceCard({ data }) {
   }
 
   useEffect(() => {
-    if (!rendered.current) {
-      rendered.current = true;
+    if (previousId !== data.id) {
+      previousId = data.id;
       if (data.posterURL) {
         try {
           fetchImageAndCache(data.posterURL);
@@ -46,6 +47,7 @@ export default function PerformanceCard({ data }) {
     }
   }, []);
   if (!imageReady) return <PerformanceCardEmpty />;
+
   return (
     <Link
       to={`/performances/${data.id}`}

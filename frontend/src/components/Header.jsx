@@ -27,7 +27,6 @@ export default function Header() {
   const handleScroll = () => setTransparentHeader(isYPositionInLimit());
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -74,7 +73,8 @@ export default function Header() {
 
           {user ? (
             <>
-              <MenuLink text="Saját profil" to="/ownUser" icon="user" iconSize="50" />
+              <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="camera" iconSize="50px" />
+              <MenuLink text="Profilom" to="/ownUser" icon="user" iconSize="50" />
               <DefaultButton
                 text="Kijelentkezés"
                 color="c-warning"
