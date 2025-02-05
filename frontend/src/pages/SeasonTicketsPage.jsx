@@ -30,7 +30,9 @@ export default function SeasonTickets() {
         description="Választhatsz különböző bérletcsomagok közül..."
       />
       <div className=" w-full p-20 flex flex-wrap flex-cols justify-center gap-10">
-        {seasonTickets.map((item, index) => <SeasonTicketsCard key={item.id} data={item} index={index} />)}
+        {seasonTickets.map((item, index) => (
+          <SeasonTicketsCard key={item.id} data={item} index={index} />
+        ))}
       </div>
     </>
   );
