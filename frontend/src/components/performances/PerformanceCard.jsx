@@ -20,7 +20,6 @@ export default function PerformanceCard({ data }) {
   const [imageReady, setImageReady] = useState(false);
 
   async function fetchImageAndCache(url) {
-    console.log('FETCH IMAGE');
     try {
       const res = await fetch(url);
       const imageBlob = await res.blob();
@@ -48,7 +47,7 @@ export default function PerformanceCard({ data }) {
   }, []);
 
   if (!imageReady) return <PerformanceCardEmpty />;
-  console.log(data);
+
   return (
     <Link
       to={`/performances/${data.id}`}
