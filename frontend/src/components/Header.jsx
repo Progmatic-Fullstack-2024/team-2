@@ -126,22 +126,18 @@ export default function Header() {
             >
               <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Admin Dashboard</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>
-                Felhasználók kezelése
-              </MenuItem>
-              <MenuItem onClick={() => navigate('/')}>
-                Színházak kezelése
-              </MenuItem>
+              <MenuItem onClick={() => navigate('/userlist')}>Felhasználók kezelése</MenuItem>
+              <MenuItem onClick={() => navigate('/')}>Színházak kezelése</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
             </Menu>
-            <div className='hidden laptop:flex gap-4'>
-            <MenuLink text="Előadás létrehozás" to="/new-performance" />
-            <MenuLink text="Admin Dashboard" to="/" />
-            <MenuLink text="Felhasználók kezelése" to="/" />
-            <MenuLink text="Színházak kezelése" to="/" />
-            <MenuLink text="Fizetési ügyek" to="/" />
-            <MenuLink text="Egyéb" to="/" />
+            <div className="hidden laptop:flex gap-4">
+              <MenuLink text="Előadás létrehozás" to="/new-performance" />
+              <MenuLink text="Admin Dashboard" to="/" />
+              <MenuLink text="Felhasználók kezelése" to="/userlist" />
+              <MenuLink text="Színházak kezelése" to="/" />
+              <MenuLink text="Fizetési ügyek" to="/" />
+              <MenuLink text="Egyéb" to="/" />
             </div>
           </nav>
         </>

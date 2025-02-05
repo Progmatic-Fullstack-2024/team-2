@@ -7,7 +7,6 @@ import { userValidationSchemaForPassword } from '../../schema/userValidationSche
 import userHandle from '../../services/userhandle.service.js';
 import DefaultButton from '../misc/DefaultButton.jsx';
 
-
 export default function NewPasswordForm({ goback }) {
   const initialValues = {
     oldPassword: '',

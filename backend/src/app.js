@@ -15,6 +15,7 @@ const app = express();
 app.use(cors({ origin: FRONTEND_URL }));
 
 app.use(json());
+
 app.use("/", authenticate);
 
 app.use("/auth", authRoutes);

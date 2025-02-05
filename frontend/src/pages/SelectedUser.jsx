@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import ImageTitle from '../components/misc/ImageTitle';
-import Unautorized from '../components/Unautorized.jsx'
+import Unautorized from '../components/Unautorized.jsx';
 import SelectedUserForm from '../components/users/SelectedUserForm.jsx';
 import AuthContext from '../contexts/AuthContext';
 

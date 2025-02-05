@@ -1,8 +1,8 @@
 import axiosInstance from './axiosInstance';
 
-const getAllUsers = async () => {
+const getAllUsers = async (params) => {
   try {
-    const response = await axiosInstance.get('/users');
+    const response = await axiosInstance.get(`/users?${params}`);
     return response.data; // Successful answer
   } catch (error) {
     throw error.response ? error.response.data : error; // In case of error

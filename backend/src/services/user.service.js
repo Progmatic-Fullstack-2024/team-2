@@ -6,7 +6,13 @@ import { getEmailExists } from "./auth.service.js";
 
 const getAllUser = async (orderBy, direction, page, limit) => {
   let startNumber = 0;
+  let short;
   if (page && limit) startNumber = (page - 1) * limit;
+  if (orderBy && orderBy === "name") {
+    short = [{ lastName: direction }, { firstName: direction }];
+  } else if (orderBy && orderBy === "email") {
+    short = { email: direction };
+  }
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -17,6 +23,7 @@ const getAllUser = async (orderBy, direction, page, limit) => {
       birthDate: true,
       role: true,
     },
+    orderBy: short,
     skip: startNumber,
     take: limit,
   });
