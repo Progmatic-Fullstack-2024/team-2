@@ -1,34 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import PerformancesService from '../../services/performances.service';
 import DefaultButton from '../misc/DefaultButton';
-import PerformanceList from '../performances/PerformancesList';
 
 export default function TheaterForTheaterAdmin({ theater }) {
-  const [performances, setPerformances] = useState([]);
   const navigate = useNavigate();
-  const rendered = useRef(false);
-
-  const getPerformances = async () => {
-    try {
-      console.log('Fetching performances...');
-      const data = await PerformancesService.listAll();
-      console.log('Fetched data:', data); // Ellenőrizzük, hogy érkezik-e válasz
-      setPerformances(data || []);
-    } catch (error) {
-      console.error('Hiba történt a performanszok lekérésekor:', error);
-      setPerformances({ data: [] });
-    }
-  };
-
-  useEffect(() => {
-    if (!rendered.current) {
-      rendered.current = true;
-      localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
-      getPerformances();
-    }
-  }, []);
 
   if (!theater || !theater.theater) {
     return (
@@ -38,7 +13,7 @@ export default function TheaterForTheaterAdmin({ theater }) {
     );
   }
 
-  const { id, name, address, email, imageURL, phone, seatsAvailable } = theater.theater;
+  const { id, name, address, email, imageURL, phone, seatsAvailable, performances } = theater.theater;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-10">
@@ -67,8 +42,23 @@ export default function TheaterForTheaterAdmin({ theater }) {
         </div>
       </div>
 
-      {/* PerformanceList csak akkor renderelődik, ha van adat */}
-      {performances.length > 0 && <PerformanceList performances={performances} />}
+      <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
+        <h2 className="text-3xl font-bold mb-4">Előadások</h2>
+        {performances && performances.length > 0 ? (
+          <ul className="list-disc list-inside text-lg">
+            {performances.map((performance) => (
+              <li key={performance.id} className="mb-2">
+                {performance.title} - {performance.date}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-lg italic">Még nincs ehhez a színházhoz tartozó előadás.</p>
+        )}
+        <div className="flex justify-center mt-5">
+          <DefaultButton text="Új előadás hozzáadása" onClick={() => navigate('/new-performance')} />
+        </div>
+      </div>
     </div>
   );
 }
