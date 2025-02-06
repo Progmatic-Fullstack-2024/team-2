@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 
-import PerformanceCard02 from './PerformanceCard02';
+import LandingPagePerformanceCard from './LandingPagePerformanceCard';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformancesNextWeek({ performances }) {
@@ -93,7 +93,7 @@ export default function PerformancesNextWeek({ performances }) {
                     visibleCards,
                   )}`}
                 >
-                  <PerformanceCard02 data={perf} />
+                  <LandingPagePerformanceCard data={perf} />
                 </div>
               ))}
             </div>

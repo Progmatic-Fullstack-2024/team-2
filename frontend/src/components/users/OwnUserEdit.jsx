@@ -112,11 +112,11 @@ export default function OwnUserEdit() {
       if (newUserData.birthDate) newUserData.birthDate = newUserData.birthDate.replaceAll('.', '-');
       setIsVisilable(true);
       try {
-        const answer = await userHandle.patchOwnUser(newUserData);
+        const answer = await userHandle.patchUser(newUserData);
         if (answer) setMsg('Az adatmódosítás sikeres');
         loadUser();
       } catch (error) {
-        setMsg('Hiba: az adatmódosítás elutsítva');
+        setMsg('Hiba: az adatmódosítás elutasítva');
       }
       cancelHandle();
     }

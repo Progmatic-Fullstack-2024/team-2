@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 
-import PerformanceCard02 from './PerformanceCard02';
+import LandingPagePerformanceCard from './LandingPagePerformanceCard';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformancesByTheaters({ performances }) {
@@ -40,7 +40,7 @@ export default function PerformancesByTheaters({ performances }) {
   // Véletlenszerű színház kiválasztása
   const theaterIds = Object.keys(performancesByTheater);
   const randomTheaterId = theaterIds[Math.floor(Math.random() * theaterIds.length)];
-  const theaterPerformances = performancesByTheater[randomTheaterId];
+  const theaterPerformances = performancesByTheater[randomTheaterId] || [];
 
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {
@@ -90,7 +90,7 @@ export default function PerformancesByTheaters({ performances }) {
                     visibleCards,
                   )}`}
                 >
-                  <PerformanceCard02 data={perf} />
+                  <LandingPagePerformanceCard data={perf} />
                 </div>
               ))}
             </div>
