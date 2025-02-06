@@ -12,13 +12,13 @@ router.get("/", theatersController.listAllTheaters);
 router.post(
   "/",
   upload.fields([{ name: "image", maxCount: 1 }]),
-  theatersController.createTheater
+  theatersController.createTheater,
 );
 
 router.patch(
   "/:theaterId",
   upload.fields([{ name: "image", maxCount: 1 }]),
-  theatersController.updateTheater
+  theatersController.updateTheater,
 );
 
 router.patch("/:theaterId/image", theatersController.deleteImage);
