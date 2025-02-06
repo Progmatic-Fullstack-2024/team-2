@@ -1,25 +1,33 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import DefaultButton from './misc/DefaultButton';
 import performanceValidationSchema from '../schema/performanceValidationSchema';
 import getCreators from '../services/creators.service';
 import createPerformance from '../services/performance.service';
-import theaterHandle from '../services/theaters.service';
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Theater id:
+  const searchParams = new URLSearchParams(location.search);
+  const theaterId = searchParams.get('theaterId');
+
+  if (!theaterId) {
+    return <div className="text-red-500 text-lg font-bold">Hiba: Színház azonosító hiányzik!</div>;
+  }
 
   const [posterPreview, setPosterPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
-  const [theaterOptions, setTheaterOptions] = useState([]);
+  // const [theaterOptions, setTheaterOptions] = useState([]);
   const [creatorOptions, setCreatorOptions] = useState([]);
 
   const initialValues = lecture || {
     title: '',
-    theaterId: '',
+    theaterId, // setting theater Id automatically
     creatorId: [''],
     description: '',
     posterURL: null,
@@ -48,7 +56,7 @@ export default function NewPerformanceForm({ lecture }) {
       resetForm();
       setPosterPreview(null);
       setImagesPreview([]);
-      navigate('/comingsoon');
+      navigate('/theater-admin');
     } catch (error) {
       toast.error(`Hiba történt az előadás létrehozásakor: ${error.message}`);
     }
@@ -79,17 +87,6 @@ export default function NewPerformanceForm({ lecture }) {
     const updatedPreviews = [...imagesPreview];
     updatedPreviews.splice(index, 1);
     setImagesPreview(updatedPreviews);
-  };
-
-  const fetchTheaters = async () => {
-    if (theaterOptions.length === 0) {
-      try {
-        const theaters = await theaterHandle.getTheaters();
-        setTheaterOptions(theaters);
-      } catch (error) {
-        toast.error('Hiba történt a színházak betöltésekor.');
-      }
-    }
   };
 
   const fetchCreators = async () => {
@@ -130,32 +127,15 @@ export default function NewPerformanceForm({ lecture }) {
 
             <div className="mb-4">
               <label htmlFor="theaterId" className="text-gray-800 font-bold">
-                Színház <span className="text-red-500">*</span>
+                Színház
               </label>
               <div className="flex items-center">
                 <Field
-                  as="select"
+                  type="text"
                   name="theaterId"
-                  className="w-full border p-2 rounded text-gray-800"
-                >
-                  <option value="">Válassz egy színházat</option>
-                  {theaterOptions.map((theater) => (
-                    <option key={theater.id} value={theater.id}>
-                      {theater.name}
-                    </option>
-                  ))}
-                </Field>
-                <button
-                  type="button"
-                  onClick={fetchTheaters}
-                  className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                >
-                  <img
-                    src="../../public/theaterSearchIcon.svg"
-                    alt="Színház keresése ikon"
-                    className="w-6 h-6"
-                  />
-                </button>
+                  className="w-full border p-2 rounded my-1 text-gray-800 bg-gray-100"
+                  disabled
+                />
               </div>
               <ErrorMessage name="theaterId" component="div" className="text-red-500 text-sm" />
             </div>

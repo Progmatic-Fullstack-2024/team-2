@@ -30,7 +30,11 @@ const getByUserId = async (userId) => {
   const theaterAdminByUserId = await prisma.theaterAdmin.findUnique({
     where: { userId },
     include: {
-      theater: true,
+      theater: {
+        include: {
+          performances: true,
+        },
+      },
     },
   });
   return theaterAdminByUserId;

@@ -13,7 +13,8 @@ export default function TheaterForTheaterAdmin({ theater }) {
     );
   }
 
-  const { id, name, address, email, imageURL, phone, seatsAvailable, performances } = theater.theater;
+  const { id, name, address, email, imageURL, phone, seatsAvailable, performances } =
+    theater.theater;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-10">
@@ -56,7 +57,10 @@ export default function TheaterForTheaterAdmin({ theater }) {
           <p className="text-lg italic">Még nincs ehhez a színházhoz tartozó előadás.</p>
         )}
         <div className="flex justify-center mt-5">
-          <DefaultButton text="Új előadás hozzáadása" onClick={() => navigate('/new-performance')} />
+          <DefaultButton
+            text="Új előadás hozzáadása"
+            onClick={() => navigate(`/new-performance?theaterId=${id}`)}
+          />
         </div>
       </div>
     </div>
