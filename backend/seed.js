@@ -70,7 +70,7 @@ async function main() {
           email: `user${i + 1}@example.com`,
           phone: `+123456789${i}`,
           password: "password123",
-          role: i < 5 ? "admin" : "user", // First 5 users are admins
+          role: i < 5 ? "Admin" : "user", // First 5 users are admins
           birthDate: new Date(`1990-01-${(i % 31) + 1}`),
         },
       }),

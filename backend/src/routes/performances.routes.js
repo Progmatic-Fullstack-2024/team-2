@@ -11,6 +11,7 @@ router.get("/", performancesController.listPerformances);
 
 router.post(
   "/",
+  isAdmin,
   upload.fields([
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },

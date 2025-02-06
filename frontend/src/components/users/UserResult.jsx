@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import DefaultButton from './misc/DefaultButton';
+import DefaultButton from '../misc/DefaultButton';
 
 export default function UserResult({ params }) {
   const {

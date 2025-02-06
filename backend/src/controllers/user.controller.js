@@ -1,9 +1,19 @@
-import authService from "../services/auth.service.js";
+import userService from "../services/user.service.js";
 import HttpError from "../utils/HttpError.js";
 
 const listUsers = async (req, res, next) => {
+  const { orderBy, direction, page } = req.query;
+  let calcLimit;
+  if (page) calcLimit = req.query.limit ? req.query.limit : 10;
+  if (direction && direction !== "asc" && direction !== "desc")
+    next(new HttpError("Bad value of direction!"), 401);
   try {
-    const users = await authService.getAllUser();
+    const users = await userService.getAllUser(
+      orderBy,
+      direction,
+      page,
+      calcLimit,
+    );
     res.json(users);
   } catch (error) {
     next(error);
@@ -14,7 +24,7 @@ const getUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (id) {
-      const user = await authService.getUserById(id);
+      const user = await userService.getUserById(id);
       if (!user) next(new HttpError("User is not Found", 404));
       else res.json(user);
     }
@@ -26,7 +36,7 @@ const getUser = async (req, res, next) => {
 const getOwnUser = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const user = await authService.getOwnUserById(id);
+    const user = await userService.getOwnUserById(id);
     if (!user) next(new HttpError("User is not Found", 404));
     else res.json(user);
   } catch (error) {
@@ -38,13 +48,13 @@ const updateUser = async (req, res, next) => {
   const { id, firstName, lastName, email, phone, birthDate } = req.body;
   let { role } = req.body;
   if (id) {
-    if (req.user.role !== "Admin" && id !== req.user.id) {
+    if (req.user.role !== "admin" && id !== req.user.id) {
       next(new HttpError("Access denied: Admin can update users only", 403));
       return;
     }
-    if (req.user.role !== "Admin") role = undefined;
+    if (req.user.role !== "admin") role = undefined;
     try {
-      const user = await authService.updateUser(
+      const user = await userService.updateUser(
         id,
         firstName,
         lastName,
@@ -64,7 +74,7 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   if (id) {
-    const user = await authService.deleteUser(id);
+    const user = await userService.deleteUser(id);
     if (user) res.status(201).json({ message: "User deleted" });
     else next(new HttpError("User is not Found", 404));
   } else next(new HttpError("User id is required", 401));
@@ -73,7 +83,7 @@ const deleteUser = async (req, res, next) => {
 const passwordChange = async (req, res, next) => {
   const { id, oldPassword, newPassword } = req.body;
   if (id && oldPassword && newPassword) {
-    const answer = await authService.passwordChange(
+    const answer = await userService.passwordChange(
       id,
       oldPassword,
       newPassword,
@@ -83,6 +93,11 @@ const passwordChange = async (req, res, next) => {
   } else next(new HttpError("Data is incompleted", 403));
 };
 
+const countUsers = async (req, res) => {
+  const userNumber = await userService.countUsers();
+  res.status(201).json({ numberOfUsers: userNumber });
+};
+
 export default {
   listUsers,
   getUser,
@@ -90,4 +105,5 @@ export default {
   updateUser,
   deleteUser,
   passwordChange,
+  countUsers,
 };

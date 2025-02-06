@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
 
+import AuthModal from './AuthModal';
 import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
@@ -12,6 +13,8 @@ export default function Header() {
   const { user, logout } = useContext(AuthContext);
   const [transparentHeader, setTransparentHeader] = useState(true);
   const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [modalForm, setModalForm] = useState('login');
 
   const navigate = useNavigate();
 
@@ -40,6 +43,10 @@ export default function Header() {
 
   const handleAdminMenuOpen = (event) => setAdminMenuAnchor(event.currentTarget);
   const handleAdminMenuClose = () => setAdminMenuAnchor(null);
+  const openAuthModal = (formType) => {
+    setModalForm(formType);
+    setShowAuthModal(true);
+  };
 
   return (
     <header className={headerClass}>
@@ -67,8 +74,8 @@ export default function Header() {
 
         <nav className="flex laptop:gap-2 items-center h-16">
           <MenuLink text="Home" to="/" icon="star" iconSize="50" />
+          <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
           <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
-
           {user ? (
             <>
               <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="camera" iconSize="50px" />
@@ -139,7 +146,7 @@ export default function Header() {
             <div className="hidden laptop:flex gap-4">
               <MenuLink text="Előadás létrehozás" to="/new-performance" />
               <MenuLink text="Admin Dashboard" to="/" />
-              <MenuLink text="Felhasználók kezelése" to="/" />
+              <MenuLink text="Felhasználók kezelése" to="/userlist" />
               <MenuLink text="Színházak kezelése" to="/" />
               <MenuLink text="Fizetési ügyek" to="/" />
               <MenuLink text="Egyéb" to="/" />
@@ -147,6 +154,8 @@ export default function Header() {
           </nav>
         </>
       )}
+
+      {showAuthModal && <AuthModal formType={modalForm} onClose={() => setShowAuthModal(false)} />}
     </header>
   );
 }

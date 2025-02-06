@@ -1,65 +1,18 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import prisma from "../models/prisma-client.js";
-import { JWT_SECRET } from "../constants/constants.js";
 import HttpError from "../utils/HttpError.js";
+import theaterAdmin from "./theaterAdmin.service.js";
+import { getEmailExists } from "./auth.service.js";
 
-export const getEmailExists = async (email) => {
-  const emailExists = await prisma.user.findUnique({ where: { email } });
-  return emailExists;
-};
-
-const registration = async ({
-  lastName,
-  firstName,
-  email,
-  password,
-  phone,
-  role = "user",
-  birthDate,
-}) => {
-  const emailExists = await getEmailExists(email);
-  if (emailExists) throw new HttpError("Email already exists!", 403);
-  let birthDatedate;
-  if (birthDate) birthDatedate = new Date(birthDate);
-  const hashedPassword = await bcrypt.hash(password, 5);
-  const newUser = await prisma.user.create({
-    data: {
-      lastName,
-      firstName,
-      email,
-      password: hashedPassword,
-      phone,
-      role,
-      birthDate: birthDatedate,
-    },
-  });
-
-  return newUser;
-};
-
-const login = async ({ email, password }) => {
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) throw new HttpError("Invalid email or password!", 403);
-
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) throw new HttpError("Invalid email or password!", 403);
-
-  const payload = {
-    id: user.id,
-    email: user.email,
-    lastName: user.lastName,
-    firstName: user.firstName,
-    role: user.role,
-    birthDate: user.birthDate,
-  };
-
-  const token = jwt.sign(payload, JWT_SECRET);
-
-  return token;
-};
-
-const getAllUser = async () => {
+const getAllUser = async (orderBy, direction, page, limit) => {
+  let startNumber = 0;
+  let short;
+  if (page && limit) startNumber = (page - 1) * limit;
+  if (orderBy && orderBy === "name") {
+    short = [{ lastName: direction }, { firstName: direction }];
+  } else if (orderBy && orderBy === "email") {
+    short = { email: direction };
+  }
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -70,6 +23,9 @@ const getAllUser = async () => {
       birthDate: true,
       role: true,
     },
+    orderBy: short,
+    skip: startNumber,
+    take: limit,
   });
   return users;
 };
@@ -77,22 +33,20 @@ const getAllUser = async () => {
 const getUserById = async (id) => {
   const user = await prisma.user.findUnique({
     where: { id },
-    select: {
-      id: true,
-      lastName: true,
-      firstName: true,
-      email: true,
-      phone: true,
-      birthDate: true,
-      role: true,
+
+    include: {
+      theaterAdmin: true,
     },
   });
+  delete user.password;
   return user;
 };
 
 const getOwnUserById = async (id) => {
   const user = await getUserById(id);
+  if (!user) return null;
   if (user.role === "user") delete user.role;
+  delete user.theaterAdmin;
   return user;
 };
 
@@ -135,9 +89,11 @@ const updateUser = async (
 const deleteUser = async (id) => {
   let user = await getUserById(id);
   if (user)
-    user = await prisma.user.delete({
-      where: { id },
-    });
+    if (user.theaterAdmin != null)
+      await theaterAdmin.deleteUserFromTheaterAdmin(id);
+  user = await prisma.user.delete({
+    where: { id },
+  });
 
   return user;
 };
@@ -159,13 +115,17 @@ const passwordChange = async (id, oldPassword, newPassword) => {
   return null;
 };
 
+const countUsers = async () => {
+  const userNumber = await prisma.user.count();
+  return userNumber;
+};
+
 export default {
-  registration,
-  login,
   getAllUser,
   getUserById,
   getOwnUserById,
   updateUser,
   deleteUser,
   passwordChange,
+  countUsers,
 };

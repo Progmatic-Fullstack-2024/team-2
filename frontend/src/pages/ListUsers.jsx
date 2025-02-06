@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
-import ListUserstable from '../components/ListUserstable.jsx';
 import ImageTitle from '../components/misc/ImageTitle';
 import Unautorized from '../components/Unautorized.jsx';
+import ListUserstable from '../components/users/ListUserstable.jsx';
 import AuthContext from '../contexts/AuthContext';
 
 export default function ListUsers() {
@@ -11,9 +11,9 @@ export default function ListUsers() {
     <>
       <ImageTitle title="Felhasználok listázása" description="" />
       <div className=" min-h-screen flex flex-col items-center m-0">
-        {user && user.role === 'Admin' ? (
+        {user && user.role === 'admin' ? (
           <div className="mt-28">
-            <h1 className="my-1 text-center text-2xl">Felhasználók listája</h1>
+            <h1 className="my-1 text-center text-2xl text-white">Felhasználók listája</h1>
             <ListUserstable />
           </div>
         ) : (

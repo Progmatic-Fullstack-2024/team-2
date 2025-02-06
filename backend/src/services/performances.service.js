@@ -47,13 +47,40 @@ const list = async ({ filter, search }) => {
 	return { data: filteredPerformances, maxSize: performances.length };
 };
 
+// const listAll = async () => {
+//   const allPerformances = await prisma.performance.findMany();
+//   return allPerformances;
+// };
+
 const listAll = async () => {
 	const allPerformances = await prisma.performance.findMany({
 		include: {
 			performanceEvents: true,
+			theater: {
+				select: {
+					id: true,
+					name: true,
+				},
+			},
+			genre: true,
 		},
 	});
 	return allPerformances;
+};
+
+const listAllGenres = async () => {
+	const genresWithCount = await prisma.genre.groupBy({
+		by: ["name"], // Grouping based on genre
+		_count: {
+			name: true, // Count genres
+		},
+	});
+
+	return genresWithCount.map((g) => ({
+		name: g.name,
+		// eslint-disable-next-line no-underscore-dangle
+		count: g._count.name,
+	}));
 };
 
 const create = async (performanceData, poster, images, creatorsIds) => {
@@ -148,4 +175,13 @@ export default {
 	getByName,
 	deleteSingleImage,
 	getById,
+	create,
+	update,
+	destroy,
+	list,
+	listAll,
+	getByName,
+	deleteSingleImage,
+	getById,
+	listAllGenres,
 };

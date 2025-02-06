@@ -1,8 +1,8 @@
 import axiosInstance from './axiosInstance';
 
-const getAllUsers = async () => {
+const getAllUsers = async (params) => {
   try {
-    const response = await axiosInstance.get('/users');
+    const response = await axiosInstance.get(`/users?${params}`);
     return response.data; // Successful answer
   } catch (error) {
     throw error.response ? error.response.data : error; // In case of error
@@ -27,7 +27,7 @@ const getUser = async (userId) => {
   }
 };
 
-const patchOwnUser = async (user) => {
+const patchUser = async (user) => {
   try {
     const response = await axiosInstance.patch(`/users`, user);
     return response.data; // Successful answer
@@ -54,4 +54,32 @@ const deleteUser = async (userId) => {
   }
 };
 
-export default { getAllUsers, getOwnUser, patchOwnUser, changePassword, getUser, deleteUser };
+const deleteTheaterAdmin = async (userId) => {
+  try {
+    const response = await axiosInstance.delete(`/theaterAdmin/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
+const setTheaterAdmin = async (userId, theaterId) => {
+  const data = { userId, theaterId };
+  try {
+    const response = await axiosInstance.post(`/theaterAdmin/newTheaterAdmin`, data);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
+export default {
+  getAllUsers,
+  getOwnUser,
+  patchUser,
+  changePassword,
+  getUser,
+  deleteUser,
+  deleteTheaterAdmin,
+  setTheaterAdmin,
+};

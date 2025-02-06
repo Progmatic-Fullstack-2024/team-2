@@ -1,11 +1,11 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 
-import { userValidationSchemaForUpdateUser } from '../schema/userValidationSchema';
-import userHandle from '../services/userhandle.service.js';
-import DefaultButton from './misc/DefaultButton';
 import NewPasswordForm from './NewPasswordForm.jsx';
 import UserResult from './UserResult.jsx';
+import { userValidationSchemaForUpdateUser } from '../../schema/userValidationSchema.js';
+import userHandle from '../../services/userhandle.service.js';
+import DefaultButton from '../misc/DefaultButton.jsx';
 
 export default function OwnUserEdit() {
   const [buttonType, setButtonType] = useState('button');
@@ -60,7 +60,7 @@ export default function OwnUserEdit() {
         lastName: user.lastName,
         email: user.email,
         phone: user.phone,
-        birthDate: user.birthDate,
+        birthDate: user.birthDate ? user.birthDate : '',
       };
     } else initialValues = null;
     return initialValues;
@@ -71,6 +71,7 @@ export default function OwnUserEdit() {
   async function loadUser() {
     try {
       const getUser = await userHandle.getOwnUser();
+      if (getUser && getUser.birthDate === null) getUser.birthDate = '';
       setUser(getUser);
     } catch (e) {
       return <h2>User nem található</h2>;
@@ -111,11 +112,11 @@ export default function OwnUserEdit() {
       if (newUserData.birthDate) newUserData.birthDate = newUserData.birthDate.replaceAll('.', '-');
       setIsVisilable(true);
       try {
-        const answer = await userHandle.patchOwnUser(newUserData);
+        const answer = await userHandle.patchUser(newUserData);
         if (answer) setMsg('Az adatmódosítás sikeres');
         loadUser();
       } catch (error) {
-        setMsg('Hiba: az adatmódosítás elutsítva');
+        setMsg('Hiba: az adatmódosítás elutasítva');
       }
       cancelHandle();
     }
