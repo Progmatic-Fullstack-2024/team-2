@@ -67,21 +67,17 @@ const listAll = async () => {
   return allPerformances;
 };
 
-// const listAllGenres = async () => {
-//   const allGenres = await prisma.genre.findMany();
-//   return allGenres;
-// };
-
 const listAllGenres = async () => {
   const genresWithCount = await prisma.genre.groupBy({
-    by: ["name"], // Csoportosítás műfajnév szerint
+    by: ["name"], // Grouping based on genre
     _count: {
-      name: true, // Megszámolja, hányszor szerepel az adott műfaj
+      name: true, // Count genres
     },
   });
 
   return genresWithCount.map((g) => ({
     name: g.name,
+    // eslint-disable-next-line no-underscore-dangle
     count: g._count.name,
   }));
 };

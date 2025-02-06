@@ -11,10 +11,8 @@ import theatersService from '../services/theaters.service';
 const formatDate = (date) => date.toISOString().split('T')[0];
 
 // Helper function for checking if two dates are the same (ignoring the year)
-const isSameDay = (date1, date2) => {
-  return date1.getUTCDate() === date2.getUTCDate() && date1.getUTCMonth() === date2.getUTCMonth();
-};
-
+const isSameDay = (date1, date2) =>
+  date1.getUTCDate() === date2.getUTCDate() && date1.getUTCMonth() === date2.getUTCMonth();
 export default function BrowsingPage() {
   const { user } = useContext(AuthContext);
   const [genres, setGenres] = useState([]);

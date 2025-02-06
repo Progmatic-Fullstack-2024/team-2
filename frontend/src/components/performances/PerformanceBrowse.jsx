@@ -34,8 +34,8 @@ export default function PerformancesBrowse({ params, title }) {
         // If genre is in the params search by genre
         const results = await Promise.all(
           genres.map((genre) =>
-            performancesService.list(new URLSearchParams({ ...params, genre }))
-          )
+            performancesService.list(new URLSearchParams({ ...params, genre })),
+          ),
         );
         allPerformances = results.flatMap((result) => result.data);
       } else {
@@ -43,7 +43,7 @@ export default function PerformancesBrowse({ params, title }) {
         allPerformances = data.data;
       }
     } catch (error) {
-      console.error('Failed to fetch performances:', error.response ? error.response.data : error);
+      throw error.response ? error.response.data : error;
     }
     setPerformances(allPerformances);
   }, [params, genres]);
