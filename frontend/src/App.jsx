@@ -31,7 +31,6 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
-              <Route path="/signedIn" element={<SignedInPage />} />
               <Route path="/theater-admin" element={<TheaterAdminPage />} />
               <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
               <Route path="/userlist" element={<ListUsers />} />

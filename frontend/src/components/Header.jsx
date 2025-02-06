@@ -142,6 +142,48 @@ export default function Header() {
           </nav>
         </>
       )}
+
+      {user?.role === 'theaterAdmin' && (
+        <>
+          <hr className="w-full border-t border-c-text/40 my-2" />
+          <nav className="flex gap-4 items-center w-full justify-center py-2">
+            <div className="laptop:hidden relative flex items-center gap-2">
+              <FiMenu
+                className="absolute -left-48 text-2xl cursor-pointer"
+                onClick={handleAdminMenuOpen}
+              />
+              <button
+                type="button"
+                className="text-white font-bold hover:underline"
+                onClick={handleAdminMenuOpen}
+                aria-label="Admin menü megnyitása"
+              />
+            </div>
+            <Menu
+              anchorEl={adminMenuAnchor}
+              open={Boolean(adminMenuAnchor)}
+              onClose={handleAdminMenuClose}
+              disableScrollLock
+              PaperProps={{
+                sx: {
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                },
+              }}
+            >
+              <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
+              <MenuItem onClick={() => navigate('/theater-admin')}>Színházam</MenuItem>
+              <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
+              <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
+            </Menu>
+            <div className="hidden laptop:flex gap-4">
+              <MenuLink text="Színházam" to="/theater-admin" />
+              <MenuLink text="Fizetési ügyek" to="/" />
+              <MenuLink text="Egyéb" to="/" />
+            </div>
+          </nav>
+        </>
+      )}
     </header>
   );
 }

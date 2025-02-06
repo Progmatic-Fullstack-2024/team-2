@@ -100,6 +100,14 @@ export default function NewPerformanceForm({ lecture }) {
     }
   };
 
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="mx-auto p-12 my-40 bg-c-secondary-light rounded-md">
       <h2 className="font-bold text-gray-800 text-xl mb-6">
@@ -280,7 +288,7 @@ export default function NewPerformanceForm({ lecture }) {
 
             <div className="flex justify-between gap-10">
               <DefaultButton text="Előadás hozzáadása" type="submit" />
-              <DefaultButton text="Mégsem" type="button" onClick={() => navigate('/comingsoon')} />
+              <DefaultButton text="Mégsem" type="button" onClick={handleBack} />
             </div>
           </Form>
         )}
