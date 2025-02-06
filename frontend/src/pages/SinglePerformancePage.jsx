@@ -11,6 +11,7 @@ export default function DetailsPage() {
   const [performance, setPerformance] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Képgörgetéshez
   const [selectedImage, setSelectedImage] = useState(null); // Modalhoz
+  const [selectedDates, setSelectedDates] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -26,6 +27,15 @@ export default function DetailsPage() {
     fetchPerformanceById(id);
   }, [id]);
 
+  // Date selection handling
+  const toggleDateSelection = (date) => {
+    setSelectedDates(
+      (prevSelected) =>
+        prevSelected.includes(date)
+          ? prevSelected.filter((d) => d !== date) // Ha már benne van, törli
+          : [...prevSelected, date], // Ha nincs benne, hozzáadja
+    );
+  };
   // Képgörgetés kezelése
   const handleNextImage = () => {
     if (performance && performance.imagesURL) {
@@ -87,7 +97,7 @@ export default function DetailsPage() {
   return (
     <>
       <ImageTitle title={performance.title} />
-      <div className="min-h-screen flex flex-col items-center justify-center p-10">
+      <div className="min-h-screen flex flex-col items-center justify-center p-10  text-c-primary-dark">
         {/* Kép tartalmazó div */}
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden flex items-center justify-center">
           <img
@@ -135,13 +145,25 @@ export default function DetailsPage() {
           </div>
 
           <p className="text-lg mb-2">{performance.description}</p>
-          <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
-          <p className="text-lg mb-2">
-            Időpont(ok):{' '}
-            {performance.performanceEvents
-              .map((event) => new Date(event.performanceDate).toLocaleString('hu-HU'))
-              .join(', ')}
-          </p>
+          <label className="block text-lg font-semibold mt-4">Következő előadás időpontok:</label>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {performance.performanceEvents.map((event) => {
+              const isSelected = selectedDates.includes(event.performanceDate);
+
+              return (
+                <button
+                  key={event.id}
+                  type="button"
+                  className={`p-2 border rounded-md transition-all mb-4 ${
+                    isSelected ? 'text-xl font-bold border-c-primary' : 'border-gray-300'
+                  }`}
+                  onClick={() => toggleDateSelection(event.performanceDate)}
+                >
+                  {new Date(event.performanceDate).toLocaleString('hu-HU')}
+                </button>
+              );
+            })}
+          </div>
           <div className="flex justify-around">
             <div>
               <DefaultButton onClick={handleBack} text="Vissza" />
