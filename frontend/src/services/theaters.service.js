@@ -9,4 +9,13 @@ const getTheaters = async () => {
   }
 };
 
-export default { getTheaters };
+const createThreater = async (theater) => {
+  try {
+    const response = await axiosInstance.post('/api/dropdown-data-theaters', theater);
+    return response.data; // Successful answer
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
+export default { getTheaters, createThreater };

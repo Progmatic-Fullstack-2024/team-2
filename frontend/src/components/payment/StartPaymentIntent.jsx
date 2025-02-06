@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import seasonTicketsService from '../../services/season-tickets.service';
 import DefaultButton from '../misc/DefaultButton';
-import { useNavigate } from 'react-router-dom';
 import Spinner from '../misc/Spinner';
 
 let ticketData = null;
@@ -23,7 +24,10 @@ export default function StartPaymentIntent({ searchParams, getStripeData }) {
     }
   }, []);
 
-  // if (!renderData) return;
+  const handleOnclick = () => {
+    setRenderData(false);
+    getStripeData({ price: renderData.price });
+  };
 
   return (
     <div className="laptop:m-20 min-w-[30vw] min-h-[40vh] p-10 border border-c-secondary/50 flex flex-col justify-center  gap-10 text-xl">
@@ -42,12 +46,7 @@ export default function StartPaymentIntent({ searchParams, getStripeData }) {
           </div>
 
           <div className="w-full flex flex-row justify-between">
-            <DefaultButton
-              text="Tovább a fizetéshez"
-              onClick={() => {
-                setRenderData(false), getStripeData({ price: renderData.price });
-              }}
-            />
+            <DefaultButton text="Tovább a fizetéshez" onClick={handleOnclick} />
 
             <DefaultButton
               text="Mégse"

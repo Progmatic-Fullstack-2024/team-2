@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import seasonTicketsService from '../services/season-tickets.service.js';
-import SeasonTicketsCard from '../components/season_tickets/SeasonTicketsCard.jsx';
 import ImageTitle from '../components/misc/ImageTitle.jsx';
+import SeasonTicketsCard from '../components/season_tickets/SeasonTicketsCard.jsx';
+import seasonTicketsService from '../services/season-tickets.service.js';
 
 let fetchedData = null;
 
@@ -30,9 +30,9 @@ export default function SeasonTickets() {
         description="Választhatsz különböző bérletcsomagok közül..."
       />
       <div className=" w-full p-20 flex flex-wrap flex-cols justify-center gap-10">
-        {seasonTickets.map((item, index) => {
-          return <SeasonTicketsCard key={item.id} data={item} index={index} />;
-        })}
+        {seasonTickets.map((item, index) => (
+          <SeasonTicketsCard key={item.id} data={item} index={index} />
+        ))}
       </div>
     </>
   );

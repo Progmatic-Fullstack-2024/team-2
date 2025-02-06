@@ -2,9 +2,10 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import CheckoutForm from '../components/payment/CheckoutForm';
-import paymentService from '../services/payment.service';
 import StartPaymentIntent from '../components/payment/StartPaymentIntent';
+import paymentService from '../services/payment.service';
 
 // test card number : 4242424242424242;
 let stripeData = { ready: false, promise: '', clientSecret: '' };
@@ -21,7 +22,11 @@ export default function PaymentPage() {
 
   const getStripeData = async ({ price }) => {
     const publicKey = await paymentService.getConfig();
-    stripeData.clientSecret = await paymentService.createPaymentIntent();
+
+    stripeData.clientSecret = await paymentService.createPaymentIntent({
+      currency: 'HUF',
+      amount: price * 100,
+    });
 
     stripeData.price = price;
     stripeData.promise = loadStripe(publicKey);

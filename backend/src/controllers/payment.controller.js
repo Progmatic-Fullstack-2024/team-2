@@ -10,8 +10,7 @@ const config = (req, res, next) => {
 };
 
 const createPaymentIntent = async (req, res, next) => {
-  const { currency, amount } = req.body;
-  console.log("req.params ", req.params);
+  const { currency, amount } = req.body.data;
   try {
     const paymentIntent = await paymentService.createPaymentIntent({
       currency,

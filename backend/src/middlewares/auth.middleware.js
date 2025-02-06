@@ -30,3 +30,11 @@ export const isAdmin = (req, res, next) => {
     next(new HttpError("Admin role required", 403));
   }
 };
+
+export const isTheaterAdmin = (req, res, next) => {
+  if (req.user && req.user.role === "theaterAdmin") {
+    next();
+  } else {
+    next(new HttpError("The theaterAdmin role required", 403));
+  }
+};
