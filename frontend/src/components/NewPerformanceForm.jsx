@@ -25,6 +25,13 @@ export default function NewPerformanceForm({ lecture }) {
   // const [theaterOptions, setTheaterOptions] = useState([]);
   const [creatorOptions, setCreatorOptions] = useState([]);
 
+  const targetAgeOptions = [
+    { label: 'Felnőtt', value: 'adult' },
+    { label: 'Gyerek', value: 'kid' },
+    { label: 'Tini', value: 'teenager' },
+    { label: 'Minden korosztály', value: 'every_age' },
+  ];
+
   const initialValues = lecture || {
     title: '',
     theaterId, // setting theater Id automatically
@@ -32,6 +39,7 @@ export default function NewPerformanceForm({ lecture }) {
     description: '',
     posterURL: null,
     imagesURL: [],
+    targetAudience: '', // default empty targetAdudience
   };
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -47,6 +55,10 @@ export default function NewPerformanceForm({ lecture }) {
     values.imagesURL.forEach((image) => {
       formData.append('files', image);
     });
+
+    if (values.targetAudience) {
+      formData.append('targetAudience', values.targetAudience);
+    }
 
     try {
       const response = await createPerformance(formData);
@@ -199,6 +211,29 @@ export default function NewPerformanceForm({ lecture }) {
                 />
               </div>
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="targetAudience" className="text-gray-800 font-bold">
+                Célközönség (opcionális)
+              </label>
+              <Field
+                as="select"
+                name="targetAudience"
+                className="w-full border p-2 rounded text-gray-800"
+              >
+                <option value="">Válassz célközönséget</option>
+                {targetAgeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage
+                name="targetAudience"
+                component="div"
+                className="text-red-500 text-sm"
+              />
             </div>
 
             <div className="mb-4">
