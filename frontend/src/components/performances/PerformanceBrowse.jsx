@@ -77,11 +77,13 @@ export default function PerformancesBrowse({ params, title }) {
         <div className="relative">
           <div className="flex items-center justify-between">
             {performances.length > visibleCards && (
+              <div className="absolute z-20 left-10">
               <DefaultButton onClick={() => scroll('left')} text="<" />
+              </div>
             )}
             <div
               ref={containerRef}
-              className="flex overflow-hidden scroll-smooth w-full max-w-screen-desktop"
+              className="flex overflow-hidden scroll-smooth w-full z-10 max-w-screen-desktop"
             >
               {performances.map((perf) => (
                 <div
@@ -93,7 +95,9 @@ export default function PerformancesBrowse({ params, title }) {
               ))}
             </div>
             {performances.length > visibleCards && (
+              <div className="absolute z-20 right-0">
               <DefaultButton onClick={() => scroll('right')} text=">" />
+              </div>
             )}
           </div>
         </div>
