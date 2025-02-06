@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Completion from './components/payment/Completion.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 
-import BrowsingPage from './pages/BrowsingPage.jsx'
+import BrowsingPage from './pages/BrowsingPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';

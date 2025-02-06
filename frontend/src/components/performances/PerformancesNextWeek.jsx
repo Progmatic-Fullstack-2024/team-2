@@ -39,7 +39,11 @@ export default function PerformancesNextWeek({ performances }) {
       const performanceDate = new Date(perf.performanceEvents[0].performanceDate);
       return performanceDate >= today && performanceDate <= oneWeekLater;
     })
-    .sort((a, b) => new Date(a.performanceEvents[0].performanceDate) - new Date(b.performanceEvents[0].performanceDate)); // Sort by date
+    .sort(
+      (a, b) =>
+        new Date(a.performanceEvents[0].performanceDate) -
+        new Date(b.performanceEvents[0].performanceDate),
+    ); // Sort by date
 
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {

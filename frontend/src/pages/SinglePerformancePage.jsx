@@ -65,7 +65,7 @@ export default function DetailsPage() {
     if (window.history.length > 2) {
       navigate(-1);
     } else {
-      navigate("/"); 
+      navigate('/');
     }
   };
 
@@ -134,48 +134,46 @@ export default function DetailsPage() {
             </div>
           </div>
 
-            <p className="text-lg mb-2">{performance.description}</p>
-            <p className="text-lg mb-2">
-              Időpont(ok):{' '}
-              {performance.performanceEvents
+          <p className="text-lg mb-2">{performance.description}</p>
+          <p className="text-lg mb-2">
+            Időpont(ok):{' '}
+            {performance.performanceEvents
               .map((event) => new Date(event.performanceDate).toLocaleString('hu-HU'))
               .join(', ')}
-            </p>
-            <div className="flex justify-around">
-              <div>
-                <DefaultButton onClick={handleBack} text="Vissza" />
-              </div>
-              <div>
-                <DefaultButton text="Foglalás" />
-              </div>
+          </p>
+          <div className="flex justify-around">
+            <div>
+              <DefaultButton onClick={handleBack} text="Vissza" />
+            </div>
+            <div>
+              <DefaultButton text="Foglalás" />
             </div>
           </div>
         </div>
-      
+      </div>
 
-        {/* Modal a teljes méretű képhez */}
-        {selectedImage && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-            onClick={closeModal}
-            role="button"
-            tabIndex="0"
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                closeModal();
-              }
-            }}
-          >
-            <div>
-              <img
-                src={selectedImage}
-                alt="Teljes méretű kép"
-                className="max-w-4xl max-h-4xl rounded-lg"
-              />
-            </div>
+      {/* Modal a teljes méretű képhez */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+          onClick={closeModal}
+          role="button"
+          tabIndex="0"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              closeModal();
+            }
+          }}
+        >
+          <div>
+            <img
+              src={selectedImage}
+              alt="Teljes méretű kép"
+              className="max-w-4xl max-h-4xl rounded-lg"
+            />
           </div>
-        )}
-    
+        </div>
+      )}
     </>
   );
 }

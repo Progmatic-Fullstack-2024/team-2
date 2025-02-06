@@ -74,7 +74,7 @@ const listAll = async () => {
 
 const listAllGenres = async () => {
   const genresWithCount = await prisma.genre.groupBy({
-    by: ['name'], // Csoportosítás műfajnév szerint
+    by: ["name"], // Csoportosítás műfajnév szerint
     _count: {
       name: true, // Megszámolja, hányszor szerepel az adott műfaj
     },

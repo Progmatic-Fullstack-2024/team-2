@@ -8,10 +8,9 @@ import DefaultButton from '../misc/DefaultButton';
 export default function PerformanceCard02({ data }) {
   const rendered = useRef(false);
   const [imageReady, setImageReady] = useState(false);
-  const [isHovered, setIsHovered] = useState(false); // Hover state
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
- 
+
   async function fetchImageAndCache(url) {
     try {
       const res = await fetch(url);
@@ -43,17 +42,11 @@ export default function PerformanceCard02({ data }) {
 
   return (
     <div
-      className="flex flex-col justify-between w-full tablet:max-w-96 min-w-72 relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500
+      className="flex flex-col justify-between w-full tablet:max-w-96 min-w-72 group relative h-96 text-white tablet:rounded-b-lg tablet:rounded-t-2xl bg-cover border border-c-secondary transform transition-transform duration-500
         scale-75 hover:scale-95 hover:z-10 hover:shadow-lg hover:shadow-c-primary/50 hover:bg-black/50"
-      
-      // className="w-full tablet:w-1/2 laptop:w-1/3 desktop:w-1/5 h-96 bg-cover border border-c-secondary 
-      //        transform transition-transform duration-500 scale-75 hover:scale-95 hover:z-10 
-      //        hover:shadow-lg hover:shadow-c-primary/50 hover:bg-black/50"
       style={{
         backgroundImage: `url(${localStorage.getItem(imageReady)})`,
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         id="top-gradient"
@@ -87,12 +80,11 @@ export default function PerformanceCard02({ data }) {
             })}
           </ul>
         </div>
-        {isHovered && ( // Show additional details on hover
-          <>
-            <span>Helyszín: {data.location || 'N/A'}</span>
-            <span>Közreműködők: {data.participants || 'N/A'}</span>
-          </>
-        )}
+        <div className="flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-3">
+          <span>Helyszín: {data.location || 'N/A'}</span>
+          <span>Közreműködők: {data.participants || 'N/A'}</span>
+        </div>
+
         {user ? (
           <DefaultButton onClick={() => navigate(`/performances/${data.id}`)} text="Érdekel..." />
         ) : (

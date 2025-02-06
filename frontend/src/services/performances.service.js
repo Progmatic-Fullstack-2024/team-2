@@ -27,7 +27,6 @@ const listAll = async () => {
   }
 };
 
-
 const createPerformance = async (performanceData) => {
   try {
     const response = await axiosInstance.post('/api/performances', performanceData);
@@ -41,5 +40,5 @@ export default {
   getById,
   list,
   listAll,
-  createPerformance
+  createPerformance,
 };

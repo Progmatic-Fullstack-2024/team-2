@@ -39,8 +39,7 @@ export default function PerformancesByTheaters({ performances }) {
 
   // Véletlenszerű színház kiválasztása
   const theaterNames = Object.keys(performancesByTheater);
-  const randomTheaterName =
-    theaterNames[Math.floor(Math.random() * theaterNames.length)];
+  const randomTheaterName = theaterNames[Math.floor(Math.random() * theaterNames.length)];
   const theaterPerformances = performancesByTheater[randomTheaterName];
 
   const scroll = (direction, containerRef) => {
@@ -76,9 +75,7 @@ export default function PerformancesByTheaters({ performances }) {
   return (
     <div className="w-full my-12 space-y-12">
       <section className="relative mb-12">
-        <h2 className="text-2xl font-bold mb-5 text-c-text">
-          Random Színház: {randomTheaterName}
-        </h2>
+        <h2 className="text-2xl font-bold mb-5 text-c-text">Random Színház: {randomTheaterName}</h2>
         <div className="relative">
           <div className="flex items-center justify-between">
             <DefaultButton onClick={() => scroll('left', containerRef)} text="<" />
