@@ -32,7 +32,11 @@ const getByUserId = async (userId) => {
     include: {
       theater: {
         include: {
-          performances: true,
+          performances: {
+            include: {
+              performanceEvents: true,
+            },
+          },
         },
       },
     },
