@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
 
+import AuthModal from './AuthModal';
 import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
@@ -12,6 +13,8 @@ export default function Header() {
   const { user, logout } = useContext(AuthContext);
   const [transparentHeader, setTransparentHeader] = useState(true);
   const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [modalForm, setModalForm] = useState('login');
 
   const navigate = useNavigate();
 
@@ -40,6 +43,10 @@ export default function Header() {
 
   const handleAdminMenuOpen = (event) => setAdminMenuAnchor(event.currentTarget);
   const handleAdminMenuClose = () => setAdminMenuAnchor(null);
+  const openAuthModal = (formType) => {
+    setModalForm(formType);
+    setShowAuthModal(true);
+  };
 
   return (
     <header className={headerClass}>
@@ -86,13 +93,22 @@ export default function Header() {
               />
             </>
           ) : (
-            <DefaultButton
-              text="Bejelentkezés"
-              buttonStyle="outline"
-              height="11"
-              onClick={() => navigate('/login')}
-              icon="login"
-            />
+            <>
+              <DefaultButton
+                text="Bejelentkezés"
+                buttonStyle="outline"
+                height="11"
+                onClick={() => openAuthModal('login')}
+                icon="login"
+              />
+              <DefaultButton
+                text="Regisztráció"
+                buttonStyle="outline"
+                height="11"
+                onClick={() => openAuthModal('register')}
+                icon='user'
+              />
+            </>
           )}
         </nav>
       </div>
@@ -143,6 +159,8 @@ export default function Header() {
           </nav>
         </>
       )}
+
+      {showAuthModal && <AuthModal formType={modalForm} onClose={() => setShowAuthModal(false)} />}
     </header>
   );
 }
