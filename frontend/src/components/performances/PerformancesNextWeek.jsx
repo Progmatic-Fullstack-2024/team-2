@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 
-import PerformanceCard02 from './PerformanceCard02';
+import LandingPagePerformanceCard from './LandingPagePerformanceCard';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformancesNextWeek({ performances }) {
@@ -38,7 +38,11 @@ export default function PerformancesNextWeek({ performances }) {
       const performanceDate = new Date(perf.performanceEvents.performanceDate);
       return performanceDate >= today && performanceDate <= oneWeekLater;
     })
-    .sort((a, b) => new Date(a.performanceEvents.performanceDate) - new Date(b.performanceEvents.performanceDate)); // Sort by date
+    .sort(
+      (a, b) =>
+        new Date(a.performanceEvents.performanceDate) -
+        new Date(b.performanceEvents.performanceDate),
+    ); // Sort by date
 
   const scroll = (direction, containerRef) => {
     if (containerRef.current) {
@@ -89,7 +93,7 @@ export default function PerformancesNextWeek({ performances }) {
                     visibleCards,
                   )}`}
                 >
-                  <PerformanceCard02 data={perf} />
+                  <LandingPagePerformanceCard data={perf} />
                 </div>
               ))}
             </div>

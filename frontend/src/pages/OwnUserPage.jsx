@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
 import ImageTitle from '../components/misc/ImageTitle';
-import OwnUserEdit from '../components/OwnUserEdit.jsx';
 import Unautorized from '../components/Unautorized.jsx';
+import OwnUserEdit from '../components/users/OwnUserEdit.jsx';
 import AuthContext from '../contexts/AuthContext';
 
 export default function OwnUser() {
@@ -13,7 +13,7 @@ export default function OwnUser() {
 
   return (
     <>
-      <ImageTitle title="saját profil kezelése" description="itt csak a saját profilod érde el." />
+      <ImageTitle title="Saját profil kezelése" description="Itt csak a saját profilod éred el." />
       <div className="min-h-screen flex flex-col items-center">
         {logined ? (
           <div className=" w-2/3">
