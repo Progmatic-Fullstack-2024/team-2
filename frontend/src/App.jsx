@@ -12,7 +12,6 @@ import NewPerformancePage from './pages/NewPerformancePage.jsx';
 import OwnUserPage from './pages/OwnUserPage.jsx';
 import PaymentPage from './pages/PaymentPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
-import RegistrationPage from './pages/RegistrationPage';
 import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 import SelectedUser from './pages/SelectedUser.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
