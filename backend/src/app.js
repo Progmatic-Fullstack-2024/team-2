@@ -11,6 +11,7 @@ import theaterAdmin from "./routes/theaterAdmin.routers.js";
 import theatersRoutes from "./routes/theaters.routes.js";
 import creatorsRoutes from "./routes/creators.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
+import genresRoutes from "./routes/genres.routes.js";
 import seasonTicketsRoutes from "./routes/season-tickets.routes.js";
 
 const app = express();
@@ -29,6 +30,7 @@ app.use("/api/dropdown-data-creators", creatorsRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/season-tickets", seasonTicketsRoutes);
 app.use("/theaterAdmin", theaterAdmin);
+app.use("/api/genres", genresRoutes);
 
 app.use(errorHandler);
 

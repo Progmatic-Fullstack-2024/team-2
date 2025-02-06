@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Completion from './components/payment/Completion.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
+import BrowsingPage from './pages/BrowsingPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
@@ -38,6 +39,7 @@ function App() {
               <Route path="/payment/completion" element={<Completion />} />
               <Route path="/userhandler" element={<SelectedUser />} />
               <Route path="/season-tickets" element={<SeasonTicketsPage />} />
+              <Route path="/browse" element={<BrowsingPage />} />
             </Routes>
           </div>
           <Footer />
