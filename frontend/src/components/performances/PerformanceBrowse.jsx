@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 
-import PerformanceCard02 from './PerformanceCard02';
+import PerformanceCard02 from './LandingPagePerformanceCard';
 import performancesService from '../../services/performances.service';
 import DefaultButton from '../misc/DefaultButton';
 

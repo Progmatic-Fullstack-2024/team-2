@@ -16,7 +16,6 @@ import PaymentPage from './pages/PaymentPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
 import RegistrationPage from './pages/RegistrationPage';
 import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
-import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 import SelectedUser from './pages/SelectedUser.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
 

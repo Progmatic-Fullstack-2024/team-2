@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 
 // Components
 import ImageTitle from '../components/misc/ImageTitle';
-import PerformanceBrowse from '../components/performances/PerformanceBrowse_orig';
+import PerformanceBrowse from '../components/performances/PerformanceBrowse';
 import AuthContext from '../contexts/AuthContext';
 import genresService from '../services/genres.service';
 import theatersService from '../services/theaters.service';
