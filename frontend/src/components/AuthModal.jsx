@@ -23,7 +23,7 @@ export default function AuthModal({ onClose, formType = 'login' }) {
         }`}
       >
         <button
-        type='button'
+          type="button"
           onClick={onClose}
           className="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
           aria-label="Close"

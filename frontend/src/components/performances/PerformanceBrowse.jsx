@@ -58,7 +58,7 @@ export default function PerformancesBrowse({ params, title }) {
     getPerformances();
   }, [getPerformances]);
 
-  if (performances.length < 3) return null;
+  if ((performances.length === 0 && params.startDate) || (performances.length < 3 && !params.startDate)) return null;
 
   const scroll = (direction) => {
     if (containerRef.current) {
@@ -77,11 +77,13 @@ export default function PerformancesBrowse({ params, title }) {
         <div className="relative">
           <div className="flex items-center justify-between">
             {performances.length > visibleCards && (
-              <DefaultButton onClick={() => scroll('left')} text="<" />
+              <div className="absolute z-20 left-9">
+                <DefaultButton onClick={() => scroll('left')} text="<" />
+              </div>
             )}
             <div
               ref={containerRef}
-              className="flex overflow-hidden scroll-smooth w-full max-w-screen-desktop"
+              className="flex overflow-hidden scroll-smooth w-full z-10 max-w-screen-desktop"
             >
               {performances.map((perf) => (
                 <div
@@ -93,7 +95,9 @@ export default function PerformancesBrowse({ params, title }) {
               ))}
             </div>
             {performances.length > visibleCards && (
-              <DefaultButton onClick={() => scroll('right')} text=">" />
+              <div className="absolute z-20 right-1">
+                <DefaultButton onClick={() => scroll('right')} text=">" />
+              </div>
             )}
           </div>
         </div>
