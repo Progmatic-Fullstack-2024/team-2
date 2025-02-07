@@ -29,7 +29,7 @@ export default function BrowsingPage() {
     };
 
     fetchData();
-    localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
+    localStorage.setItem('empty_performance_img', 'Theatron.jpg');
   }, []);
 
   // Dates and birthday logic

@@ -27,7 +27,7 @@ export default function ImageTitle({ title, description, image = 'title_bg_3.jpg
       <img
         className="object-cover z-1 h-72 w-full brightness-[55%] blur-[1px] saturate-[30%]"
         alt={`${title}-image`}
-        src={`../../public/${image}`}
+        src={`${image}`}
       />
 
       <div

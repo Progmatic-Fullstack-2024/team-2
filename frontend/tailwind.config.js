@@ -48,8 +48,8 @@ export default {
         'c-warning-dark': 'hsl(0, 100%, 40%)',
       },
       backgroundImage: {
-        'theatron01-pattern': "url('Public/theatron01.jpg')",
-        'theatron02-pattern': "url('Public/theatron02.jpg')",
+        'theatron01-pattern': "url('theatron01.jpg')",
+        'theatron02-pattern': "url('theatron02.jpg')",
       },
     },
     screens: {
