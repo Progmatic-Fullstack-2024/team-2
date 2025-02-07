@@ -27,8 +27,23 @@ const listAll = async () => {
   }
 };
 
+const update = async (performanceId, performanceData) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/api/performances/${performanceId}`,
+      performanceData,
+    );
+    console.log('API válasza:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Hiba történt az API hívás során:', error);
+    throw error.response ? error.response.data : error;
+  }
+};
+
 export default {
   getById,
   list,
   listAll,
+  update,
 };
