@@ -9,12 +9,10 @@ import { AuthProvider } from './contexts/AuthContext';
 import BrowsingPage from './pages/BrowsingPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
-import LoginPage from './pages/LoginPage';
 import NewPerformancePage from './pages/NewPerformancePage.jsx';
 import OwnUserPage from './pages/OwnUserPage.jsx';
 import PaymentPage from './pages/PaymentPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
-import RegistrationPage from './pages/RegistrationPage';
 import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 import SelectedUser from './pages/SelectedUser.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
@@ -28,8 +26,6 @@ function App() {
           <div className="w-full min-h-screen">
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegistrationPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
