@@ -156,7 +156,7 @@ export default function Header() {
                 type="button"
                 className="text-white font-bold hover:underline"
                 onClick={handleAdminMenuOpen}
-                aria-label="Admin menü megnyitása"
+                aria-label="Theater Admin menü megnyitása"
               />
             </div>
             <Menu
@@ -171,7 +171,6 @@ export default function Header() {
                 },
               }}
             >
-              <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
               <MenuItem onClick={() => navigate('/theater-admin')}>Színházam</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
               <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
