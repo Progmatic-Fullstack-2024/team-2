@@ -11,6 +11,7 @@ import EditTheaterPage from './pages/EditTheaterPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import LoginPage from './pages/LoginPage';
+import NewFuturePerformancePage from './pages/NewFuturePerformancePage.jsx';
 import NewPerformancePage from './pages/NewPerformancePage.jsx';
 import OwnUserPage from './pages/OwnUserPage.jsx';
 import PaymentPage from './pages/PaymentPage.jsx';
@@ -36,6 +37,7 @@ function App() {
               <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />
+              <Route path="/new-future-performance" element={<NewFuturePerformancePage />} />
               <Route path="/edit-performance" element={<EditPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
