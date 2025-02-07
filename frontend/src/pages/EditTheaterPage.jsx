@@ -10,6 +10,8 @@ export default function EditTheaterPage() {
   const [theater, setTheater] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  console.log(id);
+
   useEffect(() => {
     async function fetchTheater() {
       try {

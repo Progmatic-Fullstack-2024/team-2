@@ -1,8 +1,8 @@
 import axiosInstance from './axiosInstance';
 
-const getById = async (performanceId) => {
+const getById = async (id) => {
   try {
-    const response = await axiosInstance.get(`/api/performances/${performanceId}`);
+    const response = await axiosInstance.get(`/api/performances/${id}`);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -41,9 +41,23 @@ const update = async (performanceId, performanceData) => {
   }
 };
 
+const deletePoster = async (id, posterURL) => {
+  try {
+    const response = await axiosInstance.patch(`/api/:${id}/image`, {
+      posterURL,
+    });
+    console.log('Kép sikeresen törölve:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Hiba a kép törlésekor:', error);
+    throw error.response ? error.response.data : error;
+  }
+};
+
 export default {
   getById,
   list,
   listAll,
   update,
+  deletePoster,
 };

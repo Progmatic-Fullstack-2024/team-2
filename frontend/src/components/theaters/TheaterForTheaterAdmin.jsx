@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import DefaultButton from '../misc/DefaultButton';
-import PerformancesList from '../performances/PerformancesList';
+import PerformancesListForTheterAdmin from '../performances/PerformancesListForTheaterAdmin';
 
 export default function TheaterForTheaterAdmin({ theater }) {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ export default function TheaterForTheaterAdmin({ theater }) {
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
         <h2 className="text-3xl font-bold mb-4">Előadások</h2>
         {Array.isArray(performances) && performances.length > 0 ? (
-          <PerformancesList performances={performances} />
+          <PerformancesListForTheterAdmin performances={performances} />
         ) : (
           <p className="text-lg italic">Még nincs ehhez a színházhoz tartozó előadás.</p>
         )}
