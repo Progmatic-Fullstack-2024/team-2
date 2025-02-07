@@ -71,14 +71,14 @@ export default function PerformanceForm({ performance }) {
 
   return (
     <div className="mx-auto p-12 my-40 bg-c-secondary-light rounded-md">
-      <h2 className="font-bold text-gray-800 text-xl mb-6">Színház módosítása</h2>
+      <h2 className="font-bold text-gray-800 text-xl mb-6">Előadás módosítása</h2>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ setFieldValue, isSubmitting }) => (
           <Form>
             {/* Színház neve */}
             <div className="mb-4">
               <label htmlFor="title" className="text-gray-800 font-bold">
-                Színház neve
+                Előadás neve
               </label>
               <Field
                 type="text"
@@ -92,7 +92,7 @@ export default function PerformanceForm({ performance }) {
             {/* Kép feltöltés */}
             <div className="mb-4">
               <label htmlFor="imageURL" className="text-gray-800 font-bold block mb-2">
-                Színház képe
+                Előadás posztere
               </label>
               <DefaultButton
                 text="Kép módosítása"
@@ -129,7 +129,7 @@ export default function PerformanceForm({ performance }) {
 
             {/* Gombok */}
             <div className="flex justify-between gap-10">
-              <DefaultButton text="Színház módosítása" type="submit" disabled={isSubmitting} />
+              <DefaultButton text="Előadás módosítása" type="submit" disabled={isSubmitting} />
               <DefaultButton
                 text="Mégsem"
                 type="button"
