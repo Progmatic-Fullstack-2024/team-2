@@ -106,7 +106,7 @@ export default function Header() {
                 buttonStyle="outline"
                 height="11"
                 onClick={() => openAuthModal('register')}
-                icon='user'
+                icon="user"
               />
             </>
           )}

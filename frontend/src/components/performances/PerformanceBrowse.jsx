@@ -78,7 +78,7 @@ export default function PerformancesBrowse({ params, title }) {
           <div className="flex items-center justify-between">
             {performances.length > visibleCards && (
               <div className="absolute z-20 left-9">
-              <DefaultButton onClick={() => scroll('left')} text="<" />
+                <DefaultButton onClick={() => scroll('left')} text="<" />
               </div>
             )}
             <div
@@ -96,7 +96,7 @@ export default function PerformancesBrowse({ params, title }) {
             </div>
             {performances.length > visibleCards && (
               <div className="absolute z-20 right-1">
-              <DefaultButton onClick={() => scroll('right')} text=">" />
+                <DefaultButton onClick={() => scroll('right')} text=">" />
               </div>
             )}
           </div>
