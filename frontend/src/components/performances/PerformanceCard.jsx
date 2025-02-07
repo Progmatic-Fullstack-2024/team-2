@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
+import AuthContext from '../../contexts/AuthContext';
 
 function converDate(date) {
   const newDate = new Date(date).toLocaleTimeString('hun', {
@@ -19,6 +20,13 @@ let previousId = null;
 
 export default function PerformanceCard({ data }) {
   const [imageReady, setImageReady] = useState(false);
+  const { user } = useContext(AuthContext);
+  const userRole = user?.role || 'user';
+
+  const targetUrl =
+    userRole === 'theaterAdmin'
+      ? `/theater-admin/performances/${data.id}`
+      : `/performances/${data.id}`;
 
   async function fetchImageAndCache(url) {
     try {
@@ -50,7 +58,7 @@ export default function PerformanceCard({ data }) {
 
   return (
     <Link
-      to={`/performances/${data.id}`}
+      to={targetUrl}
       className="h-80 tablet:w-64  flex flex-col justify-between w-full 
       text-c-text 
       ring-1 ring-c-secondary-light/20

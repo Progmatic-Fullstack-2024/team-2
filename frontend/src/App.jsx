@@ -18,6 +18,7 @@ import RegistrationPage from './pages/RegistrationPage';
 import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 import SelectedUser from './pages/SelectedUser.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
+import SinglePerformancePageForTheaterAdmin from './pages/SinglePerformancePageForTheaterAdmin.jsx';
 import TheaterAdminPage from './pages/TheaterAdminPage.jsx';
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/performances" element={<PerformancesPage />} />
               <Route path="/performances/:id" element={<SinglePerformancePage />} />
+              <Route
+                path="/theater-admin/performances/:id"
+                element={<SinglePerformancePageForTheaterAdmin />}
+              />
               <Route path="/ownuser" element={<OwnUserPage />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/payment/completion" element={<Completion />} />
