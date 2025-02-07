@@ -26,7 +26,6 @@ router.delete(
 
 router.patch(
   "/:performanceId",
-  isAdmin,
   upload.fields([
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },
