@@ -195,7 +195,7 @@ export default function NewPerformanceForm({ lecture }) {
                     className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
                   >
                     <img
-                      src="../../public/creatorSearchIcon.svg"
+                      src="creatorSearchIcon.svg"
                       alt="Alkotó keresése ikon"
                       className="w-6 h-6"
                     />
