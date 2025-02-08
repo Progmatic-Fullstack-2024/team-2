@@ -4,10 +4,10 @@ export default function queryFilter(query) {
 		limit = 12,
 		orderBy,
 		sort,
-		theater,
 		startDate,
 		endDate,
 		targetAudience,
+		theater,
 	} = query;
 	let { genre, creators } = query;
 

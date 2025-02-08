@@ -90,13 +90,22 @@ export default function Header() {
               />
             </>
           ) : (
-            <DefaultButton
-              text="Bejelentkezés"
-              buttonStyle="outline"
-              height="11"
-              onClick={() => navigate('/login')}
-              icon="login"
-            />
+            <>
+              <DefaultButton
+                text="Bejelentkezés"
+                buttonStyle="outline"
+                height="11"
+                onClick={() => openAuthModal('login')}
+                icon="login"
+              />
+              <DefaultButton
+                text="Regisztráció"
+                buttonStyle="outline"
+                height="11"
+                onClick={() => openAuthModal('register')}
+                icon="user"
+              />
+            </>
           )}
         </nav>
       </div>

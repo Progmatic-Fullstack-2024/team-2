@@ -47,11 +47,6 @@ const list = async ({ filter, search }) => {
 	return { data: filteredPerformances, maxSize: performances.length };
 };
 
-// const listAll = async () => {
-//   const allPerformances = await prisma.performance.findMany();
-//   return allPerformances;
-// };
-
 const listAll = async () => {
 	const allPerformances = await prisma.performance.findMany({
 		include: {

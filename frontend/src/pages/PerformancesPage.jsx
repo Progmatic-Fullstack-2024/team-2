@@ -37,14 +37,14 @@ export default function PerformancesPage() {
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
 
-      <div className="flex flex-cols my-5 px-3 justify-center gap-2 tablet:gap-3 desktop:gap-10">
+      <div className="w-full flex flex-cols my-5 px-3 justify-center gap-2 tablet:gap-3 ">
         {performances ? (
           <>
             <div>
               <SideBar params={{ searchParams, setSearchParams }} />
             </div>
-            <div className="flex flex-cols tablet:flex-row items-center tablet:items-start justify-center">
-              <div className="min-h-screen flex flex-col items-start gap-5">
+            <div className="ms-2 flex flex-cols tablet:flex-row items-center tablet:items-start justify-center">
+              <div className=" min-h-screen flex flex-col items-start gap-5">
                 <PerformancesSearch
                   params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
                 />
