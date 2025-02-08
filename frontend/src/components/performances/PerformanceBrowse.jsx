@@ -58,7 +58,11 @@ export default function PerformancesBrowse({ params, title }) {
     getPerformances();
   }, [getPerformances]);
 
-  if ((performances.length === 0 && params.startDate) || (performances.length < 3 && !params.startDate)) return null;
+  if (
+    (performances.length === 0 && params.startDate) ||
+    (performances.length < 3 && !params.startDate)
+  )
+    return null;
 
   const scroll = (direction) => {
     if (containerRef.current) {

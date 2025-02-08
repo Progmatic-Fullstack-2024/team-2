@@ -36,7 +36,6 @@ const getPerformanceByID = async (req, res, next) => {
   }
 };
 
-
 const createPerformance = async (req, res, next) => {
   const { title, theaterId, description, creatorsId, targetAudience } =
     req.body;

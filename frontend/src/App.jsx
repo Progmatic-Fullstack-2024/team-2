@@ -11,7 +11,6 @@ import EditPerformancePage from './pages/EditPerformancePage.jsx';
 import EditTheaterPage from './pages/EditTheaterPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
-
 import NewFuturePerformancePage from './pages/NewFuturePerformancePage.jsx';
 import NewPerformancePage from './pages/NewPerformancePage.jsx';
 import OwnUserPage from './pages/OwnUserPage.jsx';
