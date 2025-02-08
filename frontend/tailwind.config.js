@@ -8,7 +8,14 @@ export default {
   theme: {
     extend: {
       width: {
-        88: '88px',
+        tablet: '640px',
+        laptop: '1024px',
+        desktop: '1280px',
+      },
+      minWidth: {
+        tablet: '640px',
+        laptop: '1024px',
+        desktop: '1280px',
       },
       height: {
         600: '600px',

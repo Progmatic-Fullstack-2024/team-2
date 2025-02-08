@@ -5,12 +5,10 @@ import { toast } from 'react-toastify';
 
 import getCreators from '../../services/creators.service';
 import performancesService from '../../services/performances.service';
-// import theatersService from '../../services/theaters.service';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformanceForm({ performance }) {
   const navigate = useNavigate();
-  // const location = useLocation();
 
   const [posterPreview, setPosterPreview] = useState(performance?.posterURL || null);
   const [imagesPreview, setImagesPreview] = useState(performance?.imagesURL || []);
@@ -60,15 +58,12 @@ export default function PerformanceForm({ performance }) {
     try {
       // If poster is deleted, we delete it from the db, with API
       if (isPosterDeleted) {
-        console.log('Poszter törlése:', performance.id, performance.posterURL);
         await performancesService.deletePoster(performance.id, performance.posterURL);
-        console.log(`Törölt kép az adatbázisból: ${performance.posterURL}`);
       }
 
       // If there are deleted images, we delete it from the db, with API
       if (deletedImages.length > 0) {
         await performancesService.deletePoster(performance.id, deletedImages);
-        console.log(`Törölt képek: ${deletedImages}`);
       }
 
       // Performance data update
@@ -80,7 +75,6 @@ export default function PerformanceForm({ performance }) {
         navigate('/theater-admin');
       }, 1000);
     } catch (error) {
-      console.error('API hiba:', error);
       toast.error(`Hiba történt a módosítás során: ${error.message}`);
     } finally {
       setSubmitting(false);

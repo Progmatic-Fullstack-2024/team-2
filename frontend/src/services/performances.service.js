@@ -42,10 +42,8 @@ const update = async (performanceId, performanceData) => {
       `/api/performances/${performanceId}`,
       performanceData,
     );
-    console.log('API válasza:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Hiba történt az API hívás során:', error);
     throw error.response ? error.response.data : error;
   }
 };
@@ -55,10 +53,8 @@ const deletePoster = async (id, posterURL) => {
     const response = await axiosInstance.patch(`/api/performances/${id}/image`, {
       posterURL,
     });
-    console.log('Kép sikeresen törölve:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Hiba a kép törlésekor:', error);
     throw error.response ? error.response.data : error;
   }
 };

@@ -2,14 +2,22 @@ import { Link } from 'react-router-dom';
 
 import SvgIcon from './SvgIcon';
 
-export default function MenuLink({ text = 'link', to, icon = '', iconSize = '50px' }) {
+export default function MenuLink({
+  text = 'link',
+  to,
+  icon = '',
+  iconSize = '50px',
+  hoverColor = 'c-secondary-dark',
+}) {
   return (
     <Link
-      className="px-2 flex items-center font-bold text-base hover:underline h-full hover:drop-shadow-[0_0_10px_rgba(100,255,100,1)] cursor-pointer"
+      className={`h-full px-2 flex items-center font-bold text-base hover:text-${hoverColor} cursor-pointer active:scale-95`}
       onClick={() => window.scrollTo(0, 0)}
       to={to}
     >
-      {icon && <SvgIcon icon={icon} className="laptop:hidden" stroke="white" size={iconSize} />}
+      {icon && (
+        <SvgIcon icon={icon} className="laptop:hidden" size={iconSize} hoverColor={hoverColor} />
+      )}
       <span className={`${icon && 'hidden'} laptop:inline-block`}>{`${text.toUpperCase()}`}</span>
     </Link>
   );

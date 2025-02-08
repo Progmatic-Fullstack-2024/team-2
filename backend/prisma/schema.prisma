@@ -39,19 +39,6 @@ model Genre {
   perfomances Performance[] @relation("Performance_Genre")
 }
 
-model UserVisitedPerformance {
-  id             String @id @default(cuid())
-  qrImage        String
-  userId         String
-  performanceId  String
-  seasonTicketId String
-  seats          Int
-
-  seasonTicket SeasonTicket @relation(fields: [seasonTicketId], references: [id])
-  user         User         @relation(fields: [userId], references: [id])
-  performance  Performance  @relation(fields: [performanceId], references: [id])
-}
-
 model Performance {
   id                      String                   @id @default(cuid())
   title                   String
@@ -100,7 +87,7 @@ model Company {
 }
 
 model Creator {
-  id            String  @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String
   imageURL      String?
   profession    Profession[]
@@ -111,7 +98,7 @@ model Creator {
 }
 
 model Theater {
-  id             String  @id @default(cuid())
+  id             String         @id @default(cuid())
   name           String
   address        String
   email          String

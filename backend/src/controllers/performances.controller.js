@@ -6,6 +6,16 @@ import performanceValidationSchemaForCreate from "../validations/performanceVali
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
 
+  // Filter options:
+  // page = 1 - which page do you want
+  // limit = 12 - number of peformances in 1 page
+  // orderBy - date, title etc...
+  // sort - "asc" or "desc"
+  // theater - requires the id of theater
+  // startDate - returns performances AFTER this date
+  // endDate - returns performances BEFORE this date
+  // targetAudience - needs exact targetAudience name
+
   try {
     const performances = await performancesService.list({
       filter: queryFilter(req.query),
@@ -79,8 +89,7 @@ const createPerformance = async (req, res, next) => {
 
 const updatePerformance = async (req, res, next) => {
   const { performanceId } = req.params;
-  const { title, theaterId, description, creatorsId, targetAudience } =
-    req.body;
+  const { title, theaterId, description, creatorsId } = req.body;
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
@@ -89,7 +98,6 @@ const updatePerformance = async (req, res, next) => {
   if (title) updateData.title = title;
   if (theaterId) updateData.theaterId = theaterId;
   if (description) updateData.description = description;
-  if (targetAudience) updateData.targetAudience = targetAudience;
 
   let parsedCreatorsIds = {};
   try {

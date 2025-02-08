@@ -17,7 +17,14 @@ const createThreater = async (theater) => {
     throw error.response ? error.response.data : error; // In case of error
   }
 };
-
+const getTheaterForDropdown = async (theater) => {
+  try {
+    const response = await axiosInstance.get('/api/theater/dropdown-data-theaters', theater);
+    return response.data; // Successful answer
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
 const getById = async (theaterId) => {
   try {
     const response = await axiosInstance.get(`/api/theater/${theaterId}`);
@@ -44,10 +51,8 @@ const updateTheaterById = async (id, formData) => {
       },
     });
 
-    console.log('API válasza:', response.data); // Ellenőrizd, mit válaszol a szerver
     return response.data;
   } catch (error) {
-    console.error('Hiba történt az API hívás során:', error);
     throw error.response ? error.response.data : error;
   }
 };
@@ -57,10 +62,9 @@ const deleteTheaterImage = async (id, imageUrl) => {
     const response = await axiosInstance.patch(`/api/theater/${id}/image`, {
       imageUrl, // A törlendő kép URL-je
     });
-    console.log('Kép sikeresen törölve:', response.data);
+
     return response.data;
   } catch (error) {
-    console.error('Hiba a kép törlésekor:', error);
     throw error.response ? error.response.data : error;
   }
 };
@@ -68,6 +72,7 @@ const deleteTheaterImage = async (id, imageUrl) => {
 export default {
   getTheaters,
   createThreater,
+  getTheaterForDropdown,
   getById,
   getTheaterByUserId,
   updateTheaterById,

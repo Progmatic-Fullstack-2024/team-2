@@ -11,19 +11,11 @@ export default function EditPerformancePage() {
   const [performance, setPerformance] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  console.log(id);
-  console.log('useParams:', useSearchParams());
-
   useEffect(() => {
     async function fetchPerformance() {
-      try {
-        const fetchedPerformance = await performancesService.getById(id);
-        setPerformance(fetchedPerformance);
-      } catch (error) {
-        console.error('Hiba a színház betöltésekor:', error);
-      } finally {
-        setLoading(false);
-      }
+      const fetchedPerformance = await performancesService.getById(id);
+      setPerformance(fetchedPerformance);
+      setLoading(false);
     }
 
     fetchPerformance();
