@@ -79,6 +79,7 @@ export default function DetailsPage() {
       navigate(-1);
     } else {
       navigate('/');
+      navigate('/');
     }
   };
 

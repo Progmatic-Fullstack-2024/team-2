@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import DefaultButton from './misc/DefaultButton';
 import performanceValidationSchema from '../schema/performanceValidationSchema';
 import getCreators from '../services/creators.service';
-import createPerformance from '../services/performance.service';
+import createPerformance from '../services/performances.service';
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();

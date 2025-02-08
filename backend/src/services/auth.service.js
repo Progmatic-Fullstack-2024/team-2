@@ -51,6 +51,7 @@ const login = async ({ email, password }) => {
     lastName: user.lastName,
     firstName: user.firstName,
     role: user.role,
+    birthDate: user.birthDate,
   };
 
   const token = jwt.sign(payload, JWT_SECRET);

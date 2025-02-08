@@ -1,7 +1,7 @@
 import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import queryFilter from "../utils/queryFilter.js";
-import { performanceValidationSchemaForCreate } from "../validations/performanceValidation.js";
+import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
@@ -36,13 +36,6 @@ const getPerformanceByID = async (req, res, next) => {
   }
 };
 
-// function makeParsedPerformanceDates(performanceDate) {
-//   const parsedDates = Array.isArray(performanceDate)
-//     ? performanceDate.map((date) => new Date(date))
-//     : [new Date(performanceDate)];
-
-//   return parsedDates;
-// }
 
 const createPerformance = async (req, res, next) => {
   const { title, theaterId, description, creatorsId, targetAudience } =
@@ -111,11 +104,6 @@ const updatePerformance = async (req, res, next) => {
   const { toAdd = [], toRemove = [] } = parsedCreatorsIds;
 
   try {
-    // await performanceValidationSchemaForUpdate.validate({
-    //   price,
-    //   performanceDate: parsedPerformanceDates,
-    // });
-
     const updatedPerformance = await performancesService.update(
       performanceId,
       updateData,
