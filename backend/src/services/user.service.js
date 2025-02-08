@@ -4,9 +4,41 @@ import HttpError from "../utils/HttpError.js";
 import theaterAdmin from "./theaterAdmin.service.js";
 import { getEmailExists } from "./auth.service.js";
 
-const getAllUser = async (orderBy, direction, page, limit) => {
+const createFilterObject = (search, field, filter) => {
+  const searchFilter = { OR: "" };
+  let rolefilter;
+  if (search && field) {
+    const fields = field.split(",");
+    const find = [];
+    fields.forEach((item) =>
+      find.push({ [item]: { contains: `${search}`, mode: "insensitive" } }),
+    );
+    searchFilter.OR = find;
+  }
+  if (filter) {
+    rolefilter = { role: filter };
+  }
+  let answer;
+  if (search && field && filter) {
+    answer = { AND: [searchFilter, rolefilter] };
+  } else answer = rolefilter || searchFilter;
+  return answer;
+};
+
+const getAllUser = async (
+  orderBy,
+  direction,
+  page,
+  limit,
+  search,
+  field,
+  filter,
+) => {
   let startNumber = 0;
   let short;
+  let filtering;
+  if ((search && field) || filter)
+    filtering = createFilterObject(search, field, filter);
   if (page && limit) startNumber = (page - 1) * limit;
   if (orderBy && orderBy === "name") {
     short = [{ lastName: direction }, { firstName: direction }];
@@ -14,6 +46,7 @@ const getAllUser = async (orderBy, direction, page, limit) => {
     short = { email: direction };
   }
   const users = await prisma.user.findMany({
+    where: filtering,
     select: {
       id: true,
       lastName: true,
@@ -38,7 +71,7 @@ const getUserById = async (id) => {
       theaterAdmin: true,
     },
   });
-  delete user.password;
+  if (user) delete user.password;
   return user;
 };
 
@@ -115,8 +148,13 @@ const passwordChange = async (id, oldPassword, newPassword) => {
   return null;
 };
 
-const countUsers = async () => {
-  const userNumber = await prisma.user.count();
+const countUsers = async (search, field, filter) => {
+  let filtering;
+  if ((search && field) || filter)
+    filtering = createFilterObject(search, field, filter);
+  const userNumber = await prisma.user.count({
+    where: filtering,
+  });
   return userNumber;
 };
 
