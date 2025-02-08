@@ -4,7 +4,7 @@ import OrderArrow from './OrderArrows.jsx';
 import UserTableRow from './UserTableRow.jsx';
 import userHandle from '../../services/userhandle.service.js';
 
-export default function listUserstable() {
+export default function listUserstable({ param }) {
   const [users, setUsers] = useState(null);
   const [sortDirection, setSortDirection] = useState(1);
   const [nameSort, setNameSort] = useState(false);
@@ -33,12 +33,21 @@ export default function listUserstable() {
       params = 'orderBy=email&direction=';
     }
     params += direction === 1 ? 'asc' : 'desc';
+    if (param !== '') params += `&${param}`;
     await loadList(params);
   };
 
   useEffect(() => {
-    loadList();
-  }, []);
+    let params = '';
+    if (emailSort) params = 'orderBy=email&direction=';
+    if (nameSort) params = 'orderBy=name&direction=';
+    if (emailSort || nameSort) {
+      params += sortDirection === 1 ? 'asc' : 'desc';
+      if (param !== '') params += '&';
+    }
+    params += param;
+    loadList(params);
+  }, [param]);
   const startIndex = 1;
 
   return (
