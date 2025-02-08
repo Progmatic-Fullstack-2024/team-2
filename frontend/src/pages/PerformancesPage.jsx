@@ -10,7 +10,7 @@ import PerformancesList from '../components/performances/PerformancesList';
 import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
 
-localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
+localStorage.setItem('empty_performance_img', 'Theatron.jpg');
 
 let renderedParams = null;
 
