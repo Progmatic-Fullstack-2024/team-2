@@ -81,7 +81,7 @@ export default function LandingPagePerformanceCard({ data }) {
         {isHovered && (
           <>
             <span className="self-end text-3xl text-c-secondary-light font-bold mb-2">
-              {data.price} <span className="text-white text-xl">Ft/fő</span>
+              {/* {data.price} <span className="text-white text-xl">Ft/fő</span> */}
             </span>
             <span>Helyszín: {data.location || 'N/A'}</span>
             <span>Közreműködők: {data.participants || 'N/A'}</span>

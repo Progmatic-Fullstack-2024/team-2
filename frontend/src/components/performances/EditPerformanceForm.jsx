@@ -1,29 +1,22 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import DefaultButton from './misc/DefaultButton';
-import performanceValidationSchema from '../schema/performanceValidationSchema';
-import getCreators from '../services/creators.service';
-import createPerformance from '../services/performances.service';
+import getCreators from '../../services/creators.service';
+import performancesService from '../../services/performances.service';
+// import theatersService from '../../services/theaters.service';
+import DefaultButton from '../misc/DefaultButton';
 
-export default function NewPerformanceForm({ lecture }) {
+export default function PerformanceForm({ performance }) {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
-  // Theater id:
-  const searchParams = new URLSearchParams(location.search);
-  const theaterId = searchParams.get('theaterId');
-
-  if (!theaterId) {
-    return <div className="text-red-500 text-lg font-bold">Hiba: Színház azonosító hiányzik!</div>;
-  }
-
-  const [posterPreview, setPosterPreview] = useState(null);
-  const [imagesPreview, setImagesPreview] = useState([]);
-  // const [theaterOptions, setTheaterOptions] = useState([]);
+  const [posterPreview, setPosterPreview] = useState(performance?.posterURL || null);
+  const [imagesPreview, setImagesPreview] = useState(performance?.imagesURL || []);
   const [creatorOptions, setCreatorOptions] = useState([]);
+  const [isPosterDeleted, setIsPosterDeleted] = useState(false); // Deleted poster
+  const [deletedImages, setDeletedImages] = useState([]); // Deleted pictures
 
   const targetAgeOptions = [
     { label: 'Felnőtt', value: 'adult' },
@@ -32,57 +25,79 @@ export default function NewPerformanceForm({ lecture }) {
     { label: 'Minden korosztály', value: 'every_age' },
   ];
 
-  const initialValues = lecture || {
-    title: '',
-    theaterId, // setting theater Id automatically
+  const initialValues = {
+    title: performance?.title || '',
+    theaterId: performance?.theaterId || '',
     creatorId: [''],
-    description: '',
+    description: performance?.description || '',
     posterURL: null,
-    imagesURL: [],
-    targetAudience: '', // default empty targetAdudience
+    imagesURL: performance?.imagesURL || [],
+    targetAudience: performance?.targetAudience || '',
   };
 
-  const handleSubmit = async (values, { resetForm }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     const formData = new FormData();
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
-    values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
 
-    if (values.posterURL) {
-      formData.append('poster', values.posterURL);
-    }
-    values.imagesURL.forEach((image) => {
-      formData.append('files', image);
-    });
+    values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
 
     if (values.targetAudience) {
       formData.append('targetAudience', values.targetAudience);
     }
 
+    if (values.posterURL instanceof File) {
+      formData.append('poster', values.posterURL);
+    }
+
+    values.imagesURL.forEach((image) => {
+      if (image instanceof File) {
+        formData.append('files', image);
+      }
+    });
+
     try {
-      const response = await createPerformance(formData);
+      // If poster is deleted, we delete it from the db, with API
+      if (isPosterDeleted) {
+        console.log('Poszter törlése:', performance.id, performance.posterURL);
+        await performancesService.deletePoster(performance.id, performance.posterURL);
+        console.log(`Törölt kép az adatbázisból: ${performance.posterURL}`);
+      }
 
-      if (!response.ok) throw new Error('Hiba történt az előadás létrehozásakor.');
+      // If there are deleted images, we delete it from the db, with API
+      if (deletedImages.length > 0) {
+        await performancesService.deletePoster(performance.id, deletedImages);
+        console.log(`Törölt képek: ${deletedImages}`);
+      }
 
-      resetForm();
-      setPosterPreview(null);
-      setImagesPreview([]);
-      navigate('/theater-admin');
+      // Performance data update
+      const response = await performancesService.update(performance.id, formData);
+      if (!response) throw new Error('Hiba történt az előadás módosításakor.');
+
+      toast.success('Előadás sikeresen módosítva!');
+      setTimeout(() => {
+        navigate('/theater-admin');
+      }, 1000);
     } catch (error) {
-      toast.error(`Hiba történt az előadás létrehozásakor: ${error.message}`);
+      console.error('API hiba:', error);
+      toast.error(`Hiba történt a módosítás során: ${error.message}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handlePosterChange = (event, setFieldValue) => {
     const file = event.target.files[0];
     setFieldValue('posterURL', file);
-    setPosterPreview(URL.createObjectURL(file));
+    setPosterPreview(URL.createObjectURL(file)); // Frissíti a preview-t az új képre
+    setIsPosterDeleted(false); // Ha új képet töltünk fel, akkor ne törölje az adatbázisból az előzőt
   };
 
   const removePoster = (setFieldValue) => {
     setFieldValue('posterURL', null);
     setPosterPreview(null);
+    setIsPosterDeleted(true);
   };
 
   const handleImagesChange = (event, setFieldValue, images) => {
@@ -91,14 +106,27 @@ export default function NewPerformanceForm({ lecture }) {
     setImagesPreview((prev) => [...prev, ...files.map((file) => URL.createObjectURL(file))]);
   };
 
+  // const removeImage = (index, setFieldValue, images) => {
+  //   const updatedImages = [...images];
+  //   updatedImages.splice(index, 1);
+  //   setFieldValue('imagesURL', updatedImages);
+
+  //   const updatedPreviews = [...imagesPreview];
+  //   updatedPreviews.splice(index, 1);
+  //   setImagesPreview(updatedPreviews);
+  // };
+
   const removeImage = (index, setFieldValue, images) => {
     const updatedImages = [...images];
-    updatedImages.splice(index, 1);
-    setFieldValue('imagesURL', updatedImages);
+    const removedImage = updatedImages.splice(index, 1)[0]; // 🔹 Törölt kép URL-je
 
-    const updatedPreviews = [...imagesPreview];
-    updatedPreviews.splice(index, 1);
-    setImagesPreview(updatedPreviews);
+    setFieldValue('imagesURL', updatedImages);
+    setImagesPreview((prev) => prev.filter((_, i) => i !== index));
+
+    // 🔹 Ha az eltávolított kép már az adatbázisban volt, akkor tárold törlésre
+    if (typeof removedImage === 'string') {
+      setDeletedImages((prev) => [...prev, removedImage]);
+    }
   };
 
   const fetchCreators = async () => {
@@ -122,27 +150,22 @@ export default function NewPerformanceForm({ lecture }) {
 
   return (
     <div className="mx-auto p-12 my-40 bg-c-secondary-light rounded-md">
-      <h2 className="font-bold text-gray-800 text-xl mb-6">
-        {lecture ? 'Előadás módosítása' : 'Új előadás'}
-      </h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={performanceValidationSchema}
-        onSubmit={handleSubmit}
-      >
+      <h2 className="font-bold text-gray-800 text-xl mb-6">Előadás módosítása</h2>
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ setFieldValue, values }) => (
           <Form>
+            {/* Színház neve */}
             <div className="mb-4">
               <label htmlFor="title" className="text-gray-800 font-bold">
-                Előadás neve <span className="text-red-500">*</span>
+                Előadás neve
               </label>
               <Field
                 type="text"
                 name="title"
-                placeholder="Add meg az előadás nevét"
+                placeholder={performance?.title || 'Írd be a színház nevét'}
                 className="w-full border p-2 rounded my-1 text-gray-800"
               />
-              <ErrorMessage name="title" component="div" className="text-red-500 text-sm" />
+              <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="mb-4">
@@ -158,6 +181,42 @@ export default function NewPerformanceForm({ lecture }) {
                 />
               </div>
               <ErrorMessage name="theaterId" component="div" className="text-red-500 text-sm" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="targetAudience" className="text-gray-800 font-bold">
+                Célközönség (opcionális)
+              </label>
+              <Field
+                as="select"
+                name="targetAudience"
+                className="w-full border p-2 rounded text-gray-800"
+              >
+                <option value="">Válassz célközönséget</option>
+                {targetAgeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage
+                name="targetAudience"
+                component="div"
+                className="text-red-500 text-sm"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="description" className="text-gray-800 font-bold">
+                Leírás <span className="text-red-500">*</span>
+              </label>
+              <Field
+                as="textarea"
+                name="description"
+                placeholder="Add meg az előadás leírását"
+                className="w-full border p-2 rounded my-1 text-gray-800"
+              />
+              <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="mb-4">
@@ -211,42 +270,6 @@ export default function NewPerformanceForm({ lecture }) {
                 />
               </div>
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="targetAudience" className="text-gray-800 font-bold">
-                Célközönség (opcionális)
-              </label>
-              <Field
-                as="select"
-                name="targetAudience"
-                className="w-full border p-2 rounded text-gray-800"
-              >
-                <option value="">Válassz célközönséget</option>
-                {targetAgeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage
-                name="targetAudience"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="description" className="text-gray-800 font-bold">
-                Leírás <span className="text-red-500">*</span>
-              </label>
-              <Field
-                as="textarea"
-                name="description"
-                placeholder="Add meg az előadás leírását"
-                className="w-full border p-2 rounded my-1 text-gray-800"
-              />
-              <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="mb-4">
@@ -321,8 +344,9 @@ export default function NewPerformanceForm({ lecture }) {
               </div>
             </div>
 
+            {/* Gombok */}
             <div className="flex justify-between gap-10">
-              <DefaultButton text="Előadás hozzáadása" type="submit" />
+              <DefaultButton text="Előadás módosítása" type="submit" />
               <DefaultButton text="Mégsem" type="button" onClick={handleBack} />
             </div>
           </Form>
