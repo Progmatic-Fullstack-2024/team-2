@@ -4,11 +4,11 @@ import { useSearchParams } from 'react-router-dom';
 // Components
 import ImageTitle from '../components/misc/ImageTitle';
 import Pagination from '../components/misc/Pagination';
+import Spinner from '../components/misc/Spinner';
 import SideBar from '../components/performances/filter/SideBar';
 import PerformancesList from '../components/performances/PerformancesList';
 import PerformancesSearch from '../components/performances/PerformancesSearch';
 import performancesService from '../services/performances.service';
-import Spinner from '../components/misc/Spinner';
 
 localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
 

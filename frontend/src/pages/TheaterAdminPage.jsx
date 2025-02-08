@@ -18,14 +18,12 @@ export default function TheaterAdminPage() {
         .then((theaterData) => {
           setTheater(theaterData);
         })
-        .catch(console.error)
+        .catch('error')
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
   }, [user]);
-
-  console.log(theater);
 
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;

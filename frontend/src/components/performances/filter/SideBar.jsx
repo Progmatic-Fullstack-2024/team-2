@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+
 // components
 import MenuButton from './MenuButton';
-import Spinner from '../../misc/Spinner';
 // services
-import theatersService from '../../../services/theaters.service';
 import creatorsService from '../../../services/creators.service';
 import genresService from '../../../services/genres.service';
+import theatersService from '../../../services/theaters.service';
+import Spinner from '../../misc/Spinner';
 
 function convertURL(url) {
   return String(url)
@@ -41,7 +42,7 @@ async function fetchCreators() {
 }
 async function fetchGenres() {
   const response = await genresService.listAllGenre();
-  console.log('response  ', response);
+
   addFilterData(
     'Műfaj',
     'genre',
@@ -112,7 +113,7 @@ export default function SideBar({ params }) {
 
     setSearchParams(searchParams);
   };
-  console.log(fetchReady);
+
   return (
     <div className="min-w-fit laptop:min-w-52 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text sticky top-24 rounded-lg overflow-hidden">
       {fetchReady ? (

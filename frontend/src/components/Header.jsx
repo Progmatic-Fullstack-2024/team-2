@@ -113,7 +113,7 @@ export default function Header() {
       {user?.role === 'admin' && (
         <>
           <hr className="w-full border-t border-c-text/40" />
-          <nav className="flex gap-4 items-center w-full justify-end py-2">
+          <nav className="flex gap-4 items-center w-full justify-start py-2">
             <div className="laptop:hidden relative flex items-center gap-2">
               <FiMenu className="text-2xl cursor-pointer" onClick={handleAdminMenuOpen} />
               <button
@@ -144,21 +144,13 @@ export default function Header() {
                   },
                 }}
               >
-                <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
-                <MenuItem onClick={() => navigate('/')}>Admin Dashboard</MenuItem>
                 <MenuItem onClick={() => navigate('/')}>Felhasználók kezelése</MenuItem>
                 <MenuItem onClick={() => navigate('/')}>Színházak kezelése</MenuItem>
-                <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
-                <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
               </Menu>
             </div>
             <div className="hidden laptop:flex gap-4">
-              <MenuLink text="Előadás létrehozás" to="/new-performance" />
-              <MenuLink text="Admin Dashboard" to="/" />
               <MenuLink text="Felhasználók kezelése" to="/userlist" />
               <MenuLink text="Színházak kezelése" to="/" />
-              <MenuLink text="Fizetési ügyek" to="/" />
-              <MenuLink text="Egyéb" to="/" />
             </div>
           </nav>
         </>

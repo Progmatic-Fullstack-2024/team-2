@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import SvgIcon from './SvgIcon';
 
 export default function Pagination({ params }) {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import CustomCalendar from './CustomCalendar';
 
 export default function MenuButton({ data, textColor = 'c-text', handleChange, searchParams }) {
@@ -6,7 +7,7 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
   const activeCheckbox = useRef([]);
   const optionHeight = `${type === 'calendar' ? '300' : options.length * (35 + 1) + 4}px`;
-  console.log({ data });
+
   const buttonClass = `w-full text-${textColor} font-bold text-lg bg-c-secondary/50 hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center text-end`;
 
   const checkActiveCheckboxes = () => {

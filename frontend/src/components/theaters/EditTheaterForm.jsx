@@ -32,13 +32,11 @@ export default function TheaterForm({ theater }) {
     if (values.imageURL instanceof File) {
       formData.append('image', values.imageURL);
     }
-    console.log(theater.imageURL);
-    console.log(theater.id);
+
     try {
       // 🔹 Ha a kép előnézetet törölte a felhasználó, de nem töltött fel újat, akkor API hívással töröljük az adatbázisból is
       if (isImageDeleted) {
         await theatersService.deleteTheaterImage(theater.id, theater.imageURL);
-        console.log(`Törölt kép az adatbázisból: ${theater.imageURL}`);
       }
 
       // 🔹 Színház adatok módosítása
@@ -50,7 +48,6 @@ export default function TheaterForm({ theater }) {
         navigate('/theater-admin');
       }, 1000);
     } catch (error) {
-      console.error('API hiba:', error);
       toast.error(`Hiba történt a módosítás során: ${error.message}`);
     } finally {
       setSubmitting(false);

@@ -7,14 +7,6 @@ const getById = async (performanceId) => {
 		where: { id: performanceId },
 		include: {
 			performanceEvents: true,
-		},
-	});
-	if (!performance) throw new HttpError("Performance not found", 404);
-	return performance;
-	const performance = await prisma.performance.findUnique({
-		where: { id: performanceId },
-		include: {
-			performanceEvents: true,
 			creators: true,
 		},
 	});
@@ -171,14 +163,6 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
 };
 
 export default {
-	create,
-	update,
-	destroy,
-	list,
-	listAll,
-	getByName,
-	deleteSingleImage,
-	getById,
 	create,
 	update,
 	destroy,
