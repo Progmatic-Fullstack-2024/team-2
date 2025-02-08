@@ -7,6 +7,7 @@ const getById = async (performanceId) => {
     where: { id: performanceId },
     include: {
       performanceEvents: true,
+      creators: true,
     },
   });
   if (!performance) throw new HttpError("Performance not found", 404);

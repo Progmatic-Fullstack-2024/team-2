@@ -36,16 +36,9 @@ const getPerformanceByID = async (req, res, next) => {
   }
 };
 
-// function makeParsedPerformanceDates(performanceDate) {
-//   const parsedDates = Array.isArray(performanceDate)
-//     ? performanceDate.map((date) => new Date(date))
-//     : [new Date(performanceDate)];
-
-//   return parsedDates;
-// }
-
 const createPerformance = async (req, res, next) => {
-  const { title, theaterId, description, creatorsId } = req.body;
+  const { title, theaterId, description, creatorsId, targetAudience } =
+    req.body;
 
   const creatorsIds = Array.isArray(creatorsId)
     ? creatorsId.map((creatorId) => ({ id: creatorId }))
@@ -67,6 +60,7 @@ const createPerformance = async (req, res, next) => {
         title,
         theaterId,
         description,
+        targetAudience,
       },
       poster,
       images,
@@ -85,7 +79,8 @@ const createPerformance = async (req, res, next) => {
 
 const updatePerformance = async (req, res, next) => {
   const { performanceId } = req.params;
-  const { title, theaterId, description, creatorsId } = req.body;
+  const { title, theaterId, description, creatorsId, targetAudience } =
+    req.body;
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
@@ -94,6 +89,7 @@ const updatePerformance = async (req, res, next) => {
   if (title) updateData.title = title;
   if (theaterId) updateData.theaterId = theaterId;
   if (description) updateData.description = description;
+  if (targetAudience) updateData.targetAudience = targetAudience;
 
   let parsedCreatorsIds = {};
   try {

@@ -29,9 +29,9 @@ const getTheaterById = async (req, res, next) => {
 };
 
 const createTheater = async (req, res, next) => {
-  const { name, address, email, phone } = req.body;
+  const { name, address, email, phone, seatsAvailable } = req.body;
 
-  const images = req.files && res.files.files ? req.files.files : [];
+  const image = req.files?.image ? req.files.image[0] : null;
 
   try {
     // Validálás
@@ -41,8 +41,9 @@ const createTheater = async (req, res, next) => {
         address,
         email,
         phone,
+        seatsAvailable: Number(seatsAvailable),
       },
-      images,
+      image,
     );
     res.status(201).json(newTheater);
   } catch (error) {
@@ -52,9 +53,15 @@ const createTheater = async (req, res, next) => {
 
 const updateTheater = async (req, res, next) => {
   const { theaterId } = req.params;
-  const { name, address, email, phone, seats } = req.body;
+  const { name, address, email, phone, seatsAvailable } = req.body;
 
-  const images = req.files && res.files.files ? req.files.files : [];
+  const image = req.files?.image ? req.files.image[0] : null;
+
+  // Gonosz kis trükk... lényeg, hogy kezelni kell, mert ha nem küldöm a mezőt, akkor NaN-t dob a Number konvertálás, ezért mindig null-ra update-elt...
+  const parsedSeats =
+    seatsAvailable !== undefined && seatsAvailable !== ""
+      ? Number(seatsAvailable)
+      : undefined;
 
   try {
     // Validáció
@@ -65,9 +72,9 @@ const updateTheater = async (req, res, next) => {
         address,
         email,
         phone,
-        seats: Number(seats),
+        seatsAvailable: parsedSeats,
       },
-      images,
+      image,
     );
     res.status(200).json(updatedTheater);
   } catch (error) {

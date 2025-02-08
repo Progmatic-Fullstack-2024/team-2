@@ -16,7 +16,7 @@ function converDate(date) {
 
 let previousId = null;
 
-export default function PerformanceCard({ data }) {
+export default function PerformanceCardForTheaterAdmin({ data }) {
   const [imageReady, setImageReady] = useState(false);
 
   async function fetchImageAndCache(url) {
@@ -49,7 +49,7 @@ export default function PerformanceCard({ data }) {
 
   return (
     <Link
-      to={`/performances/${data.id}`}
+      to={`/edit-performance?performanceId=${data.id}`}
       className="h-80 tablet:w-64  flex flex-col justify-between w-full 
       text-c-text 
       ring-1 ring-c-secondary-light/20

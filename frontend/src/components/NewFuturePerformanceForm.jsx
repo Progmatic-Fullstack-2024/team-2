@@ -8,7 +8,7 @@ import performanceValidationSchema from '../schema/performanceValidationSchema';
 import getCreators from '../services/creators.service';
 import createPerformance from '../services/performances.service';
 
-export default function NewPerformanceForm({ lecture }) {
+export default function NewFuturePerformanceForm({ lecture }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -134,7 +134,7 @@ export default function NewPerformanceForm({ lecture }) {
           <Form>
             <div className="mb-4">
               <label htmlFor="title" className="text-gray-800 font-bold">
-                Előadás neve <span className="text-red-500">*</span>
+                Tervezett Előadás neve <span className="text-red-500">*</span>
               </label>
               <Field
                 type="text"
