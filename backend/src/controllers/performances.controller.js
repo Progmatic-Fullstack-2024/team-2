@@ -1,13 +1,20 @@
 import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import queryFilter from "../utils/queryFilter.js";
-import {
-  performanceValidationSchemaForCreate,
-  performanceValidationSchemaForUpdate,
-} from "../validations/performanceValidation.js";
+import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
+
+  // Filter options:
+  // page = 1 - which page do you want
+  // limit = 12 - number of peformances in 1 page
+  // orderBy - date, title etc...
+  // sort - "asc" or "desc"
+  // theater - requires the id of theater
+  // startDate - returns performances AFTER this date
+  // endDate - returns performances BEFORE this date
+  // targetAudience - needs exact targetAudience name
 
   try {
     const performances = await performancesService.list({
@@ -39,16 +46,9 @@ const getPerformanceByID = async (req, res, next) => {
   }
 };
 
-function makeParsedPerformanceDates(performanceDate) {
-  const parsedDates = Array.isArray(performanceDate)
-    ? performanceDate.map((date) => new Date(date))
-    : [new Date(performanceDate)];
-
-  return parsedDates;
-}
-
 const createPerformance = async (req, res, next) => {
-  const { title, theaterId, description, creatorsId } = req.body;
+  const { title, theaterId, description, creatorsId, targetAudience } =
+    req.body;
 
   const creatorsIds = Array.isArray(creatorsId)
     ? creatorsId.map((creatorId) => ({ id: creatorId }))
@@ -70,6 +70,7 @@ const createPerformance = async (req, res, next) => {
         title,
         theaterId,
         description,
+        targetAudience,
       },
       poster,
       images,
@@ -88,23 +89,15 @@ const createPerformance = async (req, res, next) => {
 
 const updatePerformance = async (req, res, next) => {
   const { performanceId } = req.params;
-  const { title, theaterId, description, price, performanceDate, creatorsId } =
-    req.body;
+  const { title, theaterId, description, creatorsId } = req.body;
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
-
-  let parsedPerformanceDates = [];
 
   const updateData = {};
   if (title) updateData.title = title;
   if (theaterId) updateData.theaterId = theaterId;
   if (description) updateData.description = description;
-  if (price) updateData.price = Number(price);
-  if (performanceDate) {
-    parsedPerformanceDates = makeParsedPerformanceDates(performanceDate);
-    updateData.performanceDate = parsedPerformanceDates;
-  }
 
   let parsedCreatorsIds = {};
   try {
@@ -118,11 +111,6 @@ const updatePerformance = async (req, res, next) => {
   const { toAdd = [], toRemove = [] } = parsedCreatorsIds;
 
   try {
-    await performanceValidationSchemaForUpdate.validate({
-      price,
-      performanceDate: parsedPerformanceDates,
-    });
-
     const updatedPerformance = await performancesService.update(
       performanceId,
       updateData,

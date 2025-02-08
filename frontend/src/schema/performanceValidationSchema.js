@@ -26,4 +26,4 @@ const performanceValidationSchema = Yup.object({
     .notRequired(),
 });
 
-export default performanceValidationSchema;
+export default { performanceValidationSchema };

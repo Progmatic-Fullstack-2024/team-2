@@ -1,29 +1,45 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import DefaultButton from './misc/DefaultButton';
 import performanceValidationSchema from '../schema/performanceValidationSchema';
 import getCreators from '../services/creators.service';
-import createPerformance from '../services/performance.service';
-import theaterHandle from '../services/theaters.service';
+import createPerformance from '../services/performances.service';
 
 export default function NewPerformanceForm({ lecture }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Theater id:
+  const searchParams = new URLSearchParams(location.search);
+  const theaterId = searchParams.get('theaterId');
+
+  if (!theaterId) {
+    return <div className="text-red-500 text-lg font-bold">Hiba: Színház azonosító hiányzik!</div>;
+  }
 
   const [posterPreview, setPosterPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
-  const [theaterOptions, setTheaterOptions] = useState([]);
+  // const [theaterOptions, setTheaterOptions] = useState([]);
   const [creatorOptions, setCreatorOptions] = useState([]);
+
+  const targetAgeOptions = [
+    { label: 'Felnőtt', value: 'adult' },
+    { label: 'Gyerek', value: 'kid' },
+    { label: 'Tini', value: 'teenager' },
+    { label: 'Minden korosztály', value: 'every_age' },
+  ];
 
   const initialValues = lecture || {
     title: '',
-    theaterId: '',
+    theaterId, // setting theater Id automatically
     creatorId: [''],
     description: '',
     posterURL: null,
     imagesURL: [],
+    targetAudience: '', // default empty targetAdudience
   };
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -40,6 +56,10 @@ export default function NewPerformanceForm({ lecture }) {
       formData.append('files', image);
     });
 
+    if (values.targetAudience) {
+      formData.append('targetAudience', values.targetAudience);
+    }
+
     try {
       const response = await createPerformance(formData);
 
@@ -48,7 +68,7 @@ export default function NewPerformanceForm({ lecture }) {
       resetForm();
       setPosterPreview(null);
       setImagesPreview([]);
-      navigate('/comingsoon');
+      navigate('/theater-admin');
     } catch (error) {
       toast.error(`Hiba történt az előadás létrehozásakor: ${error.message}`);
     }
@@ -81,17 +101,6 @@ export default function NewPerformanceForm({ lecture }) {
     setImagesPreview(updatedPreviews);
   };
 
-  const fetchTheaters = async () => {
-    if (theaterOptions.length === 0) {
-      try {
-        const theaters = await theaterHandle.getTheaters();
-        setTheaterOptions(theaters);
-      } catch (error) {
-        toast.error('Hiba történt a színházak betöltésekor.');
-      }
-    }
-  };
-
   const fetchCreators = async () => {
     if (creatorOptions.length === 0) {
       try {
@@ -100,6 +109,14 @@ export default function NewPerformanceForm({ lecture }) {
       } catch (error) {
         toast.error('Hiba történt az alkotók betöltésekor.');
       }
+    }
+  };
+
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate('/');
     }
   };
 
@@ -130,32 +147,15 @@ export default function NewPerformanceForm({ lecture }) {
 
             <div className="mb-4">
               <label htmlFor="theaterId" className="text-gray-800 font-bold">
-                Színház <span className="text-red-500">*</span>
+                Színház
               </label>
               <div className="flex items-center">
                 <Field
-                  as="select"
+                  type="text"
                   name="theaterId"
-                  className="w-full border p-2 rounded text-gray-800"
-                >
-                  <option value="">Válassz egy színházat</option>
-                  {theaterOptions.map((theater) => (
-                    <option key={theater.id} value={theater.id}>
-                      {theater.name}
-                    </option>
-                  ))}
-                </Field>
-                <button
-                  type="button"
-                  onClick={fetchTheaters}
-                  className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                >
-                  <img
-                    src="../../public/theaterSearchIcon.svg"
-                    alt="Színház keresése ikon"
-                    className="w-6 h-6"
-                  />
-                </button>
+                  className="w-full border p-2 rounded my-1 text-gray-800 bg-gray-100"
+                  disabled
+                />
               </div>
               <ErrorMessage name="theaterId" component="div" className="text-red-500 text-sm" />
             </div>
@@ -195,7 +195,7 @@ export default function NewPerformanceForm({ lecture }) {
                     className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
                   >
                     <img
-                      src="../../public/creatorSearchIcon.svg"
+                      src="creatorSearchIcon.svg"
                       alt="Alkotó keresése ikon"
                       className="w-6 h-6"
                     />
@@ -211,6 +211,29 @@ export default function NewPerformanceForm({ lecture }) {
                 />
               </div>
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="targetAudience" className="text-gray-800 font-bold">
+                Célközönség (opcionális)
+              </label>
+              <Field
+                as="select"
+                name="targetAudience"
+                className="w-full border p-2 rounded text-gray-800"
+              >
+                <option value="">Válassz célközönséget</option>
+                {targetAgeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage
+                name="targetAudience"
+                component="div"
+                className="text-red-500 text-sm"
+              />
             </div>
 
             <div className="mb-4">
@@ -300,7 +323,7 @@ export default function NewPerformanceForm({ lecture }) {
 
             <div className="flex justify-between gap-10">
               <DefaultButton text="Előadás hozzáadása" type="submit" />
-              <DefaultButton text="Mégsem" type="button" onClick={() => navigate('/comingsoon')} />
+              <DefaultButton text="Mégsem" type="button" onClick={handleBack} />
             </div>
           </Form>
         )}

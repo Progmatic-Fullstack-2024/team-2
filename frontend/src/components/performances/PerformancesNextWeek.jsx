@@ -35,7 +35,8 @@ export default function PerformancesNextWeek({ performances }) {
   // Filter and sort performances within the next week
   const upcomingPerformances = performances
     .filter((perf) => {
-      const performanceDate = new Date(perf.performanceEvents.performanceDate);
+      if (!perf.performanceEvents?.length) return false; // Ha nincs előadás, kiszűrjük
+      const performanceDate = new Date(perf.performanceEvents[0].performanceDate);
       return performanceDate >= today && performanceDate <= oneWeekLater;
     })
     .sort(

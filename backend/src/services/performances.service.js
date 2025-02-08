@@ -7,6 +7,7 @@ const getById = async (performanceId) => {
     where: { id: performanceId },
     include: {
       performanceEvents: true,
+      creators: true,
     },
   });
   if (!performance) throw new HttpError("Performance not found", 404);
@@ -31,6 +32,7 @@ const list = async ({ filter, search }) => {
     },
     include: {
       performanceEvents: true,
+      theater: true,
       genre: !!filter.genre,
       creators: !!filter.creators,
     },
@@ -50,9 +52,31 @@ const listAll = async () => {
   const allPerformances = await prisma.performance.findMany({
     include: {
       performanceEvents: true,
+      theater: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      genre: true,
     },
   });
   return allPerformances;
+};
+
+const listAllGenres = async () => {
+  const genresWithCount = await prisma.genre.groupBy({
+    by: ["name"], // Grouping based on genre
+    _count: {
+      name: true, // Count genres
+    },
+  });
+
+  return genresWithCount.map((g) => ({
+    name: g.name,
+    // eslint-disable-next-line no-underscore-dangle
+    count: g._count.name,
+  }));
 };
 
 const create = async (performanceData, poster, images, creatorsIds) => {
@@ -167,4 +191,5 @@ export default {
   getByName,
   deleteSingleImage,
   getById,
+  listAllGenres,
 };

@@ -5,23 +5,19 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 const router = express.Router();
 
-router.get(
-  "/dropdown-data-theaters",
-  isAdmin,
-  theatersController.getTheaterForDropdown,
-);
+router.get("/dropdown-data-theaters", theatersController.getTheaterForDropdown);
 router.get("/:theaterId", theatersController.getTheaterById);
 router.get("/", theatersController.listAllTheaters);
 
 router.post(
   "/",
-  upload.fields([{ name: "files", maxCount: 10 }]),
+  upload.fields([{ name: "image", maxCount: 1 }]),
   theatersController.createTheater,
 );
 
 router.patch(
-  "/theaterId",
-  upload.fields([{ name: "files", maxCount: 10 }]),
+  "/:theaterId",
+  upload.fields([{ name: "image", maxCount: 1 }]),
   theatersController.updateTheater,
 );
 

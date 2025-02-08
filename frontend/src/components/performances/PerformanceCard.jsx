@@ -4,18 +4,17 @@ import { Link } from 'react-router-dom';
 import PerformanceCardEmpty from './PerformanceCardEmpty';
 
 function converDate(date) {
-  const newDate = new Date(date).toLocaleTimeString('hun', {
+  return new Date(date).toLocaleTimeString('hun', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   });
-
-  return newDate;
 }
 
 let previousId = null;
+const spanClass = 'col-span-2 text-end truncate font-semibold hover:text-wrap hover:text-white ';
 
 export default function PerformanceCard({ data }) {
   const [imageReady, setImageReady] = useState(false);
@@ -46,6 +45,7 @@ export default function PerformanceCard({ data }) {
       }
     }
   }, []);
+
   if (!imageReady) return <PerformanceCardEmpty />;
 
   return (
@@ -65,18 +65,22 @@ export default function PerformanceCard({ data }) {
       >
         <div
           className=" z-10 flex flex-col h-fit bg-c-background/90 mt-auto mb-1 px-3 border-t border-c-secondary/50
-         translate-y-[4rem] transition-translate duration-300 ease-out group-hover:translate-y-[5px]"
+         translate-y-[5.5em] transition-translate duration-300 ease-out group-hover:translate-y-[5px]"
         >
           <h1 className="pt-1 mb-2 text-2xl font-semibold overflow-hidden group-hover:text-c-secondary">
             {data.title}
           </h1>
-          <div className="mb-2 ">
-            <p>Helyszín : </p>
-            {data.performanceEvents[0] && (
-              <p className="flex justify-between">
-                Időpont :<span>{converDate(data.performanceEvents[0])}</span>{' '}
-              </p>
-            )}
+          <div className="grid grid-cols-3 grid-auto mb-2 ">
+            <p>Helyszín :</p>
+            <span className={spanClass}>{data.theater.name}</span>
+            <p>Cím :</p>
+            <span className={spanClass}>{data.theater.address}</span>
+            <p>Időpont :</p>
+            <span className={spanClass}>
+              {(data.performanceEvents[0] &&
+                converDate(data.performanceEvents[0].performanceDate)) ||
+                'Adatbázis hiba'}
+            </span>
           </div>
         </div>
       </div>

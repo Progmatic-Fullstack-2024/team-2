@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.delete("/:id", isAdmin, theaterAdminController.deleteTheaterAdmin);
 router.post("/newTheaterAdmin", isAdmin, theaterAdminController.create);
+router.get("/:userId", theaterAdminController.getByUserId);
 
 export default router;

@@ -27,13 +27,15 @@ model User {
 model UserSetting {
   id     String @id @default(cuid())
   userId String @unique
-  theme  Theme
-  user   User   @relation(fields: [userId], references: [id])
+
+  theme Theme
+  user  User  @relation(fields: [userId], references: [id])
 }
 
 model Genre {
-  id          String        @id @default(cuid())
-  name        String
+  id   String @id @default(cuid())
+  name String
+
   perfomances Performance[] @relation("Performance_Genre")
 }
 
@@ -78,8 +80,9 @@ model FuturePerformances {
 }
 
 model Company {
-  id       String    @id @default(cuid())
-  name     String
+  id   String @id @default(cuid())
+  name String
+
   creators Creator[] @relation("Company_Creator")
 }
 
