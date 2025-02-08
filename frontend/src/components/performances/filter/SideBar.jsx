@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import theatersService from '../../../services/theaters.service';
+// components
 import MenuButton from './MenuButton';
 import Spinner from '../../misc/Spinner';
+// services
+import theatersService from '../../../services/theaters.service';
 import creatorsService from '../../../services/creators.service';
 import genresService from '../../../services/genres.service';
-
-const filterData = [];
-function addFilterData(name, searchName, options, searchOptions, type = 'checkbox') {
-  filterData.push({ name, searchName, options, searchOptions, type });
-}
-
-// addFilterData('Alkotók', 'creators', ['Panna', 'Pisti'], ['Panna', 'Pisti']);
 
 function convertURL(url) {
   return String(url)
     .split(',')
     .filter((item) => item !== '');
+}
+
+const filterData = [];
+function addFilterData(name, searchName, options, searchOptions, type = 'checkbox') {
+  filterData.push({ name, searchName, options, searchOptions, type });
 }
 
 async function fetchTheaters() {
@@ -67,7 +67,6 @@ export default function SideBar({ params }) {
 
   useEffect(() => {
     if (filterData.length === 4) setFetchReady(true);
-    console.log('filterdata  ', filterData);
   }, [filterData]);
 
   const handleChange = ({ searchName, searchValue, type }) => {
