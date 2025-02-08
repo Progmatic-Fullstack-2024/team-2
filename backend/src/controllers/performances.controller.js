@@ -1,10 +1,7 @@
 import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import queryFilter from "../utils/queryFilter.js";
-import {
-  performanceValidationSchemaForCreate,
-  performanceValidationSchemaForUpdate,
-} from "../validations/performanceValidation.js";
+import { performanceValidationSchemaForCreate } from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
@@ -39,13 +36,13 @@ const getPerformanceByID = async (req, res, next) => {
   }
 };
 
-function makeParsedPerformanceDates(performanceDate) {
-  const parsedDates = Array.isArray(performanceDate)
-    ? performanceDate.map((date) => new Date(date))
-    : [new Date(performanceDate)];
+// function makeParsedPerformanceDates(performanceDate) {
+//   const parsedDates = Array.isArray(performanceDate)
+//     ? performanceDate.map((date) => new Date(date))
+//     : [new Date(performanceDate)];
 
-  return parsedDates;
-}
+//   return parsedDates;
+// }
 
 const createPerformance = async (req, res, next) => {
   const { title, theaterId, description, creatorsId, targetAudience } =
@@ -75,15 +72,15 @@ const createPerformance = async (req, res, next) => {
       },
       poster,
       images,
-      creatorsIds
+      creatorsIds,
     );
     return res.status(201).json(newPerformance);
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to create performance",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };
@@ -124,15 +121,15 @@ const updatePerformance = async (req, res, next) => {
       updateData,
       poster,
       images,
-      { toAdd, toRemove }
+      { toAdd, toRemove },
     );
     return res.status(200).json({ updatedPerformance });
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to update performance",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };
@@ -146,8 +143,8 @@ const destroyPerformance = async (req, res, next) => {
     return next(
       new HttpError(
         error.message || "Failed to delete performance",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };
@@ -158,15 +155,15 @@ const deleteImage = async (req, res, next) => {
   try {
     const deletedImage = await performancesService.deleteSingleImage(
       performanceId,
-      imageUrl
+      imageUrl,
     );
     return res.status(200).json({ deletedImage });
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to delete image",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };

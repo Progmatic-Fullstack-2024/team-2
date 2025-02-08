@@ -43,7 +43,7 @@ const update = async (performanceId, performanceData) => {
 
 const deletePoster = async (id, posterURL) => {
   try {
-    const response = await axiosInstance.patch(`/api/:${id}/image`, {
+    const response = await axiosInstance.patch(`/api/performances/${id}/image`, {
       posterURL,
     });
     console.log('Kép sikeresen törölve:', response.data);

@@ -33,10 +33,6 @@ router.patch(
   performancesController.updatePerformance,
 );
 
-router.patch(
-  "/:performanceId/image",
-  isAdmin,
-  performancesController.deleteImage,
-);
+router.patch("/:performanceId/image", performancesController.deleteImage);
 
 export default router;
