@@ -51,13 +51,17 @@ export default function listUserstable({ param }) {
   const startIndex = 1;
 
   return (
-    <div className="w-full mx-auto my-40 bg-c-secondary-light p-12 rounded-md">
+    <div className="w-full mx-auto my-40 bg-c-secondary-light p-5 rounded-md overflow-x-auto ">
       {users ? (
-        <table className="table-auto border-solid p-2 border-gray-950 border border-separate rounded ">
+        <table className="w-full table-fix border-solid p-2 border-gray-950 border border-separate rounded">
           <thead>
             <tr className="font-bold">
-              <td className="border-solid p-2 border-gray-950 border rounded">Sorszám</td>
-              <td className="border-solid p-2 border-gray-950 border rounded">
+              <td className="border-solid p-2 border-gray-950 border rounded hidden desktop:table-cell">
+                Sor-
+                <br />
+                szám
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
                 <div className="flex fex-row gap-2">
                   <span>Vezetéknév</span>
                   <OrderArrow
@@ -68,8 +72,21 @@ export default function listUserstable({ param }) {
                   />
                 </div>
               </td>
-              <td className="border-solid p-2 border-gray-950 border rounded">Keresztnév</td>
-              <td className="border-solid p-2 border-gray-950 border rounded">
+              <td className="border-solid p-2 border-gray-950 border rounded tablet:hidden">
+                <div className="flex fex-row gap-2">
+                  <span>Név</span>
+                  <OrderArrow
+                    selected={nameSort}
+                    direction={sortDirection}
+                    func={sortHandler}
+                    column="name"
+                  />
+                </div>
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
+                Keresztnév
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded w-sx">
                 <div className="flex fex-row gap-2">
                   <span>E-mail cím</span>
                   <OrderArrow
@@ -80,8 +97,12 @@ export default function listUserstable({ param }) {
                   />
                 </div>
               </td>
-              <td className="border-solid p-2 border-gray-950 border rounded">telefon</td>
-              <td className="border-solid p-2 border-gray-950 border rounded">Születési dátum</td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
+                telefon
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
+                Születési dátum
+              </td>
               <td className="border-solid p-2 border-gray-950 border rounded">Szerepkör</td>
               <td className="border-solid p-2 border-gray-950 border rounded">
                 {String.fromCharCode(160)}

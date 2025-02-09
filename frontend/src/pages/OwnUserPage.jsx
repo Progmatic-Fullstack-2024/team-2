@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import ImageTitle from '../components/misc/ImageTitle';
 import Unautorized from '../components/Unautorized.jsx';
-import OwnUserEdit from '../components/users/OwnUserEdit.jsx';
+import OwnUserBlock from '../components/users/OwnUserBlock.jsx';
 import AuthContext from '../contexts/AuthContext';
 
 export default function OwnUser() {
@@ -17,7 +17,7 @@ export default function OwnUser() {
       <div className="min-h-screen flex flex-col items-center">
         {logined ? (
           <div className=" w-2/3">
-            <OwnUserEdit />
+            <OwnUserBlock />
           </div>
         ) : (
           <Unautorized text="Kérlek előbb jelentkezz be!" />

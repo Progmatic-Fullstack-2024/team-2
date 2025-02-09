@@ -15,7 +15,7 @@ export default function UserMenu({ func }) {
   const [maxPage, setMaxPage] = useState(1);
   const [isPage, setIsPage] = useState(false);
 
-  const buttonClass="bg-c-primary-light px-1";
+  const buttonClass = 'bg-c-primary-light px-1 mx-1';
 
   const getSearchText = () => {
     let searchText = null;
@@ -110,7 +110,8 @@ export default function UserMenu({ func }) {
   };
 
   const rePagination = async () => {
-    const param = await pagination('');
+    let param = await pagination('');
+    if (searchValue !== '') param += getSearchText();
     func(param);
   };
 
@@ -124,9 +125,9 @@ export default function UserMenu({ func }) {
   }, [page, pageSize]);
 
   return (
-    <form className=" w-full p-2  bg-c-secondary-light rounded-md place-content-between">
-      <div className="flex flex-col gap-2 tablet:flex-row items-center">
-        <div className="border flex p-2 border-gray-500 items-center ">
+    <form className=" w-full p-2  bg-c-secondary rounded-md place-content-between">
+      <div className="flex flex-col gap-2 flex-1 tablet:flex-row items-center justify-between">
+        <div className="border flex p-2 border-gray-500 items-center w-full tablet:w-auto">
           <div className="flex flex-row max-h-10 w-1/2 flex-1 tablet:w-fit">
             <input
               name="userSearch"
@@ -183,7 +184,7 @@ export default function UserMenu({ func }) {
             </label>
           </div>
         </div>
-        <div className="border flex p-2 border-gray-500 w-1/2 flex-1 mx-auto tablet:w-fit tablet:mx-0">
+        <div className="border flex p-2 border-gray-500 w-full tablet:w-auto ">
           <h3>Szűrés</h3>
           <div className="flex flex-col">
             <label htmlFor="all">
@@ -237,7 +238,7 @@ export default function UserMenu({ func }) {
           </div>
         </div>
       </div>
-      <div className=" mt-2 p-2 border border-gray-500">
+      <div className=" mt-2 p-2 border border-gray-500 bg-c-primary">
         Lapméret:
         <select name="" id="pagesize" onChange={changePageSize} selected={pageSize} className="m-1">
           <option value="Infinity">összes</option>
@@ -259,6 +260,7 @@ export default function UserMenu({ func }) {
             <button type="button" onClick={pagePlus} className={buttonClass}>
               {String.fromCharCode(9655)}
             </button>
+            oldalak száma: {maxPage}
           </span>
         )}
       </div>

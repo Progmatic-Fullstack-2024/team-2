@@ -17,10 +17,10 @@ export default function ListUsers() {
   return (
     <>
       <ImageTitle title="Felhasználok listázása" description="" />
-      <div className="  flex flex-col items-center m-0 mx-1">
+      <div className="  m-1 mx-1">
         {user && user.role === 'admin' ? (
           <div className="mt-28">
-            <div className="w-3/4 mx-auto">
+            <div className="w-full mx-auto">
               <UserMenu func={menuHandler} />
             </div>
             <ListUserstable param={filterParam} />
