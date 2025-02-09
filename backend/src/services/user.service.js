@@ -69,6 +69,8 @@ const getUserById = async (id) => {
 
     include: {
       theaterAdmin: true,
+      UserSeasonTicket: true,
+      UserVisitedPerformance: true,
     },
   });
   if (user) delete user.password;
