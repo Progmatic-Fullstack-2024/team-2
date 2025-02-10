@@ -61,7 +61,7 @@ export default function NewPerformanceForm({ lecture }) {
     }
 
     try {
-      const response = await createPerformance(formData);
+      const response = await createPerformance.createPerformance(formData);
 
       if (!response.ok) throw new Error('Hiba történt az előadás létrehozásakor.');
 
@@ -127,7 +127,7 @@ export default function NewPerformanceForm({ lecture }) {
       </h2>
       <Formik
         initialValues={initialValues}
-        validationSchema={performanceValidationSchema}
+        validationSchema={performanceValidationSchema.performanceValidationSchema}
         onSubmit={handleSubmit}
       >
         {({ setFieldValue, values }) => (

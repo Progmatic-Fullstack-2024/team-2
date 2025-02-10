@@ -48,12 +48,14 @@ const createPerformance = async (req, res, next) => {
   const images = req.files && req.files.files ? req.files.files : [];
 
   try {
-    await performanceValidationSchemaForCreate.validate({
-      title,
-      theaterId,
-      description,
-      creatorsIds,
-    });
+    await performanceValidationSchemaForCreate.performanceValidationSchemaForCreate.validate(
+      {
+        title,
+        theaterId,
+        description,
+        creatorsIds,
+      },
+    );
 
     const newPerformance = await performancesService.create(
       {
