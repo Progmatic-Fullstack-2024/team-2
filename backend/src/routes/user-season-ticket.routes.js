@@ -1,5 +1,5 @@
 import express from "express";
-import userSeasonTicketController from "../controllers/user-season-ticket.controller";
+import userSeasonTicketController from "../controllers/user-season-ticket.controller.js";
 
 const router = express.Router();
 

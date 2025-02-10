@@ -1,4 +1,4 @@
-import userSeasonTicketService from "../services/user-season-ticket.service";
+import userSeasonTicketService from "../services/user-season-ticket.service.js";
 
 const list = async (req, res, next) => {
 	try {
