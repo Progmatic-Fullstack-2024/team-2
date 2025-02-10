@@ -47,7 +47,7 @@ export default function NewPerformanceForm({ lecture }) {
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
-    values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
+    values.creatorId.forEach((creator) => formData.append('creatorIds', creator));
 
     if (values.posterURL) {
       formData.append('poster', values.posterURL);
