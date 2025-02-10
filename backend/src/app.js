@@ -14,6 +14,7 @@ import paymentRoutes from "./routes/payment.routes.js";
 import genresRoutes from "./routes/genres.routes.js";
 import seasonTicketsRoutes from "./routes/season-tickets.routes.js";
 import performanceEventsRoutes from "./routes/performanceEvents.routes.js";
+import userSeasonTicketRoutes from "./routes/user-season-ticket.routes.js";
 
 const app = express();
 
@@ -34,11 +35,12 @@ app.use("/api/season-tickets", seasonTicketsRoutes);
 app.use("/theaterAdmin", theaterAdmin);
 app.use("/api/genres", genresRoutes);
 app.use("/api/theater", theatersRoutes);
+app.use("/api/user_season_ticket", userSeasonTicketRoutes);
 
 app.use(errorHandler);
 
 app.use("/", (req, res) => {
-  res.status(404).send("No Endpoint");
+	res.status(404).send("No Endpoint");
 });
 
 export default app;
