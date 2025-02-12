@@ -83,38 +83,33 @@ const createPerformance = async (req, res, next) => {
 
 const updatePerformance = async (req, res, next) => {
   const { performanceId } = req.params;
-  const { title, theaterId, description, creatorsId, targetAudience } =
-    req.body;
+  const { title, theaterId, description, targetAudience } = req.body;
 
-  const poster = req.files.poster ? req.files.poster[0] : null;
-  const images = req.files && req.files.files ? req.files.files : [];
+  let { creatorIds } = req.body;
 
-  const updateData = {};
-  if (title) updateData.title = title;
-  if (theaterId) updateData.theaterId = theaterId;
-  if (description) updateData.description = description;
-  if (targetAudience) updateData.targetAudience = targetAudience;
-
-  let parsedCreatorsIds = {};
-  try {
-    parsedCreatorsIds = creatorsId
-      ? JSON.parse(creatorsId)
-      : { toAdd: [], toRemove: [] };
-  } catch (error) {
-    return next(new HttpError("Invalid creatorsId format, must be JSON", 400));
+  // If one link arrives (string) convert to array
+  if (typeof creatorIds === "string") {
+    creatorIds = [creatorIds];
   }
 
-  const { toAdd = [], toRemove = [] } = parsedCreatorsIds;
+  const creators = Array.isArray(creatorIds)
+    ? creatorIds.map((creatorId) => ({ id: creatorId }))
+    : [];
+
+  console.log("Final creators array:", creators);
+
+  const poster = req.files?.poster ? req.files.poster[0] : null;
+  const images = req.files?.files ? req.files.files : [];
 
   try {
     const updatedPerformance = await performancesService.update(
       performanceId,
-      updateData,
+      { title, theaterId, description, targetAudience },
       poster,
       images,
-      { toAdd, toRemove }
+      creators
     );
-    return res.status(200).json({ updatedPerformance });
+    return res.status(200).json(updatedPerformance);
   } catch (error) {
     return next(
       new HttpError(
@@ -148,7 +143,7 @@ const deleteImage = async (req, res, next) => {
       performanceId,
       imageUrl
     );
-    return res.status(200).json({ deletedImage });
+    return res.status(200).json({ performanceWithDeletedImage: deletedImage });
   } catch (error) {
     return next(
       new HttpError(
