@@ -48,11 +48,9 @@ const update = async (performanceId, performanceData) => {
   }
 };
 
-const deletePoster = async (id, posterURL) => {
+const deletePoster = async (id, imageUrl) => {
   try {
-    const response = await axiosInstance.patch(`/api/performances/${id}/image`, {
-      posterURL,
-    });
+    const response = await axiosInstance.patch(`/api/performances/${id}/image`, { imageUrl });
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;

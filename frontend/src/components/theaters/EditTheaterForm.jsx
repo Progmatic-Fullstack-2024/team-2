@@ -32,7 +32,6 @@ export default function TheaterForm({ theater }) {
     if (values.imageURL instanceof File) {
       formData.append('image', values.imageURL);
     }
-
     try {
       // 🔹 Ha a kép előnézetet törölte a felhasználó, de nem töltött fel újat, akkor API hívással töröljük az adatbázisból is
       if (isImageDeleted) {

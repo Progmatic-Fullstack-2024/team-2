@@ -13,9 +13,14 @@ export default function EditPerformancePage() {
 
   useEffect(() => {
     async function fetchPerformance() {
-      const fetchedPerformance = await performancesService.getById(id);
-      setPerformance(fetchedPerformance);
-      setLoading(false);
+      try {
+        const fetchedPerformance = await performancesService.getById(id);
+        setPerformance(fetchedPerformance);
+      } catch (error) {
+        throw error.response ? error.response.data : error;
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchPerformance();
