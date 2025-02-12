@@ -4,18 +4,17 @@ export default function OwnUserSeasonTicketTable({ data, performance }) {
   const getUsedSeatsNumberFromSeasonTicket = (ticketId) => {
     let answer = 0;
     if (performance && performance.length > 0) {
-      answer = performance.reduce(
-        (sum, item) => {sum += item.userSeasonTicketId === ticketId ? Number(item.seats) : 0;
-          return sum;
-        },
-        0);
+      answer = performance.reduce((sum, item) => {
+        sum += item.userSeasonTicketId === ticketId ? Number(item.seats) : 0;
+        return sum;
+      }, 0);
     }
     return answer;
   };
-  for (let i = 0; i < data.length; i+=1) {
+  for (let i = 0; i < data.length; i += 1) {
     const ticketName = data[i].SeasonTicket.name;
     const durationms = Number(data[i].SeasonTicket.durationDay) * 86400000;
-    const {seatQuantity} = data[i].SeasonTicket;
+    const { seatQuantity } = data[i].SeasonTicket;
     const createdAtms = new Date(data[i].created).getTime();
     const endDatems = createdAtms + durationms;
     const endDate = new Date(endDatems).toISOString().substring(0, 10);
