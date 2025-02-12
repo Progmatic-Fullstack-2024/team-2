@@ -1,5 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -13,6 +13,7 @@ export default function PerformanceForm({ performance }) {
   const [posterPreview, setPosterPreview] = useState(performance?.posterURL || null);
   const [imagesPreview, setImagesPreview] = useState(performance?.imagesURL || []);
   const [creatorOptions, setCreatorOptions] = useState([]);
+  const [selectedCreators, setSelectedCreators] = useState(performance?.creatorId || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
   const [isPosterDeleted, setIsPosterDeleted] = useState(false); // Deleted poster
   const [deletedImages, setDeletedImages] = useState([]); // Deleted pictures
 
@@ -26,12 +27,32 @@ export default function PerformanceForm({ performance }) {
   const initialValues = {
     title: performance?.title || '',
     theaterId: performance?.theaterId || '',
-    creatorId: [''],
+    creatorId: selectedCreators, // 🔥 Itt állítjuk be a kiválasztott alkotókat
     description: performance?.description || '',
     posterURL: null,
     imagesURL: performance?.imagesURL || [],
     targetAudience: performance?.targetAudience || '',
   };
+
+  useEffect(() => {
+    const fetchCreators = async () => {
+      try {
+        const creators = await getCreators.getCreators();
+        console.log('Alkotók betöltve:', creators); // 🔍 Ellenőrzés a konzolon
+        setCreatorOptions(creators);
+
+        // Ha az előadásnak már vannak alkotói, beállítjuk őket
+        if (performance?.creatorId) {
+          setSelectedCreators(performance.creatorId);
+        }
+      } catch (error) {
+        console.error('Hiba történt az alkotók betöltésekor:', error); // 🔍 Hibakeresés
+        toast.error('Hiba történt az alkotók betöltésekor.');
+      }
+    };
+
+    fetchCreators();
+  }, [performance]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const formData = new FormData();
@@ -39,7 +60,7 @@ export default function PerformanceForm({ performance }) {
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
 
-    values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
+    values.creatorId.forEach((creator) => formData.append('creatorIds[]', creator));
 
     if (values.targetAudience) {
       formData.append('targetAudience', values.targetAudience);
@@ -54,6 +75,8 @@ export default function PerformanceForm({ performance }) {
         formData.append('files', image);
       }
     });
+
+    console.log('Küldött adatok:', values);
 
     try {
       // Összegyűjtjük az összes törlendő képet egy tömbbe
@@ -125,16 +148,16 @@ export default function PerformanceForm({ performance }) {
     }
   };
 
-  const fetchCreators = async () => {
-    if (creatorOptions.length === 0) {
-      try {
-        const creators = await getCreators();
-        setCreatorOptions(creators);
-      } catch (error) {
-        toast.error('Hiba történt az alkotók betöltésekor.');
-      }
-    }
-  };
+  // const fetchCreators = async () => {
+  //   if (creatorOptions.length === 0) {
+  //     try {
+  //       const creators = await getCreators();
+  //       setCreatorOptions(creators);
+  //     } catch (error) {
+  //       toast.error('Hiba történt az alkotók betöltésekor.');
+  //     }
+  //   }
+  // };
 
   const handleBack = () => {
     if (window.history.length > 2) {
@@ -243,17 +266,6 @@ export default function PerformanceForm({ performance }) {
                     className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
                   >
                     Törlés
-                  </button>
-                  <button
-                    type="button"
-                    onClick={fetchCreators}
-                    className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                  >
-                    <img
-                      src="creatorSearchIcon.svg"
-                      alt="Alkotó keresése ikon"
-                      className="w-6 h-6"
-                    />
                   </button>
                 </div>
               ))}
