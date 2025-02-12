@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import CreatorsList from '../components/creators/CreatorsList';
 import DefaultButton from '../components/misc/DefaultButton';
 import Gallery from '../components/misc/Galery';
 import ImageModal from '../components/misc/ImageModal';
@@ -124,6 +125,8 @@ export default function DetailsPage() {
           />
 
           <p className="text-lg mb-2">{performance.description}</p>
+
+          <CreatorsList creators={performance.creators} />
 
           {/* Select Dates */}
           <PerformanceDates

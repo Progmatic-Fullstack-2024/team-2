@@ -34,7 +34,7 @@ export default function LoginForm({ onSwitch, onClose }) {
   };
 
   return (
-    <div className="mx-auto min-w-96 min-h-96 p-12 my-40 bg-c-secondary-light rounded-md flex flex-col justify-between">
+    <div className="p-2 bg-c-secondary-light">
       <h2 className="font-bold text-gray-800 text-2xl mb-6">Bejelentkezés</h2>
 
       <Formik
@@ -46,12 +46,12 @@ export default function LoginForm({ onSwitch, onClose }) {
           <FormField name="email" type="email" placeholder="Email cím" />
           <FormField name="password" type="password" placeholder="Jelszó" />
           <div className="flex justify-center">
-            <DefaultButton color="c-primary" type="submit" text="Bejelentkezés" />
+            <DefaultButton type="submit" text="Bejelentkezés" />
           </div>
         </Form>
       </Formik>
 
-      <div className="text-black flex justify-center mt-5">
+      <div className="text-black py-2 flex justify-center">
         Nem vagy regisztrálva?
         <button
           type="button"
@@ -64,3 +64,4 @@ export default function LoginForm({ onSwitch, onClose }) {
     </div>
   );
 }
+

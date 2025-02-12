@@ -37,6 +37,19 @@ model Genre {
   perfomances Performance[] @relation("Performance_Genre")
 }
 
+model UserVisitedPerformance {
+  id                    String                @id @default(cuid())
+  qrImage               String
+  userId                String
+  performanceEventsId   String 
+  userSeasonTicketId    String 
+  seats                 Int
+
+  userSeasonTicket      UserSeasonTicket      @relation(fields: [userSeasonTicketId], references: [id])
+  user                  User                  @relation(fields: [userId], references: [id])
+  performanceEvents     PerformanceEvents     @relation(fields: [performanceEventsId], references: [id])
+}
+
 model Performance {
   id                      String              @id @default(cuid())
   title                   String

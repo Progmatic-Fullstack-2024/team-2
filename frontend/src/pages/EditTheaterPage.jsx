@@ -12,9 +12,14 @@ export default function EditTheaterPage() {
 
   useEffect(() => {
     async function fetchTheater() {
-      const fetchedTheater = await theaterService.getById(id);
-      setTheater(fetchedTheater);
-      setLoading(false);
+      try {
+        const fetchedTheater = await theaterService.getById(id);
+        setTheater(fetchedTheater);
+      } catch (error) {
+        throw error.response ? error.response.data : error;
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchTheater();
