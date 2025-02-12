@@ -13,7 +13,7 @@ export default function PerformanceForm({ performance }) {
   const [posterPreview, setPosterPreview] = useState(performance?.posterURL || null);
   const [imagesPreview, setImagesPreview] = useState(performance?.imagesURL || []);
   const [creatorOptions, setCreatorOptions] = useState([]);
-  const [selectedCreators, setSelectedCreators] = useState(performance?.creatorId || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
+  const [selectedCreators, setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
   const [isPosterDeleted, setIsPosterDeleted] = useState(false); // Deleted poster
   const [deletedImages, setDeletedImages] = useState([]); // Deleted pictures
 
@@ -27,7 +27,7 @@ export default function PerformanceForm({ performance }) {
   const initialValues = {
     title: performance?.title || '',
     theaterId: performance?.theaterId || '',
-    creatorId: selectedCreators, // 🔥 Itt állítjuk be a kiválasztott alkotókat
+    creatorId: selectedCreators.map((creator) => creator.id), // 🔥 Itt állítjuk be a kiválasztott alkotókat
     description: performance?.description || '',
     posterURL: null,
     imagesURL: performance?.imagesURL || [],
@@ -60,7 +60,7 @@ export default function PerformanceForm({ performance }) {
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
 
-    values.creatorId.forEach((creator) => formData.append('creatorIds[]', creator));
+    values.creatorId.forEach((creator) => formData.append('creatorIds', creator));
 
     if (values.targetAudience) {
       formData.append('targetAudience', values.targetAudience);
@@ -249,7 +249,9 @@ export default function PerformanceForm({ performance }) {
                     name={`creatorId[${index}]`}
                     className="w-full border p-2 rounded text-gray-800"
                   >
-                    <option value="">Válassz egy alkotót</option>
+                    <option value={_.id} key={_.id}>
+                      {_.name ? _.name : 'Válassz egy alkotót!'}
+                    </option>
                     {creatorOptions.map((creator) => (
                       <option key={creator.id} value={creator.id}>
                         {creator.name}
