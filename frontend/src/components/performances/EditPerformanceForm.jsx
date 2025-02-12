@@ -62,13 +62,11 @@ export default function PerformanceForm({ performance }) {
       const allDeletedImages = [...deletedImages];
 
       if (isPosterDeleted) {
-        console.log('🟢 Poszter törlésre kijelölve:', performance.posterURL);
         allDeletedImages.push(performance.posterURL);
       }
 
       // Ha van mit törölni, akkor küldjük el
       if (allDeletedImages.length > 0) {
-        console.log('📡 Törlendő képek:', allDeletedImages);
         await performancesService.deletePoster(performance.id, allDeletedImages); // 🔥 NE csomagold újra!
       }
 
@@ -81,7 +79,6 @@ export default function PerformanceForm({ performance }) {
         navigate('/theater-admin');
       }, 1000);
     } catch (error) {
-      console.error('API hiba:', error);
       toast.error(`Hiba történt a módosítás során: ${error.message}`);
     } finally {
       setSubmitting(false);

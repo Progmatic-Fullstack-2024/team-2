@@ -43,11 +43,8 @@ const updateTheaterById = async (id, formData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-
-    console.log('API válasza:', response.data); // Ellenőrizd, mit válaszol a szerver
     return response.data;
   } catch (error) {
-    console.error('Hiba történt az API hívás során:', error);
     throw error.response ? error.response.data : error;
   }
 };
@@ -57,10 +54,8 @@ const deleteTheaterImage = async (id, imageUrl) => {
     const response = await axiosInstance.patch(`/api/theater/${id}/image`, {
       imageUrl, // A törlendő kép URL-je
     });
-    console.log('Kép sikeresen törölve:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Hiba a kép törlésekor:', error);
     throw error.response ? error.response.data : error;
   }
 };

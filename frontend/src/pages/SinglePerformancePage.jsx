@@ -123,7 +123,7 @@ export default function DetailsPage() {
             onNext={handleNextImage}
             onSelectImage={setSelectedImage}
           />
-          
+
           <p className="text-lg mb-2">{performance.description}</p>
 
           <CreatorsList creators={performance.creators} />

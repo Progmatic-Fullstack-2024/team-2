@@ -3,12 +3,12 @@ const extractPublicId = (url) => {
     if (!url) return null;
 
     // 1️⃣ URL-dekódolás (Cloudinary ezt várja)
-    url = decodeURIComponent(url);
+    const decodedUrl = decodeURIComponent(url);
 
     // 2️⃣ URL szétbontása "/"
-    const urlParts = url.split("/");
-    let filenameWithExtension = urlParts.pop(); // Pl.: "PLAKÁT_MÁTÉ.jpg"
-    let filename = filenameWithExtension.split(".")[0]; // Kiterjesztés levágása
+    const urlParts = decodedUrl.split("/");
+    const filenameWithExtension = urlParts.pop(); // Pl.: "PLAKÁT_MÁTÉ.jpg"
+    const filename = filenameWithExtension.split(".")[0]; // Kiterjesztés levágása
 
     // 3️⃣ Verziószám eltávolítása
     const lastFolderOrVersion = urlParts.pop();
@@ -22,13 +22,13 @@ const extractPublicId = (url) => {
       folder && folder !== "upload" ? `${folder}/${filename}` : filename;
 
     console.log(
-      `✅ Helyesen kinyert publicId törléshez: ${publicId} az URL-ből: ${url}`
+      `✅ Helyesen kinyert publicId törléshez: ${publicId} az URL-ből: ${decodedUrl}`,
     );
     return publicId;
   } catch (error) {
     console.error(
       `❌ Hiba történt a Public ID kinyerésekor az URL-ből: ${url}`,
-      error
+      error,
     );
     return null;
   }

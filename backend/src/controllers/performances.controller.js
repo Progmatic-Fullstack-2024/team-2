@@ -56,7 +56,7 @@ const createPerformance = async (req, res, next) => {
         theaterId,
         description,
         creators,
-      }
+      },
     );
 
     const newPerformance = await performancesService.create(
@@ -68,15 +68,15 @@ const createPerformance = async (req, res, next) => {
       },
       poster,
       images,
-      creators
+      creators,
     );
     return res.status(201).json(newPerformance);
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to create performance",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };
@@ -107,15 +107,15 @@ const updatePerformance = async (req, res, next) => {
       { title, theaterId, description, targetAudience },
       poster,
       images,
-      creators
+      creators,
     );
     return res.status(200).json(updatedPerformance);
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to update performance",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };
@@ -129,8 +129,8 @@ const destroyPerformance = async (req, res, next) => {
     return next(
       new HttpError(
         error.message || "Failed to delete performance",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };
@@ -145,15 +145,15 @@ const deleteImage = async (req, res, next) => {
   try {
     const deletedImage = await performancesService.deleteSingleImage(
       performanceId,
-      imageUrl
+      imageUrl,
     );
     return res.status(200).json({ performanceWithDeletedImage: deletedImage });
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to delete image",
-        error.statusCode || 500
-      )
+        error.statusCode || 500,
+      ),
     );
   }
 };

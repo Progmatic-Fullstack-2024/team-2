@@ -10,15 +10,13 @@ export default function EditTheaterPage() {
   const [theater, setTheater] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  console.log(id);
-
   useEffect(() => {
     async function fetchTheater() {
       try {
         const fetchedTheater = await theaterService.getById(id);
         setTheater(fetchedTheater);
       } catch (error) {
-        console.error('Hiba a színház betöltésekor:', error);
+        throw error.response ? error.response.data : error;
       } finally {
         setLoading(false);
       }

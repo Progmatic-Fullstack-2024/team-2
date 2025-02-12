@@ -42,22 +42,17 @@ const update = async (performanceId, performanceData) => {
       `/api/performances/${performanceId}`,
       performanceData,
     );
-    console.log('API válasza:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Hiba történt az API hívás során:', error);
     throw error.response ? error.response.data : error;
   }
 };
 
 const deletePoster = async (id, imageUrl) => {
-  console.log('📡 API kérés a képek törléséhez:', imageUrl);
   try {
     const response = await axiosInstance.patch(`/api/performances/${id}/image`, { imageUrl });
-    console.log('✅ Kép sikeresen törölve:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Hiba a kép törlésekor:', error.response?.data || error.message);
     throw error.response ? error.response.data : error;
   }
 };
