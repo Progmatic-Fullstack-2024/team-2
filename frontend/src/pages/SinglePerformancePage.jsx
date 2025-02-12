@@ -60,7 +60,7 @@ export default function DetailsPage() {
   };
 
   const closeModal = () => setSelectedImage(null);
-  const handleBookingClick = () => setIsBookingModalOpen(true);
+  // const handleBookingClick = () => setIsBookingModalOpen(true);
 
   const closeBookingModal = () => {
     setIsBookingModalOpen(false);
@@ -154,6 +154,8 @@ export default function DetailsPage() {
         setSelectedTicket={setSelectedTicket}
         ticketCount={ticketCount}
         setTicketCount={setTicketCount}
+        performance={performance}
+        selectedDates={selectedDates}
       />
     </>
   );
