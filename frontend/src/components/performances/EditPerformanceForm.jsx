@@ -5,12 +5,10 @@ import { toast } from 'react-toastify';
 
 import getCreators from '../../services/creators.service';
 import performancesService from '../../services/performances.service';
-// import theatersService from '../../services/theaters.service';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformanceForm({ performance }) {
   const navigate = useNavigate();
-  // const location = useLocation();
 
   const [posterPreview, setPosterPreview] = useState(performance?.posterURL || null);
   const [imagesPreview, setImagesPreview] = useState(performance?.imagesURL || []);
@@ -252,7 +250,7 @@ export default function PerformanceForm({ performance }) {
                     className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
                   >
                     <img
-                      src="../../public/creatorSearchIcon.svg"
+                      src="creatorSearchIcon.svg"
                       alt="Alkotó keresése ikon"
                       className="w-6 h-6"
                     />

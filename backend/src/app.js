@@ -33,6 +33,7 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/season-tickets", seasonTicketsRoutes);
 app.use("/theaterAdmin", theaterAdmin);
 app.use("/api/genres", genresRoutes);
+app.use("/api/theater", theatersRoutes);
 
 app.use(errorHandler);
 

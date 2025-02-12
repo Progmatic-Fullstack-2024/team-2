@@ -21,7 +21,7 @@ export default function PerformancesPage() {
   useEffect(() => {
     if (!rendered.current) {
       rendered.current = true;
-      localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
+      localStorage.setItem('empty_performance_img', 'Theatron.jpg');
       getPeformances(searchParams);
     }
   }, []);

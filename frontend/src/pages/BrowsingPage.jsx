@@ -29,7 +29,7 @@ export default function BrowsingPage() {
     };
 
     fetchData();
-    localStorage.setItem('empty_performance_img', '../../../public/Theatron.jpg');
+    localStorage.setItem('empty_performance_img', 'Theatron.jpg');
   }, []);
 
   // Dates and birthday logic
@@ -49,7 +49,7 @@ export default function BrowsingPage() {
 
   // Helper to render PerformanceBrowse
   const renderPerformanceBrowse = (params, title) => (
-    <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto">
+    <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto" key={title}>
       <PerformanceBrowse params={params} title={title} />
     </div>
   );

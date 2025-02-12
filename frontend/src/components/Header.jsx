@@ -51,8 +51,8 @@ export default function Header() {
   return (
     <header className={headerClass}>
       <div className="flex w-full justify-between items-center">
-        <div className="flex gap-4 px-3 py-2 text-xl font-bold">
-          <Link to="/" className="min-w-[58]">
+        <div className="flex gap-4 px-3 py-2 text-xl font-bold ">
+          <Link to="/" className="min-w-[55px] hidden tablet:block">
             <SvgIcon
               icon="masks"
               stroke="c-text"
@@ -65,20 +65,17 @@ export default function Header() {
           {user && (
             <Link
               to="/ownUser"
-              className="hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default mx-5 my-auto "
+              className="hidden laptop:block hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default mx-5 my-auto "
             >
               {`${user.firstName}`}
             </Link>
           )}
         </div>
 
-        <nav className="flex laptop:gap-4 items-center">
-          <div className="flex justify-center h-full gap-1">
-            <MenuLink text="Home" to="/" icon="star" iconSize="50" />
-            <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
-            <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
-          </div>
-
+        <nav className="flex laptop:gap-2 items-center h-16">
+          <MenuLink text="Home" to="/" icon="star" iconSize="50" />
+          <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
+          <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
           {user ? (
             <>
               <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="camera" iconSize="50px" />
@@ -115,13 +112,10 @@ export default function Header() {
 
       {user?.role === 'admin' && (
         <>
-          <hr className="w-full border-t border-c-text/40 my-2" />
-          <nav className="flex gap-4 items-center w-full justify-center py-2">
+          <hr className="w-full border-t border-c-text/40" />
+          <nav className="flex gap-4 items-center w-full justify-start py-2">
             <div className="laptop:hidden relative flex items-center gap-2">
-              <FiMenu
-                className="absolute -left-48 text-2xl cursor-pointer"
-                onClick={handleAdminMenuOpen}
-              />
+              <FiMenu className="text-2xl cursor-pointer" onClick={handleAdminMenuOpen} />
               <button
                 type="button"
                 className="text-white font-bold hover:underline"
@@ -129,32 +123,34 @@ export default function Header() {
                 aria-label="Admin menü megnyitása"
               />
             </div>
-            <Menu
-              anchorEl={adminMenuAnchor}
-              open={Boolean(adminMenuAnchor)}
-              onClose={handleAdminMenuClose}
-              disableScrollLock
-              PaperProps={{
-                sx: {
-                  maxHeight: '200px',
-                  overflowY: 'auto',
-                },
-              }}
-            >
-              <MenuItem onClick={() => navigate('/new-performance')}>Előadás létrehozás</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>Admin Dashboard</MenuItem>
-              <MenuItem onClick={() => navigate('/userlist')}>Felhasználók kezelése</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>Színházak kezelése</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
-            </Menu>
+            <div className="my-2">
+              <Menu
+                anchorEl={adminMenuAnchor}
+                open={Boolean(adminMenuAnchor)}
+                onClose={handleAdminMenuClose}
+                disableScrollLock
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: {
+                    maxHeight: '500px',
+                    overflowY: 'auto',
+                  },
+                }}
+              >
+                <MenuItem onClick={() => navigate('/')}>Felhasználók kezelése</MenuItem>
+                <MenuItem onClick={() => navigate('/')}>Színházak kezelése</MenuItem>
+              </Menu>
+            </div>
             <div className="hidden laptop:flex gap-4">
-              <MenuLink text="Előadás létrehozás" to="/new-performance" />
-              <MenuLink text="Admin Dashboard" to="/" />
               <MenuLink text="Felhasználók kezelése" to="/userlist" />
               <MenuLink text="Színházak kezelése" to="/" />
-              <MenuLink text="Fizetési ügyek" to="/" />
-              <MenuLink text="Egyéb" to="/" />
             </div>
           </nav>
         </>

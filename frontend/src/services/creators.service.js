@@ -9,4 +9,4 @@ const getCreators = async () => {
   }
 };
 
-export default getCreators;
+export default { getCreators };

@@ -100,7 +100,7 @@ model Company {
 }
 
 model Creator {
-  id            String  @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String
   imageURL      String?
   profession    Profession[]
@@ -111,7 +111,7 @@ model Creator {
 }
 
 model Theater {
-  id             String  @id @default(cuid())
+  id             String         @id @default(cuid())
   name           String
   address        String
   email          String

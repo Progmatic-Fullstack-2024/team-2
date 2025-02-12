@@ -1,6 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 
-import { COLORS } from './src/constants/constants';
+const COLORS = {
+  DAY: {
+    TEXT: 'hsl(88, 46%, 92%)',
+    BACKGROUND: 'hsl(88, 55%, 6%)',
+
+    PRIMARY: 'hsl(90, 78%, 35%)',
+    PRIMARY_LIGHT: 'hsl(90, 78%, 40%)',
+    PRIMARY_DARK: 'hsl(90, 78%, 30%)',
+
+    SECONDARY: 'hsl(90, 65%, 72%)',
+    SECONDARY_LIGHT: 'hsl(90, 65%, 77%)',
+    SECONDARY_DARK: 'hsl(90, 65%, 67%)',
+
+    ACCENT: 'hsl(89, 89%, 55%)',
+  },
+};
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,jsx,ts,tsx}'],
@@ -8,7 +23,14 @@ export default {
   theme: {
     extend: {
       width: {
-        88: '88px',
+        tablet: '640px',
+        laptop: '1024px',
+        desktop: '1280px',
+      },
+      minWidth: {
+        tablet: '640px',
+        laptop: '1024px',
+        desktop: '1280px',
       },
       height: {
         600: '600px',

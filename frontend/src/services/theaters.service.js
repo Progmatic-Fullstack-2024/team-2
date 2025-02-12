@@ -17,7 +17,14 @@ const createThreater = async (theater) => {
     throw error.response ? error.response.data : error; // In case of error
   }
 };
-
+const getTheaterForDropdown = async (theater) => {
+  try {
+    const response = await axiosInstance.get('/api/theater/dropdown-data-theaters', theater);
+    return response.data; // Successful answer
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
 const getById = async (theaterId) => {
   try {
     const response = await axiosInstance.get(`/api/theater/${theaterId}`);
@@ -63,6 +70,7 @@ const deleteTheaterImage = async (id, imageUrl) => {
 export default {
   getTheaters,
   createThreater,
+  getTheaterForDropdown,
   getById,
   getTheaterByUserId,
   updateTheaterById,
