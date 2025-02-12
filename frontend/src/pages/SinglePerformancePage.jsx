@@ -8,15 +8,19 @@ import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
 import PerformanceDates from '../components/performances/PerformanceDates';
 import performanceService from '../services/performances.service';
+import BookingModal from '../components/BookingModal';
 
 export default function DetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [performance, setPerformance] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Képgörgetéshez
-  const [selectedImage, setSelectedImage] = useState(null); // Modalhoz
-  const [selectedDates, setSelectedDates] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedDates, setSelectedDates] = useState([]);
   const [error, setError] = useState(null);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState('');
+  const [ticketCount, setTicketCount] = useState(1);
 
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
@@ -31,24 +35,23 @@ export default function DetailsPage() {
     fetchPerformanceById(id);
   }, [id]);
 
-  // Date selection handling
   const toggleDateSelection = (date) => {
-    setSelectedDates(
-      (prevSelected) =>
-        prevSelected.includes(date)
-          ? prevSelected.filter((d) => d !== date) // Ha már benne van, törli
-          : [...prevSelected, date], // Ha nincs benne, hozzáadja
+    setSelectedDates((prevSelected) =>
+      prevSelected.includes(date)
+        ? prevSelected.filter((d) => d !== date)
+        : [...prevSelected, date],
     );
+    setIsBookingModalOpen(true);
   };
-  // Képgörgetés kezelése
+
   const handleNextImage = () => {
-    if (performance && performance.imagesURL) {
+    if (performance?.imagesURL) {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % performance.imagesURL.length);
     }
   };
 
   const handlePreviousImage = () => {
-    if (performance && performance.imagesURL) {
+    if (performance?.imagesURL) {
       setCurrentImageIndex(
         (prevIndex) =>
           (prevIndex - 1 + performance.imagesURL.length) % performance.imagesURL.length,
@@ -56,8 +59,13 @@ export default function DetailsPage() {
     }
   };
 
-  // Modal bezárása
   const closeModal = () => setSelectedImage(null);
+  const handleBookingClick = () => setIsBookingModalOpen(true);
+
+  const closeBookingModal = () => {
+    setIsBookingModalOpen(false);
+    setSelectedDates((prevSelected) => prevSelected.slice(0, -1));
+  };
 
   if (error) {
     return (
@@ -102,8 +110,7 @@ export default function DetailsPage() {
   return (
     <>
       <ImageTitle title={performance.title} />
-      <div className="min-h-screen flex flex-col items-center justify-center p-10  text-c-primary-dark">
-        {/* Poster div */}
+      <div className="min-h-screen flex flex-col items-center justify-center p-10 text-c-primary-dark">
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden flex items-center justify-center">
           <img
             src={performance.posterURL || 'https://via.placeholder.com/640x360?text=Nincs+plakát'}
@@ -112,11 +119,9 @@ export default function DetailsPage() {
           />
         </div>
 
-        {/* Description div */}
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
           <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
 
-          {/* Gallery */}
           <Gallery
             images={getGalleryImages()}
             onPrev={handlePreviousImage}
@@ -128,7 +133,6 @@ export default function DetailsPage() {
 
           <CreatorsList creators={performance.creators} />
 
-          {/* Select Dates */}
           <PerformanceDates
             events={performance.performanceEvents}
             selectedDates={selectedDates}
@@ -136,18 +140,21 @@ export default function DetailsPage() {
           />
 
           <div className="flex justify-around">
-            <div>
-              <DefaultButton onClick={handleBack} text="Vissza" />
-            </div>
-            <div>
-              <DefaultButton text="Foglalás" />
-            </div>
+            <DefaultButton onClick={handleBack} text="Vissza" />
+            {/* <DefaultButton onClick={handleBookingClick} text="Foglalás" /> */}
           </div>
         </div>
       </div>
 
-      {/* Teljes méretű kép megjelenítése */}
       <ImageModal image={selectedImage} onClose={closeModal} />
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={closeBookingModal}
+        selectedTicket={selectedTicket}
+        setSelectedTicket={setSelectedTicket}
+        ticketCount={ticketCount}
+        setTicketCount={setTicketCount}
+      />
     </>
   );
 }
