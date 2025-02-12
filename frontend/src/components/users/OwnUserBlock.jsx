@@ -44,8 +44,8 @@ export default function OwnUserBlock() {
         </button>
       </nav>
       {tab === 'person' && <OwnUserEdit />}
-      {tab === 'seasoinTicket' && <OwnUserSeasonTicket ticket='season' />}
-      {tab === 'seats' && <OwnUserSeasonTicket ticket='seats' />}
+      {tab === 'seasoinTicket' && <OwnUserSeasonTicket ticket="season" />}
+      {tab === 'seats' && <OwnUserSeasonTicket ticket="seats" />}
     </div>
   );
 }

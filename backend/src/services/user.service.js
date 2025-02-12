@@ -69,11 +69,51 @@ const getUserById = async (id) => {
 
     include: {
       theaterAdmin: true,
-      UserSeasonTicket: true,
-      UserVisitedPerformance: true,
+      UserSeasonTicket: {
+        include: {
+          SeasonTicket: {
+            select: {
+              name: true,
+              durationDay: true,
+              seatQuantity: true,
+            },
+          },
+        },
+      },
+      UserVisitedPerformance: {
+        include: {
+          PerformanceEvents: {
+            include: {
+              performance: {
+                include: {
+                  theater: {
+                    select: { name: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
-  if (user) delete user.password;
+  if (user) {
+    delete user.password;
+    for (let i = 0; i < user.UserVisitedPerformance.length; i += 1) {
+      // it need'nt from prisma 4.x
+      delete user.UserVisitedPerformance[i].PerformanceEvents.performance.id;
+      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+        .description;
+      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+        .posterURL;
+      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+        .imagesURL;
+      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+        .targetAudience;
+      delete user.UserVisitedPerformance[i].PerformanceEvents.qrImage;
+      delete user.UserVisitedPerformance[i].PerformanceEvents.userId;
+    }
+  }
   return user;
 };
 
