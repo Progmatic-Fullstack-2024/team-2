@@ -50,15 +50,14 @@ const update = async (performanceId, performanceData) => {
   }
 };
 
-const deletePoster = async (id, posterURL) => {
+const deletePoster = async (id, imageUrl) => {
+  console.log('📡 API kérés a képek törléséhez:', imageUrl);
   try {
-    const response = await axiosInstance.patch(`/api/performances/${id}/image`, {
-      posterURL,
-    });
-    console.log('Kép sikeresen törölve:', response.data);
+    const response = await axiosInstance.patch(`/api/performances/${id}/image`, { imageUrl });
+    console.log('✅ Kép sikeresen törölve:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Hiba a kép törlésekor:', error);
+    console.error('❌ Hiba a kép törlésekor:', error.response?.data || error.message);
     throw error.response ? error.response.data : error;
   }
 };

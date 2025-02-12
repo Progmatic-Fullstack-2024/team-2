@@ -58,17 +58,18 @@ export default function PerformanceForm({ performance }) {
     });
 
     try {
-      // If poster is deleted, we delete it from the db, with API
+      // Összegyűjtjük az összes törlendő képet egy tömbbe
+      const allDeletedImages = [...deletedImages];
+
       if (isPosterDeleted) {
-        console.log('Poszter törlése:', performance.id, performance.posterURL);
-        await performancesService.deletePoster(performance.id, performance.posterURL);
-        console.log(`Törölt kép az adatbázisból: ${performance.posterURL}`);
+        console.log('🟢 Poszter törlésre kijelölve:', performance.posterURL);
+        allDeletedImages.push(performance.posterURL);
       }
 
-      // If there are deleted images, we delete it from the db, with API
-      if (deletedImages.length > 0) {
-        await performancesService.deletePoster(performance.id, deletedImages);
-        console.log(`Törölt képek: ${deletedImages}`);
+      // Ha van mit törölni, akkor küldjük el
+      if (allDeletedImages.length > 0) {
+        console.log('📡 Törlendő képek:', allDeletedImages);
+        await performancesService.deletePoster(performance.id, allDeletedImages); // 🔥 NE csomagold újra!
       }
 
       // Performance data update

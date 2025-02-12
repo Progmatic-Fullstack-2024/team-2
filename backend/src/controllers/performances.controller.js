@@ -136,6 +136,10 @@ const destroyPerformance = async (req, res, next) => {
 };
 
 const deleteImage = async (req, res, next) => {
+  console.log("🔹 DELETE IMAGE API CALL");
+  console.log("➡️ Body:", req.body);
+  console.log("➡️ Params:", req.params);
+
   const { imageUrl } = req.body;
   const { performanceId } = req.params;
   try {
