@@ -120,7 +120,7 @@ const update = async (
       imageUrls = [...imageUrls, ...newImageUrls];
     }
 
-    const { toAdd, toRemove } = creatorsIds;
+    console.log("creatorsIds:", creatorsIds);
 
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
@@ -129,8 +129,8 @@ const update = async (
         posterURL: posterURL[0],
         imagesURL: imageUrls,
         creators: {
-          connect: toAdd.map((creatorId) => ({ id: creatorId })),
-          disconnect: toRemove.map((creatorId) => ({ id: creatorId })),
+          set: [],
+          connect: creatorsIds.map((creator) => ({ id: creator.id })),
         },
       },
     });
@@ -160,19 +160,46 @@ const destroy = async (performanceId) => {
 const deleteSingleImage = async (performanceId, imageUrl) => {
   try {
     const performanceToUpdate = await getById(performanceId);
-    const originalImagesUrl = performanceToUpdate.imagesURL;
-    if (!originalImagesUrl.includes(imageUrl[0])) {
+    const { imagesURL, posterURL } = performanceToUpdate;
+
+    const imageUrls = Array.isArray(imageUrl) ? imageUrl : [imageUrl];
+
+    console.log("performanceId: ", performanceId);
+    console.log("originalImagesUrl: ", imagesURL);
+    console.log("posterURL: ", posterURL);
+    console.log("imageUrls: ", imageUrls);
+
+    // Check iamgeUrl is posterUrl or imageUrl
+    const isPoster = imageUrls.includes(posterURL);
+    const isInImages = imageUrls.some((url) => imagesURL.includes(url));
+
+    if (!isPoster && !isInImages) {
       throw new HttpError("Image URL not found in performance", 400);
     }
-    await deleteFiles(imageUrl);
-    const updatedImagesUrl = originalImagesUrl.filter(
-      (url) => url !== imageUrl[0],
-    );
 
+    // Cloudinary delete
+    await deleteFiles(imageUrls);
+
+    const updatedData = {};
+
+    // if posterUrl - delete
+    if (isPoster) {
+      updatedData.posterURL = null;
+    }
+
+    // if imageUrl - array - delete
+    if (isInImages) {
+      updatedData.imagesURL = imagesURL.filter(
+        (url) => !imageUrls.includes(url),
+      );
+    }
+
+    // Updating db
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
-      data: { imagesURL: updatedImagesUrl },
+      data: updatedData,
     });
+
     return updatedPerformance;
   } catch (error) {
     throw new HttpError(

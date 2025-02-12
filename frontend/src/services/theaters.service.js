@@ -50,7 +50,6 @@ const updateTheaterById = async (id, formData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -62,7 +61,6 @@ const deleteTheaterImage = async (id, imageUrl) => {
     const response = await axiosInstance.patch(`/api/theater/${id}/image`, {
       imageUrl, // A törlendő kép URL-je
     });
-
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
