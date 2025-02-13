@@ -27,15 +27,13 @@ model User {
 model UserSetting {
   id     String @id @default(cuid())
   userId String @unique
-
-  theme Theme
-  user  User  @relation(fields: [userId], references: [id])
+  theme  Theme
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Genre {
-  id   String @id @default(cuid())
-  name String
-
+  id          String        @id @default(cuid())
+  name        String
   perfomances Performance[] @relation("Performance_Genre")
 }
 
@@ -53,32 +51,32 @@ model UserVisitedPerformance {
 }
 
 model Performance {
-  id                      String                   @id @default(cuid())
+  id                      String              @id @default(cuid())
   title                   String
   theaterId               String
   posterURL               String?
-  imagesURL               String[]                 @default([])
+  imagesURL               String[]            @default([])
   description             String
   targetAudience          TargetAge?
-  performanceEventId      String?                  @unique
+  performanceEventId      String?             @unique
   futurePerformance       FuturePerformances?
-  premierePerfomanceEvent PerformanceEvents?       @relation("premiere", fields: [performanceEventId], references: [id])
-  theater                 Theater                  @relation(fields: [theaterId], references: [id])
+  premierePerfomanceEvent PerformanceEvents?  @relation("premiere", fields: [performanceEventId], references: [id])
+  theater                 Theater             @relation(fields: [theaterId], references: [id])
   performanceEvents       PerformanceEvents[]
-  performanceFollowers    User[]                   @relation("PerformanceFollower_User")
-  creators                Creator[]                @relation("Performance_Creator")
-  genre                   Genre[]                  @relation("Performance_Genre")
+  performanceFollowers    User[]              @relation("PerformanceFollower_User")
+  creators                Creator[]           @relation("Performance_Creator")
+  genre                   Genre[]             @relation("Performance_Genre")
 }
 
 model PerformanceEvents {
-  id                      String                    @id @default(cuid())
-  spots                   Int
-  soldSpots               Int                       @default(0)
-  performanceId           String
-  performanceDate         DateTime                  @default(now())
-  userVisitedPerformance  UserVisitedPerformance []
-  premiere                Performance?              @relation("premiere")
-  performance             Performance               @relation(fields: [performanceId], references: [id])
+  id                     String                   @id @default(cuid())
+  spots                  Int
+  soldSpots              Int                      @default(0)
+  performanceId          String
+  performanceDate        DateTime                 @default(now())
+  premiere               Performance?             @relation("premiere")
+  performance            Performance              @relation(fields: [performanceId], references: [id])
+  UserVisitedPerformance UserVisitedPerformance[]
 }
 
 model FuturePerformances {
@@ -93,9 +91,8 @@ model FuturePerformances {
 }
 
 model Company {
-  id   String @id @default(cuid())
-  name String
-
+  id       String    @id @default(cuid())
+  name     String
   creators Creator[] @relation("Company_Creator")
 }
 
@@ -131,22 +128,22 @@ model TheaterAdmin {
 }
 
 model SeasonTicket {
-  id                     String                   @id @default(cuid())
-  name                   String
-  price                  Int
-  durationDay            Int
-  seatQuantity           Int
-  UserSeasonTicket       UserSeasonTicket[]
+  id               String             @id @default(cuid())
+  name             String
+  price            Int
+  durationDay      Int
+  seatQuantity     Int
+  UserSeasonTicket UserSeasonTicket[]
 }
 
 model UserSeasonTicket {
-  id                      String                    @id @default(cuid())
-  userId                  String
-  seasonTicketId          String
-  created                 DateTime                  @default(now())
-  SeasonTicket            SeasonTicket              @relation(fields: [seasonTicketId], references: [id])
-  User                    User                      @relation(fields: [userId], references: [id])
-  userVisitedPerformance  UserVisitedPerformance[]
+  id                     String                   @id
+  userId                 String
+  seasonTicketId         String
+  created                DateTime                 @default(now())
+  SeasonTicket           SeasonTicket             @relation(fields: [seasonTicketId], references: [id])
+  User                   User                     @relation(fields: [userId], references: [id])
+  UserVisitedPerformance UserVisitedPerformance[]
 }
 
 enum Profession {

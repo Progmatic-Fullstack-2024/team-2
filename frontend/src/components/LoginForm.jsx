@@ -64,4 +64,3 @@ export default function LoginForm({ onSwitch, onClose }) {
     </div>
   );
 }
-

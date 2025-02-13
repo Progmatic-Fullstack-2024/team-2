@@ -21,6 +21,7 @@ export default function OwnUserEdit() {
   const [passwordformactive, setPasswordFormActive] = useState(false);
   const [isVisilable, setIsVisilable] = useState(false);
   const [msg, setMsg] = useState('');
+  const [userNullMsg, setUserNullMsg] = useState('Betöltés...');
 
   const color = 'c-primary';
   const textColor = 'white';
@@ -73,10 +74,10 @@ export default function OwnUserEdit() {
       const getUser = await userHandle.getOwnUser();
       if (getUser && getUser.birthDate === null) getUser.birthDate = '';
       setUser(getUser);
+      if (getUser === null) throw new Error();
     } catch (e) {
-      return <h2>User nem található</h2>;
+      setUserNullMsg('Hiba: A felhasználó nem található!');
     }
-    return null;
   }
   useEffect(() => {
     setDataButton({
@@ -125,7 +126,7 @@ export default function OwnUserEdit() {
   return (
     <div>
       {user ? (
-        <div className="w-full mx-auto my-40 bg-c-secondary-light p-12  px-auto rounded-md relative">
+        <div className="w-full mx-auto bg-c-secondary-light p-12  px-auto rounded-md relative">
           <UserResult params={{ isVisilable, msg, clearProcedure: cancelModal }} />
           {passwordformactive ? <NewPasswordForm goback={cancelPassword} /> : undefined}
           <h1 className="font-bold text-gray-800 text-xl mx-auto mb-10 text-center">{title}</h1>
@@ -242,7 +243,7 @@ export default function OwnUserEdit() {
           </Formik>
         </div>
       ) : (
-        <h2>Betöltés...</h2>
+        <h2 className="py-24 text-center">{userNullMsg}</h2>
       )}
     </div>
   );
