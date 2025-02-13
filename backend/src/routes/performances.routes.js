@@ -11,6 +11,7 @@ router.get("/", performancesController.listPerformances);
 
 router.post(
   "/",
+  // isAdmin,
   upload.fields([
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },
@@ -26,7 +27,6 @@ router.delete(
 
 router.patch(
   "/:performanceId",
-  isAdmin,
   upload.fields([
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },
@@ -34,10 +34,6 @@ router.patch(
   performancesController.updatePerformance,
 );
 
-router.patch(
-  "/:performanceId/image",
-  isAdmin,
-  performancesController.deleteImage,
-);
+router.patch("/:performanceId/image", performancesController.deleteImage);
 
 export default router;

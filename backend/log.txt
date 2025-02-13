@@ -1,0 +1,3 @@
+Theater Admin - logikai hiba!
+A felhasználónak kelljen megadni egy nevet a színháznak, aminek az adminjává válik, mert most valamiért a noname színháznak két adminja is van.
+Tudom, hogy lehetne több, így viszont nem hoz létre új rekordot, csak hozzáadja a régihez. 

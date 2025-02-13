@@ -5,6 +5,10 @@ import HttpError from "../utils/HttpError.js";
 const getById = async (performanceId) => {
   const performance = await prisma.performance.findUnique({
     where: { id: performanceId },
+    include: {
+      performanceEvents: true,
+      creators: true,
+    },
   });
   if (!performance) throw new HttpError("Performance not found", 404);
   return performance;
@@ -18,29 +22,61 @@ const getByName = async (title) => {
   return performance.id;
 };
 
-const list = async ({ pagination, search }) => {
-  const { orderBy, where } = pagination;
-  console.log(pagination);
+const list = async ({ filter, search }) => {
+  const { orderBy, where } = filter;
+
   const performances = await prisma.performance.findMany({
-    orderBy,
     where: {
       ...where,
       title: { contains: search, mode: "insensitive" },
     },
+    include: {
+      performanceEvents: true,
+      theater: true,
+      genre: !!filter.genre,
+      creators: !!filter.creators,
+    },
+    orderBy,
   });
   if (!performances) throw new HttpError("Performances not found", 404);
   // custom skip and take
+  // console.log(performances);
   const filteredPerformances = performances.filter(
-    (item, index) =>
-      index >= pagination.skip && index < pagination.skip + pagination.take,
+    (item, index) => index >= filter.skip && index < filter.skip + filter.take,
   );
-  console.log({ filteredPerformances });
+
   return { data: filteredPerformances, maxSize: performances.length };
 };
 
 const listAll = async () => {
-  const allPerformances = await prisma.performance.findMany();
+  const allPerformances = await prisma.performance.findMany({
+    include: {
+      performanceEvents: true,
+      theater: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      genre: true,
+    },
+  });
   return allPerformances;
+};
+
+const listAllGenres = async () => {
+  const genresWithCount = await prisma.genre.groupBy({
+    by: ["name"], // Grouping based on genre
+    _count: {
+      name: true, // Count genres
+    },
+  });
+
+  return genresWithCount.map((g) => ({
+    name: g.name,
+    // eslint-disable-next-line no-underscore-dangle
+    count: g._count.name,
+  }));
 };
 
 const create = async (performanceData, poster, images, creatorsIds) => {
@@ -84,7 +120,7 @@ const update = async (
       imageUrls = [...imageUrls, ...newImageUrls];
     }
 
-    const { toAdd, toRemove } = creatorsIds;
+    console.log("creatorsIds:", creatorsIds);
 
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
@@ -93,8 +129,8 @@ const update = async (
         posterURL: posterURL[0],
         imagesURL: imageUrls,
         creators: {
-          connect: toAdd.map((creatorId) => ({ id: creatorId })),
-          disconnect: toRemove.map((creatorId) => ({ id: creatorId })),
+          set: [],
+          connect: creatorsIds.map((creator) => ({ id: creator.id })),
         },
       },
     });
@@ -124,19 +160,46 @@ const destroy = async (performanceId) => {
 const deleteSingleImage = async (performanceId, imageUrl) => {
   try {
     const performanceToUpdate = await getById(performanceId);
-    const originalImagesUrl = performanceToUpdate.imagesURL;
-    if (!originalImagesUrl.includes(imageUrl[0])) {
+    const { imagesURL, posterURL } = performanceToUpdate;
+
+    const imageUrls = Array.isArray(imageUrl) ? imageUrl : [imageUrl];
+
+    console.log("performanceId: ", performanceId);
+    console.log("originalImagesUrl: ", imagesURL);
+    console.log("posterURL: ", posterURL);
+    console.log("imageUrls: ", imageUrls);
+
+    // Check iamgeUrl is posterUrl or imageUrl
+    const isPoster = imageUrls.includes(posterURL);
+    const isInImages = imageUrls.some((url) => imagesURL.includes(url));
+
+    if (!isPoster && !isInImages) {
       throw new HttpError("Image URL not found in performance", 400);
     }
-    await deleteFiles(imageUrl);
-    const updatedImagesUrl = originalImagesUrl.filter(
-      (url) => url !== imageUrl[0],
-    );
 
+    // Cloudinary delete
+    await deleteFiles(imageUrls);
+
+    const updatedData = {};
+
+    // if posterUrl - delete
+    if (isPoster) {
+      updatedData.posterURL = null;
+    }
+
+    // if imageUrl - array - delete
+    if (isInImages) {
+      updatedData.imagesURL = imagesURL.filter(
+        (url) => !imageUrls.includes(url),
+      );
+    }
+
+    // Updating db
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
-      data: { imagesURL: updatedImagesUrl },
+      data: updatedData,
     });
+
     return updatedPerformance;
   } catch (error) {
     throw new HttpError(
@@ -155,4 +218,5 @@ export default {
   getByName,
   deleteSingleImage,
   getById,
+  listAllGenres,
 };

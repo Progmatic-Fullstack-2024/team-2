@@ -1,17 +1,24 @@
 import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
-import paginate from "../utils/pagination.js";
-import {
-  performanceValidationSchemaForCreate,
-  performanceValidationSchemaForUpdate,
-} from "../validations/performanceValidation.js";
+import queryFilter from "../utils/queryFilter.js";
+import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
 
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
 
+  // Filter options:
+  // page = 1 - which page do you want
+  // limit = 12 - number of peformances in 1 page
+  // orderBy - date, title etc...
+  // sort - "asc" or "desc"
+  // theater - requires the id of theater
+  // startDate - returns performances AFTER this date
+  // endDate - returns performances BEFORE this date
+  // targetAudience - needs exact targetAudience name
+
   try {
     const performances = await performancesService.list({
-      pagination: paginate(req.query),
+      filter: queryFilter(req.query),
       search,
     });
     res.status(200).send(performances);
@@ -39,48 +46,39 @@ const getPerformanceByID = async (req, res, next) => {
   }
 };
 
-function makeParsedPerformanceDates(performanceDate) {
-  const parsedDates = Array.isArray(performanceDate)
-    ? performanceDate.map((date) => new Date(date))
-    : [new Date(performanceDate)];
-
-  return parsedDates;
-}
-
 const createPerformance = async (req, res, next) => {
-  const { title, theaterId, description, price, performanceDate, creatorsId } =
+  const { title, theaterId, description, creatorIds, targetAudience } =
     req.body;
 
-  const creatorsIds = Array.isArray(creatorsId)
-    ? creatorsId.map((creatorId) => ({ id: creatorId }))
+  const creators = Array.isArray(creatorIds)
+    ? creatorIds.map((creatorId) => ({ id: creatorId }))
     : [];
+
+  // const creators = [{ id: creatorIds }];
 
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
 
-  const parsedPerformanceDates = makeParsedPerformanceDates(performanceDate);
-
   try {
-    await performanceValidationSchemaForCreate.validate({
-      title,
-      theaterId,
-      description,
-      price,
-      performanceDate: parsedPerformanceDates,
-      creatorsIds,
-    });
+    await performanceValidationSchemaForCreate.performanceValidationSchemaForCreate.validate(
+      {
+        title,
+        theaterId,
+        description,
+        creators,
+      },
+    );
 
     const newPerformance = await performancesService.create(
       {
         title,
         theaterId,
         description,
-        performanceDate: parsedPerformanceDates,
-        price: Number(price),
+        targetAudience,
       },
       poster,
       images,
-      creatorsIds,
+      creators,
     );
     return res.status(201).json(newPerformance);
   } catch (error) {
@@ -95,49 +93,33 @@ const createPerformance = async (req, res, next) => {
 
 const updatePerformance = async (req, res, next) => {
   const { performanceId } = req.params;
-  const { title, theaterId, description, price, performanceDate, creatorsId } =
-    req.body;
+  const { title, theaterId, description, targetAudience } = req.body;
 
-  const poster = req.files.poster ? req.files.poster[0] : null;
-  const images = req.files && req.files.files ? req.files.files : [];
+  let { creatorIds } = req.body;
 
-  let parsedPerformanceDates = [];
-
-  const updateData = {};
-  if (title) updateData.title = title;
-  if (theaterId) updateData.theaterId = theaterId;
-  if (description) updateData.description = description;
-  if (price) updateData.price = Number(price);
-  if (performanceDate) {
-    parsedPerformanceDates = makeParsedPerformanceDates(performanceDate);
-    updateData.performanceDate = parsedPerformanceDates;
+  // If one link arrives (string) convert to array
+  if (typeof creatorIds === "string") {
+    creatorIds = [creatorIds];
   }
 
-  let parsedCreatorsIds = {};
-  try {
-    parsedCreatorsIds = creatorsId
-      ? JSON.parse(creatorsId)
-      : { toAdd: [], toRemove: [] };
-  } catch (error) {
-    return next(new HttpError("Invalid creatorsId format, must be JSON", 400));
-  }
+  const creators = Array.isArray(creatorIds)
+    ? creatorIds.map((creatorId) => ({ id: creatorId }))
+    : [];
 
-  const { toAdd = [], toRemove = [] } = parsedCreatorsIds;
+  console.log("Final creators array:", creators);
+
+  const poster = req.files?.poster ? req.files.poster[0] : null;
+  const images = req.files?.files ? req.files.files : [];
 
   try {
-    await performanceValidationSchemaForUpdate.validate({
-      price,
-      performanceDate: parsedPerformanceDates,
-    });
-
     const updatedPerformance = await performancesService.update(
       performanceId,
-      updateData,
+      { title, theaterId, description, targetAudience },
       poster,
       images,
-      { toAdd, toRemove },
+      creators,
     );
-    return res.status(200).json({ updatedPerformance });
+    return res.status(200).json(updatedPerformance);
   } catch (error) {
     return next(
       new HttpError(
@@ -164,6 +146,10 @@ const destroyPerformance = async (req, res, next) => {
 };
 
 const deleteImage = async (req, res, next) => {
+  console.log("🔹 DELETE IMAGE API CALL");
+  console.log("➡️ Body:", req.body);
+  console.log("➡️ Params:", req.params);
+
   const { imageUrl } = req.body;
   const { performanceId } = req.params;
   try {
@@ -171,7 +157,7 @@ const deleteImage = async (req, res, next) => {
       performanceId,
       imageUrl,
     );
-    return res.status(200).json({ deletedImage });
+    return res.status(200).json({ performanceWithDeletedImage: deletedImage });
   } catch (error) {
     return next(
       new HttpError(

@@ -4,7 +4,7 @@ import prisma from "../models/prisma-client.js";
 import { JWT_SECRET } from "../constants/constants.js";
 import HttpError from "../utils/HttpError.js";
 
-const getEmailExists = async (email) => {
+export const getEmailExists = async (email) => {
   const emailExists = await prisma.user.findUnique({ where: { email } });
   return emailExists;
 };
@@ -16,13 +16,23 @@ const registration = async ({
   password,
   phone,
   role = "user",
+  birthDate,
 }) => {
   const emailExists = await getEmailExists(email);
   if (emailExists) throw new HttpError("Email already exists!", 403);
-
+  let birthDatedate;
+  if (birthDate) birthDatedate = new Date(birthDate);
   const hashedPassword = await bcrypt.hash(password, 5);
   const newUser = await prisma.user.create({
-    data: { lastName, firstName, email, password: hashedPassword, phone, role },
+    data: {
+      lastName,
+      firstName,
+      email,
+      password: hashedPassword,
+      phone,
+      role,
+      birthDate: birthDatedate,
+    },
   });
 
   return newUser;
@@ -41,6 +51,7 @@ const login = async ({ email, password }) => {
     lastName: user.lastName,
     firstName: user.firstName,
     role: user.role,
+    birthDate: user.birthDate,
   };
 
   const token = jwt.sign(payload, JWT_SECRET);
@@ -56,6 +67,7 @@ const getAllUser = async () => {
       firstName: true,
       email: true,
       phone: true,
+      birthDate: true,
       role: true,
     },
   });
@@ -71,6 +83,7 @@ const getUserById = async (id) => {
       firstName: true,
       email: true,
       phone: true,
+      birthDate: true,
       role: true,
     },
   });
@@ -89,19 +102,32 @@ const updateUser = async (
   lastName,
   email,
   phone,
+  birthDate,
   role,
   password,
 ) => {
   let hashedPassword;
+  let birthDate1;
   if (password) hashedPassword = await bcrypt.hash(password, 5);
   if (email) {
     const existEmail = await getEmailExists(email);
     if (existEmail && existEmail.id !== id)
       throw new HttpError("Email already exists!", 403);
   }
+  if (birthDate) {
+    birthDate1 = new Date(birthDate);
+  }
   const user = await prisma.user.update({
     where: { id },
-    data: { firstName, lastName, email, phone, role, password: hashedPassword },
+    data: {
+      firstName,
+      lastName,
+      email,
+      phone,
+      birthDate: birthDate1,
+      role,
+      password: hashedPassword,
+    },
   });
   return user;
 };

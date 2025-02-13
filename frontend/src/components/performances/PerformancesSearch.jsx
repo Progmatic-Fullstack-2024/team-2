@@ -23,7 +23,7 @@ export default function PerformancesSearch({ params }) {
   };
 
   return (
-    <div className="h-fit min-h-32 w-full min-w- mb-2 bg-c-secondary/20 p-5 rounded-lg">
+    <div className="h-fit min-h-32 w-full min-w- mb-2 bg-c-secondary/10 p-5 rounded-md">
       <form
         id="inputForm"
         className="w-full min-w-96 tablet:w-1/2 self-start mb-6"

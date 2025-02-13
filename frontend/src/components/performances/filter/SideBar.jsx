@@ -1,29 +1,12 @@
-// import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+// components
 import MenuButton from './MenuButton';
-// import getTheaters from '../../../services/theaters.service';
-
-const filterData = [];
-function addFilterData(name, searchName, options, searchOptions, type = 'checkbox') {
-  filterData.push({ name, searchName, options, searchOptions, type });
-}
-
-addFilterData(
-  'Ár',
-  'price',
-  ['Korlátlan', '2000 Ft alatt', '4000 Ft alatt', '6000 Ft alatt'],
-  [null, '2000', '4000', '6000'],
-  'radio',
-);
-
-addFilterData(
-  'Dátum',
-  'date',
-  ['2020', '2021', '2023', '2024', '2025'],
-  ['2020', '2021', '2023', '2024', '2025'],
-);
-addFilterData('Színház', 'theater', ['Nemzeti', 'Miskolci'], ['Nemzeti', 'Miskolci']);
-addFilterData('Alkotók', 'creators', ['Panna', 'Pisti'], ['Panna', 'Pisti']);
+// services
+import creatorsService from '../../../services/creators.service';
+import genresService from '../../../services/genres.service';
+import theatersService from '../../../services/theaters.service';
+import Spinner from '../../misc/Spinner';
 
 function convertURL(url) {
   return String(url)
@@ -31,22 +14,65 @@ function convertURL(url) {
     .filter((item) => item !== '');
 }
 
-// async function fetchTheaters() {
-//   try {
-//     const theaters = await getTheaters();
-//   } catch (error) {}
-// }
+const filterData = [];
+function addFilterData(name, searchName, options, searchOptions, type = 'checkbox') {
+  filterData.push({ name, searchName, options, searchOptions, type });
+}
+
+async function fetchTheaters() {
+  const response = await theatersService.getTheaterForDropdown();
+  addFilterData(
+    'Színház',
+    'theater',
+    response.map((value) => value.name),
+    response.map((value) => value.id),
+    'checkbox',
+  );
+}
+
+async function fetchCreators() {
+  const response = await creatorsService.getCreators();
+
+  addFilterData(
+    'Készítők',
+    'creators',
+    response.map((value) => value.name),
+    response.map((value) => value.id),
+  );
+}
+async function fetchGenres() {
+  const response = await genresService.listAllGenre();
+
+  addFilterData(
+    'Műfaj',
+    'genre',
+    response.map((value) => value.name),
+    response.map((value) => value.name),
+  );
+}
+
+addFilterData(
+  'Dátum',
+  'date',
+  ['2020', '2021', '2023', '2024', '2025'],
+  ['2020', '2021', '2023', '2024', '2025'],
+  'calendar',
+);
+fetchTheaters();
+fetchCreators();
+fetchGenres();
 
 export default function SideBar({ params }) {
   const { searchParams, setSearchParams } = params;
+  const [fetchReady, setFetchReady] = useState(false);
 
-  // useEffect(() => {
-  //   fetchTheaters();
-  // }, []);
+  useEffect(() => {
+    if (filterData.length === 4) setFetchReady(true);
+  }, [filterData]);
 
   const handleChange = ({ searchName, searchValue, type }) => {
     let query = searchParams.get(searchName);
-
+    searchParams.set('page', 1);
     switch (type) {
       case 'radio':
         if (!searchValue) {
@@ -77,6 +103,10 @@ export default function SideBar({ params }) {
           }
         }
         break;
+      case 'calendar':
+        searchParams.set('startDate', searchValue.startDate);
+        searchParams.set('endDate', searchValue.endDate);
+        break;
       default:
         break;
     }
@@ -85,15 +115,21 @@ export default function SideBar({ params }) {
   };
 
   return (
-    <div className="min-w-48 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text mx-5 sticky top-24 rounded-lg overflow-hidden">
-      {filterData.map((element) => (
-        <MenuButton
-          key={element.name}
-          data={element}
-          searchParams={searchParams}
-          handleChange={handleChange}
-        />
-      ))}
+    <div className="min-w-fit laptop:min-w-52 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text sticky top-24 rounded-lg overflow-hidden">
+      {fetchReady ? (
+        filterData.map((element) => (
+          <MenuButton
+            key={element.name}
+            data={element}
+            searchParams={searchParams}
+            handleChange={handleChange}
+          />
+        ))
+      ) : (
+        <div className="h-10 flex justify-center items-center">
+          <Spinner size={5} />
+        </div>
+      )}
     </div>
   );
 }

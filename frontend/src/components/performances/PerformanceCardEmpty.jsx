@@ -1,8 +1,10 @@
 import Spinner from '../misc/Spinner';
 
-export default function PerformanceCardEmpty() {
+export default function PerformanceCardEmpty({ hidden = false }) {
   return (
-    <div className="flex justify-center items-center w-80 h-100  h-96 text-white rounded-b-lg rounded-t-2xl bg-c-secondary ">
+    <div
+      className={`flex justify-center items-center tablet:w-64  text-white bg-c-secondary ${(hidden && 'opacity-0 h-0') || 'h-80'}`}
+    >
       <Spinner />
     </div>
   );

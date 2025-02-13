@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import CreatorsList from '../components/creators/CreatorsList';
 import DefaultButton from '../components/misc/DefaultButton';
+import Gallery from '../components/misc/Galery';
+import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
+import PerformanceDates from '../components/performances/PerformanceDates';
 import performanceService from '../services/performances.service';
 
 export default function DetailsPage() {
@@ -11,6 +15,7 @@ export default function DetailsPage() {
   const [performance, setPerformance] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Képgörgetéshez
   const [selectedImage, setSelectedImage] = useState(null); // Modalhoz
+  const [selectedDates, setSelectedDates] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -26,6 +31,15 @@ export default function DetailsPage() {
     fetchPerformanceById(id);
   }, [id]);
 
+  // Date selection handling
+  const toggleDateSelection = (date) => {
+    setSelectedDates(
+      (prevSelected) =>
+        prevSelected.includes(date)
+          ? prevSelected.filter((d) => d !== date) // Ha már benne van, törli
+          : [...prevSelected, date], // Ha nincs benne, hozzáadja
+    );
+  };
   // Képgörgetés kezelése
   const handleNextImage = () => {
     if (performance && performance.imagesURL) {
@@ -59,6 +73,17 @@ export default function DetailsPage() {
     );
   }
 
+  // Vissza gomb funkció
+
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate('/');
+      navigate('/');
+    }
+  };
+
   // Galéria három képének kiszámítása
   const getGalleryImages = () => {
     if (!performance || !performance.imagesURL || performance.imagesURL.length === 0) {
@@ -77,8 +102,8 @@ export default function DetailsPage() {
   return (
     <>
       <ImageTitle title={performance.title} />
-      <div className="min-h-screen flex flex-col items-center justify-center p-10">
-        {/* Kép tartalmazó div */}
+      <div className="min-h-screen flex flex-col items-center justify-center p-10  text-c-primary-dark">
+        {/* Poster div */}
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden flex items-center justify-center">
           <img
             src={performance.posterURL || 'https://via.placeholder.com/640x360?text=Nincs+plakát'}
@@ -87,80 +112,42 @@ export default function DetailsPage() {
           />
         </div>
 
-        {/* Szöveges tartalom div */}
+        {/* Description div */}
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
           <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
 
-          {/* Képgaléria */}
-          <div className="mb-6">
-            <div className="w-full flex items-center justify-between space-x-4">
-              {/* Bal nyíl */}
-              <DefaultButton onClick={handlePreviousImage} text="❮" />
-
-              {/* Három kép */}
-              <div className="flex justify-center flex-1 space-x-4">
-                {getGalleryImages().map((img, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => setSelectedImage(img)}
-                    className={`w-1/3 h-auto rounded-lg shadow-md cursor-pointer ${
-                      index === 1 ? 'scale-105 border-2 border-gray-500' : ''
-                    }`}
-                    aria-label={`Galéria kép ${index + 1} megnyitása`}
-                  >
-                    <img
-                      src={img || 'https://via.placeholder.com/400x600?text=Nincs+kép'}
-                      alt={`Galéria kép ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg"
-                      onError={() => 'https://via.placeholder.com/400x600?text=Nincs+kép'}
-                    />
-                  </button>
-                ))}
-              </div>
-
-              {/* Jobb nyíl */}
-              <DefaultButton onClick={handleNextImage} text="❯" />
-            </div>
-          </div>
+          {/* Gallery */}
+          <Gallery
+            images={getGalleryImages()}
+            onPrev={handlePreviousImage}
+            onNext={handleNextImage}
+            onSelectImage={setSelectedImage}
+          />
 
           <p className="text-lg mb-2">{performance.description}</p>
-          <p className="text-lg mb-2">Ár: {performance.price} Ft/fő</p>
-          <p className="text-lg mb-2">
-            Időpont(ok):{' '}
-            {performance.performanceDate
-              .map((date) => new Date(date).toLocaleString('hu-HU'))
-              .join(', ')}
-          </p>
-          <div className="flex justify-around">
-            <DefaultButton onClick={() => navigate('/')} text="Vissza" />
-            <DefaultButton text="Foglalás" />
-          </div>
-        </div>
 
-        {/* Modal a teljes méretű képhez */}
-        {selectedImage && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-            onClick={closeModal}
-            role="button"
-            tabIndex="0"
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                closeModal();
-              }
-            }}
-          >
+          <CreatorsList creators={performance.creators} />
+
+          {/* Select Dates */}
+          <PerformanceDates
+            events={performance.performanceEvents}
+            selectedDates={selectedDates}
+            onToggleDate={toggleDateSelection}
+          />
+
+          <div className="flex justify-around">
             <div>
-              <img
-                src={selectedImage}
-                alt="Teljes méretű kép"
-                className="max-w-4xl max-h-4xl rounded-lg"
-              />
+              <DefaultButton onClick={handleBack} text="Vissza" />
+            </div>
+            <div>
+              <DefaultButton text="Foglalás" />
             </div>
           </div>
-        )}
+        </div>
       </div>
+
+      {/* Teljes méretű kép megjelenítése */}
+      <ImageModal image={selectedImage} onClose={closeModal} />
     </>
   );
 }

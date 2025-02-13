@@ -1,10 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
 
+function converDate(date) {
+  return new Date(date).toLocaleTimeString('hun', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+let previousId = null;
+const spanClass = 'col-span-2 text-end truncate font-semibold hover:text-wrap hover:text-white ';
+
 export default function PerformanceCard({ data }) {
-  const rendered = useRef(false); // stops unnecessary rerender of imageReady state
   const [imageReady, setImageReady] = useState(false);
 
   async function fetchImageAndCache(url) {
@@ -20,8 +32,8 @@ export default function PerformanceCard({ data }) {
   }
 
   useEffect(() => {
-    if (!rendered.current) {
-      rendered.current = true;
+    if (previousId !== data.id) {
+      previousId = data.id;
       if (data.posterURL) {
         try {
           fetchImageAndCache(data.posterURL);
@@ -33,30 +45,44 @@ export default function PerformanceCard({ data }) {
       }
     }
   }, []);
+
   if (!imageReady) return <PerformanceCardEmpty />;
+
   return (
     <Link
       to={`/performances/${data.id}`}
-      className="h-100 flex flex-col justify-between w-full tablet:w-80 
-      bg-c-secondary-light/10 tablet:rounded-md text-c-text 
+      className="h-80 tablet:w-64  flex flex-col justify-between w-full 
+      text-c-text 
       ring-1 ring-c-secondary-light/20
-      transition-transform ease-out hover:scale-110 hover:bg-c-secondary/20 cursor-pointer"
+      transition-transform ease-out tablet:hover:scale-105 cursor-pointer
+      overflow-hidden group brightness-90 hover:brightness-100"
     >
       <div
-        className="flex flex-col relative min-h-60 bg-cover rounded-t-md"
+        className="flex flex-col h-full  bg-center bg-cover "
         style={{
           backgroundImage: `url(${localStorage.getItem(imageReady)})`,
         }}
-      />
-
-      <div className="z-10 mx-3  flex flex-col h-fit bot-0">
-        <h1 className="z-10 mb-2 text-2xl font-semibold truncate">{data.title}</h1>
-
-        <span className="self-end text-3xl text-c-accent font-bold mb-2">
-          {data.price} <span className="text-c-text text-xl">Ft/fő</span>
-        </span>
-        <span>Helyszín : </span>
-        <span className="mb-3">Időpont : {data.performanceDate[0]}</span>
+      >
+        <div
+          className=" z-10 flex flex-col h-fit bg-c-background/90 mt-auto mb-1 px-3 border-t border-c-secondary/50
+         translate-y-[5.5em] transition-translate duration-300 ease-out group-hover:translate-y-[5px]"
+        >
+          <h1 className="pt-1 mb-2 text-2xl font-semibold overflow-hidden group-hover:text-c-secondary">
+            {data.title}
+          </h1>
+          <div className="grid grid-cols-3 grid-auto mb-2 ">
+            <p>Helyszín :</p>
+            <span className={spanClass}>{data.theater.name}</span>
+            <p>Cím :</p>
+            <span className={spanClass}>{data.theater.address}</span>
+            <p>Időpont :</p>
+            <span className={spanClass}>
+              {(data.performanceEvents[0] &&
+                converDate(data.performanceEvents[0].performanceDate)) ||
+                'Adatbázis hiba'}
+            </span>
+          </div>
+        </div>
       </div>
     </Link>
   );

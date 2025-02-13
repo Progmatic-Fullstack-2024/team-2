@@ -8,42 +8,164 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(cuid())
-  lastName  String
-  firstName String
-  email     String  @unique
-  phone     String?
-  password  String
-  role      String
+  id                     String                   @id @default(cuid())
+  lastName               String
+  firstName              String
+  email                  String                   @unique
+  phone                  String?
+  password               String
+  birthDate              DateTime?
+  role                   Role
+  theaterAdmin           TheaterAdmin?            @relation("TheaterAdmin_User")
+  UserSeasonTicket       UserSeasonTicket[]
+  userSettings           UserSetting?
+  UserVisitedPerformance UserVisitedPerformance[]
+  followedPerformance    Performance[]            @relation("PerformanceFollower_User")
+  followedTheater        Theater[]                @relation("TheaterFollower_User")
+}
+
+model UserSetting {
+  id     String @id @default(cuid())
+  userId String @unique
+  theme  Theme
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Genre {
+  id          String        @id @default(cuid())
+  name        String
+  perfomances Performance[] @relation("Performance_Genre")
+}
+
+model UserVisitedPerformance {
+  id                    String                @id @default(cuid())
+  qrImage               String
+  userId                String
+  performanceEventsId   String 
+  userSeasonTicketId    String 
+  seats                 Int
+
+  userSeasonTicket      UserSeasonTicket      @relation(fields: [userSeasonTicketId], references: [id])
+  user                  User                  @relation(fields: [userId], references: [id])
+  performanceEvents     PerformanceEvents     @relation(fields: [performanceEventsId], references: [id])
 }
 
 model Performance {
-  id              String     @id @default(cuid())
-  title           String
-  theaterId       String
-  posterURL       String?
-  imagesURL       String[]   @default([])
-  performanceDate DateTime[] @default(dbgenerated("(ARRAY[]::timestamp without time zone[])::timestamp(3) without time zone[]"))
-  description     String
-  price           Int
-  theater         Theater    @relation(fields: [theaterId], references: [id])
-  creators        Creator[]  @relation("Performance_Creator")
+  id                      String              @id @default(cuid())
+  title                   String
+  theaterId               String
+  posterURL               String?
+  imagesURL               String[]            @default([])
+  description             String
+  targetAudience          TargetAge?
+  performanceEventId      String?             @unique
+  futurePerformance       FuturePerformances?
+  premierePerfomanceEvent PerformanceEvents?  @relation("premiere", fields: [performanceEventId], references: [id])
+  theater                 Theater             @relation(fields: [theaterId], references: [id])
+  performanceEvents       PerformanceEvents[]
+  performanceFollowers    User[]              @relation("PerformanceFollower_User")
+  creators                Creator[]           @relation("Performance_Creator")
+  genre                   Genre[]             @relation("Performance_Genre")
+}
+
+model PerformanceEvents {
+  id                     String                   @id @default(cuid())
+  spots                  Int
+  soldSpots              Int                      @default(0)
+  performanceId          String
+  performanceDate        DateTime                 @default(now())
+  premiere               Performance?             @relation("premiere")
+  performance            Performance              @relation(fields: [performanceId], references: [id])
+  UserVisitedPerformance UserVisitedPerformance[]
+}
+
+model FuturePerformances {
+  id                String      @id @default(cuid())
+  targetBudgetIdeal Int
+  targetBudget      Int
+  minimumBudget     Int
+  actualBudget      Int
+  gift              String
+  performanceId     String      @unique
+  performance       Performance @relation(fields: [performanceId], references: [id])
+}
+
+model Company {
+  id       String    @id @default(cuid())
+  name     String
+  creators Creator[] @relation("Company_Creator")
 }
 
 model Creator {
-  id           String        @id @default(cuid())
-  name         String
-  imageURL     String?
-  performances Performance[] @relation("Performance_Creator")
+  id            String        @id @default(cuid())
+  name          String
+  imageURL      String?
+  profession    Profession[]
+  awards        String?
+  introductions String?
+  company       Company[]     @relation("Company_Creator")
+  performances  Performance[] @relation("Performance_Creator")
 }
 
 model Theater {
-  id           String        @id @default(cuid())
-  name         String
-  address      String
-  email        String?
-  imageURL     String?
-  phone        String?
-  seats        Int
-  performances Performance[]
+  id             String         @id @default(cuid())
+  name           String
+  address        String
+  email          String
+  imageURL       String?
+  phone          String?
+  seatsAvailable Int?
+  performances   Performance[]
+  admins         TheaterAdmin[] @relation("TheaterAdmin_Theater")
+  followers      User[]         @relation("TheaterFollower_User")
+}
+
+model TheaterAdmin {
+  userId    String  @id
+  theaterId String
+  theater   Theater @relation("TheaterAdmin_Theater", fields: [theaterId], references: [id])
+  user      User    @relation("TheaterAdmin_User", fields: [userId], references: [id])
+}
+
+model SeasonTicket {
+  id               String             @id @default(cuid())
+  name             String
+  price            Int
+  durationDay      Int
+  seatQuantity     Int
+  UserSeasonTicket UserSeasonTicket[]
+}
+
+model UserSeasonTicket {
+  id                     String                   @id
+  userId                 String
+  seasonTicketId         String
+  created                DateTime                 @default(now())
+  SeasonTicket           SeasonTicket             @relation(fields: [seasonTicketId], references: [id])
+  User                   User                     @relation(fields: [userId], references: [id])
+  UserVisitedPerformance UserVisitedPerformance[]
+}
+
+enum Profession {
+  actor
+  director
+  writer
+  stageDesigner
+}
+
+enum TargetAge {
+  adult
+  kid
+  teenager
+  every_age
+}
+
+enum Theme {
+  default
+}
+
+enum Role {
+  user
+  theaterAdmin
+  admin
 }

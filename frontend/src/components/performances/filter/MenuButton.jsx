@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 
+import CustomCalendar from './CustomCalendar';
+
 export default function MenuButton({ data, textColor = 'c-text', handleChange, searchParams }) {
   const { name, searchName, options, searchOptions, type } = data;
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
   const activeCheckbox = useRef([]);
-  const optionHeight = `${options.length * (35 + 1) + 4}px`;
+  const optionHeight = `${type === 'calendar' ? '300' : options.length * (35 + 1) + 4}px`;
 
-  const buttonClass = `w-full text-${textColor} font-bold text-lg bg-c-secondary/50 hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center`;
-  const dropdownMenuClass = `w-full bot-0 truncate justify-self-end ${dropdownMenuOpen ? 'opacity-100' : ' opacity-100 w-0 '} transition-[height,width,opacity] duration-200  ease-out block`;
+  const buttonClass = `w-full text-${textColor} font-bold text-lg bg-c-secondary/50 hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center text-end`;
 
   const checkActiveCheckboxes = () => {
     if (searchParams.get(searchName)) {
@@ -61,39 +62,51 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
 
       <div
         style={{ height: dropdownMenuOpen ? optionHeight : '0px' }}
-        className={dropdownMenuClass}
+        className={`w-full bot-0 truncate justify-self-end ${dropdownMenuOpen ? 'opacity-100' : ' opacity-100 w-0 '} transition-[height ] duration-200  ease-out block`}
       >
-        <ul className="text-md ">
-          {options.map((value, index) => (
-            <li
-              key={value}
-              className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-background/30 `}
-            >
-              <label
-                className="ms-2 w-full px-3 pt-2 h-full text-sm font-medium text-align-center inline-block hover:underline cursor-pointer"
-                htmlFor={value}
+        {type === 'calendar' ? (
+          <CustomCalendar
+            handleChange={handleChange}
+            searchName={searchName}
+            searchOptions={searchOptions}
+          />
+        ) : (
+          <ul className="text-md ">
+            {options.map((value, index) => (
+              <li
+                key={value}
+                className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-background/30 `}
               >
-                <input
-                  key={value}
-                  id={value}
-                  type={type}
-                  name={name}
-                  checked={setChecked({ index })}
-                  onChange={() =>
-                    handleChange({
-                      searchName,
-                      searchValue: searchOptions[index],
-                      type,
-                    })
-                  }
-                  className="w-4 h-4 me-2 text-white cursor-pointer accent-c-accent"
-                  style={{ iconStyle: { fill: 'black' }, color: 'black', backgroundColor: 'black' }}
-                />
-                {value}
-              </label>
-            </li>
-          ))}
-        </ul>
+                <label
+                  className="ms-2 w-full px-3 pt-2 h-full text-sm font-medium text-align-center inline-block hover:underline cursor-pointer"
+                  htmlFor={value}
+                >
+                  <input
+                    key={value}
+                    id={value}
+                    type={type}
+                    name={name}
+                    checked={setChecked({ index })}
+                    onChange={() =>
+                      handleChange({
+                        searchName,
+                        searchValue: searchOptions[index],
+                        type,
+                      })
+                    }
+                    className="w-4 h-4 me-2 text-white cursor-pointer accent-c-accent"
+                    style={{
+                      iconStyle: { fill: 'black' },
+                      color: 'black',
+                      backgroundColor: 'black',
+                    }}
+                  />
+                  {value}
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
