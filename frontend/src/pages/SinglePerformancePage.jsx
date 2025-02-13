@@ -21,6 +21,7 @@ export default function DetailsPage() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState('');
   const [ticketCount, setTicketCount] = useState(1);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
@@ -35,12 +36,18 @@ export default function DetailsPage() {
     fetchPerformanceById(id);
   }, [id]);
 
-  const toggleDateSelection = (date) => {
-    setSelectedDates((prevSelected) =>
-      prevSelected.includes(date)
-        ? prevSelected.filter((d) => d !== date)
-        : [...prevSelected, date],
-    );
+  // const toggleDateSelection = (date) => {
+  //   setSelectedDates((prevSelected) =>
+  //     prevSelected.includes(date)
+  //       ? prevSelected.filter((d) => d !== date)
+  //       : [...prevSelected, date],
+  //   );
+  //   setIsBookingModalOpen(true);
+  // };
+
+  const toggleDateSelection = (event) => {
+    setSelectedDates([event.performanceDate]); // Csak az aktuálisan kiválasztott dátumot tároljuk
+    setSelectedEvent(event); // Teljes performanceEvent mentése
     setIsBookingModalOpen(true);
   };
 
@@ -156,6 +163,7 @@ export default function DetailsPage() {
         setTicketCount={setTicketCount}
         performance={performance}
         selectedDates={selectedDates}
+        selectedEvent={selectedEvent}
       />
     </>
   );

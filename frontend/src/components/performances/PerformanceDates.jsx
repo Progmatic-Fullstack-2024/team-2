@@ -18,7 +18,8 @@ export default function PerformanceDates({ events, selectedDates, onToggleDate }
                 className={`p-2 border rounded-md transition-all mb-4 ${
                   isSelected ? 'text-xl font-bold border-c-primary' : 'border-gray-300'
                 }`}
-                onClick={() => onToggleDate(event.performanceDate)}
+                // onClick={() => onToggleDate(event.performanceDate)}
+                onClick={() => onToggleDate(event)}
               >
                 {new Date(event.performanceDate).toLocaleString('hu-HU')}
               </button>

@@ -13,12 +13,15 @@ export default function BookingModal({
   setTicketCount,
   selectedDates,
   performance,
+  selectedEvent,
 }) {
   if (!isOpen) return null;
 
   const { user } = useContext(AuthContext);
   const [seasonTickets, setSeasonTickets] = useState([]);
+  const [soldTickets, setsoldTickets] = useState([]);
   const userId = user.id;
+  const performanceEventId = selectedEvent.id;
 
   const getUserSeasonTickets = async () => {
     try {
@@ -29,13 +32,51 @@ export default function BookingModal({
     }
   };
 
-  console.log(seasonTickets);
+  const getSoldTickets = async () => {
+    console.log("getSoldTickets")
+    try {
+      const soldTickets = await bookingService.getSoldTickets({ performanceEventId });
+      setsoldTickets(soldTickets);
+      console.log(soldTickets)
+    } catch (error) {
+      console.error('Hiba történt a jegyek lekérésekor:', error);
+    }
+  };
+
+  // const availableSpots = selectedEvent?.spots - soldTickets ?? 0;
+  const availableSpots = (selectedEvent?.spots ?? 0) - (soldTickets ?? 0);
+
+  const selectedSeasonTicket = seasonTickets.find((ticket) => ticket.id === selectedTicket);
+  const isSeasonTicketStillHasSeats = selectedSeasonTicket
+    ? Math.min(selectedSeasonTicket.remainingSeats, availableSpots) // A kisebbik érték kerül be
+    : 0;
+
   useEffect(() => {
     getUserSeasonTickets();
+    getSoldTickets();
   }, []);
 
   const handleTicketCountChange = (change) => {
     setTicketCount((prev) => Math.max(1, prev + change));
+  };
+
+  const handleBooking = async () => {
+    if (!selectedTicket) {
+      console.error('Nincs kiválasztva bérlet!');
+      return;
+    }
+  
+    try {
+      await bookingService.buyTicket({
+        performanceEventId,
+        userId,
+        userSeasonTicketId: selectedTicket, 
+        seats: ticketCount,
+      });
+      console.log('Sikeres foglalás!');
+    } catch (error) {
+      console.error('Hiba történt a foglaláskor:', error);
+    }
   };
 
   return (
@@ -44,7 +85,7 @@ export default function BookingModal({
         <h2 className="text-xl font-bold mb-4">
           Foglalás {handleDate(selectedDates)} {performance.title}
         </h2>
-
+        <h3> Szabad helyek: {availableSpots}</h3>
         <label className="block mb-2">Válassz bérletet</label>
         <select
           className="w-full p-2 border rounded mb-4"
@@ -56,7 +97,7 @@ export default function BookingModal({
           {seasonTickets.length > 0 ? (
             seasonTickets.map((ticket, index) => (
               <option key={index} value={ticket.id}>
-                {`Bérlet ${ticket.id} ${ticket.SeasonTicket.name}`} {/* Bérlet 1, Bérlet 2, stb. */}
+                {`${ticket.SeasonTicket.name} Lej.: ${handleDate(ticket.expirationDate)} Megvehető helyek: ${ticket.remainingSeats}`}
               </option>
             ))
           ) : (
@@ -70,12 +111,16 @@ export default function BookingModal({
             -
           </button>
           <span className="mx-4">{ticketCount}</span>
-          <button className="px-3 py-1 border rounded" onClick={() => handleTicketCountChange(1)}>
+          <button
+            className="px-3 py-1 border rounded"
+            disabled={ticketCount >= isSeasonTicketStillHasSeats}
+            onClick={() => handleTicketCountChange(1)}
+          >
             +
           </button>
         </div>
 
-        <DefaultButton text="Foglalás" />
+        <DefaultButton text="Foglalás" onClick={() => handleBooking()}/>
         <button className="block mt-4 text-red-500 underline" onClick={onClose}>
           Mégse
         </button>

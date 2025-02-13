@@ -73,7 +73,6 @@ model Performance {
 model PerformanceEvents {
   id                      String                    @id @default(cuid())
   spots                   Int
-  soldSpots               Int                       @default(0)
   performanceId           String
   performanceDate         DateTime                  @default(now())
   userVisitedPerformance  UserVisitedPerformance []
