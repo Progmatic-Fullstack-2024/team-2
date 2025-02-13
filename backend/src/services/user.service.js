@@ -81,19 +81,21 @@ const getAllUser = async (
   }
   const users = await prisma.user.findMany({
     where: filtering,
-    select: {
-      id: true,
-      lastName: true,
-      firstName: true,
-      email: true,
-      phone: true,
-      birthDate: true,
-      role: true,
+    include: {
+      theaterAdmin: {
+        include: { theater: { select: { name: true } } },
+      },
     },
     orderBy: short,
     skip: startNumber,
     take: limit,
   });
+  if (users)
+    users.forEach((user) => {
+      const newUser = user;
+      delete newUser.password;
+      return newUser;
+    });
   return users;
 };
 
