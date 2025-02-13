@@ -1,15 +1,17 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import CheckoutForm from '../components/payment/CheckoutForm';
 import StartPaymentIntent from '../components/payment/StartPaymentIntent';
+import AuthContext from '../contexts/AuthContext';
 import paymentService from '../services/payment.service';
 
 // test card number : 4242424242424242;
 let stripeData = { ready: false, promise: '', clientSecret: '' };
 export default function PaymentPage() {
+  const { user } = useContext(AuthContext);
   const [searchParams] = useSearchParams();
   const [renderStripe, setRenderStripe] = useState(stripeData.ready);
 
@@ -20,7 +22,7 @@ export default function PaymentPage() {
     }
   }, [searchParams]);
 
-  const getStripeData = async ({ price }) => {
+  const getStripeData = async ({ price, seasonTicketId }) => {
     const publicKey = await paymentService.getConfig();
 
     stripeData.clientSecret = await paymentService.createPaymentIntent({
@@ -28,6 +30,8 @@ export default function PaymentPage() {
       amount: price * 100,
     });
 
+    stripeData.seasonTicketId = seasonTicketId;
+    stripeData.userId = user.id;
     stripeData.price = price;
     stripeData.promise = loadStripe(publicKey);
     stripeData.ready = true;
@@ -39,13 +43,13 @@ export default function PaymentPage() {
       {!renderStripe ? (
         <StartPaymentIntent searchParams={searchParams} getStripeData={getStripeData} />
       ) : (
-        <div className="w-fit h-fit max-w-[400px] min-h-80 min-w-80 bg-c-secondary p-10 flex flex-col gap-5 ">
+        <div className="w-fit h-fit max-w-[600px] min-h-80 min-w-80 bg-c-secondary p-10 px-12 flex flex-col gap-5 ">
           <h2 className="text-c-background text-2xl font-bold">
             Fizetendő összeg:
             <span className="text-c-primary-dark font-bold text-3xl"> {stripeData.price}</span> Ft
           </h2>
           <Elements stripe={stripeData.promise} options={stripeData.clientSecret}>
-            <CheckoutForm />
+            <CheckoutForm stripeData={stripeData} />
           </Elements>
         </div>
       )}

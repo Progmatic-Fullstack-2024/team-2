@@ -10,6 +10,8 @@ export default function SeasonTicketsCard({ data, index }) {
     'bg-c-secondary/30',
     'bg-c-secondary/40',
     'bg-c-secondary/50',
+    'bg-c-secondary/55',
+    'bg-c-secondary/60',
   ];
 
   return (

@@ -7,6 +7,9 @@ CREATE TYPE "TargetAge" AS ENUM ('adult', 'kid', 'teenager', 'every_age');
 -- CreateEnum
 CREATE TYPE "Theme" AS ENUM ('default');
 
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('user', 'theaterAdmin', 'admin');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -15,8 +18,8 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "password" TEXT NOT NULL,
-    "role" TEXT NOT NULL,
     "birthDate" TIMESTAMP(3),
+    "role" "Role" NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -55,10 +58,10 @@ CREATE TABLE "Performance" (
 -- CreateTable
 CREATE TABLE "PerformanceEvents" (
     "id" TEXT NOT NULL,
-    "performanceDate" TIMESTAMP(3)[] DEFAULT (ARRAY[]::timestamp without time zone[])::timestamp(3) without time zone[],
     "spots" INTEGER NOT NULL,
     "soldSpots" INTEGER NOT NULL DEFAULT 0,
     "performanceId" TEXT NOT NULL,
+    "performanceDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "PerformanceEvents_pkey" PRIMARY KEY ("id")
 );
@@ -118,6 +121,39 @@ CREATE TABLE "TheaterAdmin" (
 );
 
 -- CreateTable
+CREATE TABLE "SeasonTicket" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
+    "durationDay" INTEGER NOT NULL,
+    "seatQuantity" INTEGER NOT NULL,
+
+    CONSTRAINT "SeasonTicket_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserSeasonTicket" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "seasonTicketId" TEXT NOT NULL,
+    "created" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserSeasonTicket_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserVisitedPerformance" (
+    "id" TEXT NOT NULL,
+    "qrImage" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "seats" INTEGER NOT NULL,
+    "performanceEventsId" TEXT NOT NULL,
+    "userSeasonTicketId" TEXT NOT NULL,
+
+    CONSTRAINT "UserVisitedPerformance_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_Performance_Genre" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -160,12 +196,6 @@ CREATE UNIQUE INDEX "Performance_performanceEventId_key" ON "Performance"("perfo
 CREATE UNIQUE INDEX "FuturePerformances_performanceId_key" ON "FuturePerformances"("performanceId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "TheaterAdmin_userId_key" ON "TheaterAdmin"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "TheaterAdmin_userId_theaterId_key" ON "TheaterAdmin"("userId", "theaterId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_Performance_Genre_AB_unique" ON "_Performance_Genre"("A", "B");
 
 -- CreateIndex
@@ -199,10 +229,10 @@ CREATE INDEX "_TheaterFollower_User_B_index" ON "_TheaterFollower_User"("B");
 ALTER TABLE "UserSetting" ADD CONSTRAINT "UserSetting_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Performance" ADD CONSTRAINT "Performance_theaterId_fkey" FOREIGN KEY ("theaterId") REFERENCES "Theater"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Performance" ADD CONSTRAINT "Performance_performanceEventId_fkey" FOREIGN KEY ("performanceEventId") REFERENCES "PerformanceEvents"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Performance" ADD CONSTRAINT "Performance_performanceEventId_fkey" FOREIGN KEY ("performanceEventId") REFERENCES "PerformanceEvents"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Performance" ADD CONSTRAINT "Performance_theaterId_fkey" FOREIGN KEY ("theaterId") REFERENCES "Theater"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PerformanceEvents" ADD CONSTRAINT "PerformanceEvents_performanceId_fkey" FOREIGN KEY ("performanceId") REFERENCES "Performance"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -211,10 +241,25 @@ ALTER TABLE "PerformanceEvents" ADD CONSTRAINT "PerformanceEvents_performanceId_
 ALTER TABLE "FuturePerformances" ADD CONSTRAINT "FuturePerformances_performanceId_fkey" FOREIGN KEY ("performanceId") REFERENCES "Performance"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "TheaterAdmin" ADD CONSTRAINT "TheaterAdmin_theaterId_fkey" FOREIGN KEY ("theaterId") REFERENCES "Theater"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "TheaterAdmin" ADD CONSTRAINT "TheaterAdmin_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TheaterAdmin" ADD CONSTRAINT "TheaterAdmin_theaterId_fkey" FOREIGN KEY ("theaterId") REFERENCES "Theater"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserSeasonTicket" ADD CONSTRAINT "UserSeasonTicket_seasonTicketId_fkey" FOREIGN KEY ("seasonTicketId") REFERENCES "SeasonTicket"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserSeasonTicket" ADD CONSTRAINT "UserSeasonTicket_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserVisitedPerformance" ADD CONSTRAINT "UserVisitedPerformance_performanceEventsId_fkey" FOREIGN KEY ("performanceEventsId") REFERENCES "PerformanceEvents"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserVisitedPerformance" ADD CONSTRAINT "UserVisitedPerformance_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserVisitedPerformance" ADD CONSTRAINT "UserVisitedPerformance_userSeasonTicketId_fkey" FOREIGN KEY ("userSeasonTicketId") REFERENCES "UserSeasonTicket"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_Performance_Genre" ADD CONSTRAINT "_Performance_Genre_A_fkey" FOREIGN KEY ("A") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;

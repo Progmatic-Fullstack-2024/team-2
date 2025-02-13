@@ -5,33 +5,33 @@ import seasonTicketsService from '../../services/season-tickets.service';
 import DefaultButton from '../misc/DefaultButton';
 import Spinner from '../misc/Spinner';
 
-let ticketData = null;
+let fetchData = null;
 
 export default function StartPaymentIntent({ searchParams, getStripeData }) {
   const navigate = useNavigate();
-  const [renderData, setRenderData] = useState(ticketData);
+  const [sTicketData, setSTicketData] = useState(fetchData);
 
   async function fetchSeasonTicketData(id) {
-    ticketData = await seasonTicketsService.getById({ id });
-    setRenderData(ticketData);
+    fetchData = await seasonTicketsService.getById({ id });
+    setSTicketData(fetchData);
   }
 
   useEffect(() => {
-    if (ticketData !== true) {
-      ticketData = true;
-      setRenderData(false);
+    if (fetchData !== true) {
+      fetchData = true;
+      setSTicketData(false);
       fetchSeasonTicketData(searchParams.get('season-ticket-id'));
     }
   }, []);
 
   const handleOnclick = () => {
-    setRenderData(false);
-    getStripeData({ price: renderData.price });
+    setSTicketData(false);
+    getStripeData({ price: sTicketData.price, seasonTicketId: sTicketData.id });
   };
 
   return (
     <div className="laptop:m-20 min-w-[30vw] min-h-[40vh] p-10 border border-c-secondary/50 flex flex-col justify-center  gap-10 text-xl">
-      {!renderData ? (
+      {!sTicketData ? (
         <div className="w-full flex justify-center">
           <Spinner />
         </div>
@@ -40,12 +40,12 @@ export default function StartPaymentIntent({ searchParams, getStripeData }) {
           <h1 className="font-bold text-white text-3xl truncate">Vásárlás megkezdése</h1>
           <div className="w-full gap-x-2 grid grid-cols-3">
             <p className="col-span-2">Vásárolni kívánt termék :</p>
-            <span className="text-end">{renderData.name}</span>
+            <span className="text-end">{sTicketData.name}</span>
             <p className="col-span-2">Fizetendő összeg :</p>
-            <span className="text-end">{renderData.price} Ft</span>
+            <span className="text-end">{sTicketData.price} Ft</span>
           </div>
 
-          <div className="w-full flex flex-row justify-between">
+          <div className="w-full flex flex-row justify-between gap-5">
             <DefaultButton text="Tovább a fizetéshez" onClick={handleOnclick} />
 
             <DefaultButton
