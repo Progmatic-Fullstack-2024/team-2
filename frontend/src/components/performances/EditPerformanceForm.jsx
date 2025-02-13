@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import AddPerformanceEventModal from './AddPerformanceEventModal';
 import getCreators from '../../services/creators.service';
 import performancesService from '../../services/performances.service';
 import DefaultButton from '../misc/DefaultButton';
@@ -16,6 +17,8 @@ export default function PerformanceForm({ performance }) {
   const [selectedCreators, setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
   const [isPosterDeleted, setIsPosterDeleted] = useState(false); // Deleted poster
   const [deletedImages, setDeletedImages] = useState([]); // Deleted pictures
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // modal for adding performanceEvent
 
   const targetAgeOptions = [
     { label: 'Felnőtt', value: 'adult' },
@@ -362,6 +365,24 @@ export default function PerformanceForm({ performance }) {
           </Form>
         )}
       </Formik>
+      <div className="mb-4 mt-4 flex justify-center">
+        <DefaultButton
+          text="Új előadás időpont hozzáadása"
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+        />
+      </div>
+      {isModalOpen && (
+        <AddPerformanceEventModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          performanceId={performance.id}
+          onEventAdded={(newEvent) => {
+            console.log('Új esemény hozzáadva:', newEvent);
+            // Itt frissítheted az állapotot, ha szükséges
+          }}
+        />
+      )}
     </div>
   );
 }

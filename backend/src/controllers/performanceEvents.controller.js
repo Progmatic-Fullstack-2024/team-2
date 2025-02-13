@@ -23,6 +23,8 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   const { spots, performanceId, performanceDate } = req.body;
 
+  console.log(performanceDate);
+
   try {
     if (!performanceDate) {
       return res.status(400).json({ error: "Missing performanceDate" });
