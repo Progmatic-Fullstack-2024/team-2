@@ -18,12 +18,5 @@ const getById = async ({ id }) => {
   }
 };
 
-const getByUserId = async ({ userId }) => {
-  try {
-    const response = await axiosInstance.get(`/api/season-tickets/user/${userId}`);
-    return response.data;
-  } catch (error) {
-    throw error.response ? error.response.data : error;
-  }
-};
-export default { list, getById, getByUserId };
+
+export default { list, getById };

@@ -1,6 +1,6 @@
 import DefaultButton from '../components/misc/DefaultButton';
 import handleDate from '../utils/handleDates';
-import seasonTicketsService from '../services/season-tickets.service';
+import bookingService from '../services/booking.service';
 import { useEffect, useContext, useState } from 'react';
 import AuthContext from '../contexts/AuthContext';
 
@@ -22,7 +22,7 @@ export default function BookingModal({
 
   const getUserSeasonTickets = async () => {
     try {
-      const tickets = await seasonTicketsService.getByUserId({ userId });
+      const tickets = await bookingService.getByUserId({ userId });
       setSeasonTickets(tickets);
     } catch (error) {
       console.error('Hiba történt a bérletek lekérésekor:', error);

@@ -17,14 +17,4 @@ const getById = async ({ id }) => {
   return response;
 };
 
-const getByUserId = async ({ userId }) => {
-  const response = await prisma.userSeasonTicket.findMany({
-    where: { userId: userId },
-    include: {
-      SeasonTicket: true,  
-    },
-  });
-  return response;
-};
-
-export default { list, create, getById, getByUserId };
+export default { list, create, getById };

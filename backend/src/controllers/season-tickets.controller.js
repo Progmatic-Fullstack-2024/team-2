@@ -42,13 +42,5 @@ const getById = async (req, res, next) => {
 };
 
 
-const getByUserId = async (req, res, next) => {
-  const { userId } = req.params;
-  try {
-    const response = await seasonTicketsService.getByUserId({ userId });
-    res.json(response);
-  } catch (error) {
-    next(error);
-  }
-};
-export default { list, create, getById, getByUserId };
+
+export default { list, create, getById };
