@@ -2,11 +2,11 @@ export default function OwnSeatsTable({ data }) {
   const tableData = [];
 
   for (let i = 0; i < data.length; i += 1) {
-    const eventDate = new Date(data[i].PerformanceEvents.performanceDate);
+    const eventDate = new Date(data[i].performanceEvents.performanceDate);
     if (eventDate > Date.now()) {
-      const { title } = data[i].PerformanceEvents.performance;
+      const { title } = data[i].performanceEvents.performance;
       const { seats } = data[i];
-      const theater = data[i].PerformanceEvents.performance.theater.name;
+      const theater = data[i].performanceEvents.performance.theater.name;
       const date = eventDate.toISOString().substring(0, 10);
       const time = eventDate.toISOString().substring(11, 16);
       tableData.push({
@@ -18,6 +18,8 @@ export default function OwnSeatsTable({ data }) {
       });
     }
   }
+
+  if (tableData.length === 0) return null;
 
   return (
     <table className="mx-auto ">

@@ -71,7 +71,6 @@ model Performance {
 model PerformanceEvents {
   id                     String                   @id @default(cuid())
   spots                  Int
-  soldSpots              Int                      @default(0)
   performanceId          String
   performanceDate        DateTime                 @default(now())
   premiere               Performance?             @relation("premiere")
@@ -137,7 +136,7 @@ model SeasonTicket {
 }
 
 model UserSeasonTicket {
-  id                     String                   @id
+  id                     String                   @id @default(cuid())
   userId                 String
   seasonTicketId         String
   created                DateTime                 @default(now())

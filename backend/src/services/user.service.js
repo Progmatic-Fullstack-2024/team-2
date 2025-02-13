@@ -25,6 +25,40 @@ const createFilterObject = (search, field, filter) => {
   return answer;
 };
 
+const getExperiedDate = (datetxt, durationDay) => {
+  const durationms = Number(durationDay) * 86400000;
+  let answer;
+  const date = new Date(datetxt);
+  if (Number.isNaN(durationms)) answer = date.getDate();
+  else answer = date.getTime() + durationms;
+  return answer;
+};
+
+const deleteOldUserSeasonTickets = (user) => {
+  if (user.UserSeasonTicket && user.UserSeasonTicket.length > 0) {
+    for (let i = 0; i < user.UserSeasonTicket.length; i += 1) {
+      const endDate = getExperiedDate(
+        user.UserSeasonTicket[i].created,
+        user.UserSeasonTicket[i].SeasonTicket.durationDay,
+      );
+      if (endDate < Date.now()) user.UserSeasonTicket.splice(i, 1);
+    }
+  }
+};
+
+const deleteOldUserVisitedPerformance = (user) => {
+  if (user.UserVisitedPerformance && user.UserVisitedPerformance.length > 0) {
+    for (let i = 0; i < user.UserVisitedPerformance.length; i += 1) {
+      if (
+        user.UserVisitedPerformance[
+          i
+        ].performanceEvents.performanceDate.getTime() < Date.now()
+      )
+        user.UserVisitedPerformance.splice(i, 1);
+    }
+  }
+};
+
 const getAllUser = async (
   orderBy,
   direction,
@@ -82,7 +116,7 @@ const getUserById = async (id) => {
       },
       UserVisitedPerformance: {
         include: {
-          PerformanceEvents: {
+          performanceEvents: {
             include: {
               performance: {
                 include: {
@@ -98,21 +132,23 @@ const getUserById = async (id) => {
     },
   });
   if (user) {
+    deleteOldUserVisitedPerformance(user);
     delete user.password;
     for (let i = 0; i < user.UserVisitedPerformance.length; i += 1) {
       // it need'nt from prisma 4.x
-      delete user.UserVisitedPerformance[i].PerformanceEvents.performance.id;
-      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+      delete user.UserVisitedPerformance[i].performanceEvents.performance.id;
+      delete user.UserVisitedPerformance[i].performanceEvents.performance
         .description;
-      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+      delete user.UserVisitedPerformance[i].performanceEvents.performance
         .posterURL;
-      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+      delete user.UserVisitedPerformance[i].performanceEvents.performance
         .imagesURL;
-      delete user.UserVisitedPerformance[i].PerformanceEvents.performance
+      delete user.UserVisitedPerformance[i].performanceEvents.performance
         .targetAudience;
-      delete user.UserVisitedPerformance[i].PerformanceEvents.qrImage;
-      delete user.UserVisitedPerformance[i].PerformanceEvents.userId;
+      delete user.UserVisitedPerformance[i].performanceEvents.qrImage;
+      delete user.UserVisitedPerformance[i].performanceEvents.userId;
     }
+    deleteOldUserSeasonTickets(user);
   }
   return user;
 };

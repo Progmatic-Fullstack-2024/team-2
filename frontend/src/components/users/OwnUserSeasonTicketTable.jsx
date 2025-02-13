@@ -18,7 +18,7 @@ export default function OwnUserSeasonTicketTable({ data, performance }) {
     const createdAtms = new Date(data[i].created).getTime();
     const endDatems = createdAtms + durationms;
     const endDate = new Date(endDatems).toISOString().substring(0, 10);
-    const avaleableSeat = seatQuantity - getUsedSeatsNumberFromSeasonTicket(data[i].seasonTicketId);
+    const avaleableSeat = seatQuantity - getUsedSeatsNumberFromSeasonTicket(data[i].id);
     tableData.push({
       name: ticketName,
       endDate,
