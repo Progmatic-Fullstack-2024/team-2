@@ -38,10 +38,35 @@ const destroy = async (id) => {
   return performanceEventToDelete;
 };
 
+const destroyMany = async (eventIds) => {
+  try {
+    if (!eventIds || eventIds.length === 0) {
+      return { message: "No performance events to delete." };
+    }
+
+    const deletedEvents = await prisma.performanceEvents.deleteMany({
+      where: {
+        id: { in: eventIds },
+      },
+    });
+
+    return {
+      message: "Performance events deleted successfully",
+      deletedCount: deletedEvents.count,
+    };
+  } catch (error) {
+    throw new HttpError(
+      error.message || "Failed to delete performance events",
+      error.status || 500
+    );
+  }
+};
+
 export default {
   list,
   getById,
   create,
   update,
   destroy,
+  destroyMany,
 };

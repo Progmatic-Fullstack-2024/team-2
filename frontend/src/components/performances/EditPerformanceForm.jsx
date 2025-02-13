@@ -15,6 +15,9 @@ export default function PerformanceForm({ performance }) {
   const [imagesPreview, setImagesPreview] = useState(performance?.imagesURL || []);
   const [creatorOptions, setCreatorOptions] = useState([]);
   const [selectedCreators, setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
+  const [selectedPerformanceEvents, setSelectedPerformanceEvents] = useState(
+    performance?.performanceEvents || [],
+  );
   const [isPosterDeleted, setIsPosterDeleted] = useState(false); // Deleted poster
   const [deletedImages, setDeletedImages] = useState([]); // Deleted pictures
 
@@ -35,6 +38,8 @@ export default function PerformanceForm({ performance }) {
     posterURL: null,
     imagesURL: performance?.imagesURL || [],
     targetAudience: performance?.targetAudience || '',
+
+    performanceEventId: selectedPerformanceEvents.map((performanceEvent) => performanceEvent.id),
   };
 
   useEffect(() => {
@@ -64,6 +69,10 @@ export default function PerformanceForm({ performance }) {
     formData.append('description', values.description);
 
     values.creatorId.forEach((creator) => formData.append('creatorIds', creator));
+
+    values.performanceEventId.forEach((performanceEvent) =>
+      formData.append('performanceEventIds', performanceEvent),
+    );
 
     if (values.targetAudience) {
       formData.append('targetAudience', values.targetAudience);
@@ -128,16 +137,6 @@ export default function PerformanceForm({ performance }) {
     setImagesPreview((prev) => [...prev, ...files.map((file) => URL.createObjectURL(file))]);
   };
 
-  // const removeImage = (index, setFieldValue, images) => {
-  //   const updatedImages = [...images];
-  //   updatedImages.splice(index, 1);
-  //   setFieldValue('imagesURL', updatedImages);
-
-  //   const updatedPreviews = [...imagesPreview];
-  //   updatedPreviews.splice(index, 1);
-  //   setImagesPreview(updatedPreviews);
-  // };
-
   const removeImage = (index, setFieldValue, images) => {
     const updatedImages = [...images];
     const removedImage = updatedImages.splice(index, 1)[0]; // 🔹 Törölt kép URL-je
@@ -150,17 +149,6 @@ export default function PerformanceForm({ performance }) {
       setDeletedImages((prev) => [...prev, removedImage]);
     }
   };
-
-  // const fetchCreators = async () => {
-  //   if (creatorOptions.length === 0) {
-  //     try {
-  //       const creators = await getCreators();
-  //       setCreatorOptions(creators);
-  //     } catch (error) {
-  //       toast.error('Hiba történt az alkotók betöltésekor.');
-  //     }
-  //   }
-  // };
 
   const handleBack = () => {
     if (window.history.length > 2) {
@@ -283,6 +271,46 @@ export default function PerformanceForm({ performance }) {
                 />
               </div>
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="performanceEvents" className="text-gray-800 font-bold">
+                Előadás eseményei <span className="text-red-500">*</span>
+              </label>
+              {selectedPerformanceEvents.map((_, index) => (
+                <div key={_.id} className="flex items-center mb-2">
+                  <Field
+                    as="select"
+                    name={`performanceEventId[${index}]`}
+                    className="w-full border p-2 rounded text-gray-800"
+                    disabled
+                  >
+                    <option key={_.id} value={_.id}>
+                      {_.id || 'Névtelen esemény'}
+                    </option>
+                  </Field>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updatedEvents = [...selectedPerformanceEvents];
+                      updatedEvents.splice(index, 1);
+                      setSelectedPerformanceEvents(updatedEvents);
+                      setFieldValue(
+                        'performanceEventId',
+                        updatedEvents.map((e) => e.id),
+                      );
+                    }}
+                    className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
+                  >
+                    Törlés
+                  </button>
+                </div>
+              ))}
+              <ErrorMessage
+                name="performanceEventId"
+                component="div"
+                className="text-red-500 text-sm"
+              />
             </div>
 
             <div className="mb-4">

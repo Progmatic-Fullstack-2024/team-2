@@ -2,6 +2,7 @@ import performancesService from "../services/performances.service.js";
 import HttpError from "../utils/HttpError.js";
 import queryFilter from "../utils/queryFilter.js";
 import performanceValidationSchemaForCreate from "../validations/performanceValidation.js";
+import performanceEventsService from "../services/performanceEvents.service.js";
 
 const listPerformances = async (req, res, next) => {
   const { search } = req.query;
@@ -66,7 +67,7 @@ const createPerformance = async (req, res, next) => {
         theaterId,
         description,
         creators,
-      },
+      }
     );
 
     const newPerformance = await performancesService.create(
@@ -78,15 +79,15 @@ const createPerformance = async (req, res, next) => {
       },
       poster,
       images,
-      creators,
+      creators
     );
     return res.status(201).json(newPerformance);
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to create performance",
-        error.statusCode || 500,
-      ),
+        error.statusCode || 500
+      )
     );
   }
 };
@@ -95,37 +96,77 @@ const updatePerformance = async (req, res, next) => {
   const { performanceId } = req.params;
   const { title, theaterId, description, targetAudience } = req.body;
 
-  let { creatorIds } = req.body;
+  let { creatorIds, performanceEventIds } = req.body;
 
   // If one link arrives (string) convert to array
   if (typeof creatorIds === "string") {
     creatorIds = [creatorIds];
   }
 
+  if (typeof performanceEventIds === "string") {
+    performanceEventIds = [performanceEventIds];
+  }
+
   const creators = Array.isArray(creatorIds)
     ? creatorIds.map((creatorId) => ({ id: creatorId }))
     : [];
 
+  const newPerformanceEvents = Array.isArray(performanceEventIds)
+    ? performanceEventIds // ✅ Már egy tömb, nincs szükség további map-re
+    : [];
+
   console.log("Final creators array:", creators);
+  console.log(
+    "Final performanceEvents array (from frontend):",
+    newPerformanceEvents
+  );
 
   const poster = req.files?.poster ? req.files.poster[0] : null;
   const images = req.files?.files ? req.files.files : [];
 
   try {
+    // Lekérjük a meglévő performance adatokat, hogy összehasonlítsuk az eseményeket
+    const existingPerformance =
+      await performancesService.getById(performanceId);
+    if (!existingPerformance) {
+      throw new HttpError("Performance not found", 404);
+    }
+
+    const existingEventIds = existingPerformance.performanceEvents.map(
+      (event) => event.id
+    );
+    console.log("Existing performanceEvents (DB):", existingEventIds);
+
+    // Azokat az ID-kat keressük meg, amelyek NINCSENEK az új listában → ezeket törölni kell
+    const eventsToRemove =
+      Array.isArray(performanceEventIds) && performanceEventIds.length > 0
+        ? existingEventIds.filter((id) => !performanceEventIds.includes(id))
+        : [];
+
+    console.log("PerformanceEvents to remove:", eventsToRemove);
+
+    // Ha van olyan event, amit törölni kell, akkor azt eltávolítjuk az adatbázisból
+    if (eventsToRemove.length > 0) {
+      await performanceEventsService.destroyMany(eventsToRemove);
+    }
+
+    // Frissített Performance rekord hívása a service-ben
     const updatedPerformance = await performancesService.update(
       performanceId,
       { title, theaterId, description, targetAudience },
       poster,
       images,
       creators,
+      newPerformanceEvents // Csak az új performanceEventek listáját adjuk át
     );
+
     return res.status(200).json(updatedPerformance);
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to update performance",
-        error.statusCode || 500,
-      ),
+        error.statusCode || 500
+      )
     );
   }
 };
@@ -139,8 +180,8 @@ const destroyPerformance = async (req, res, next) => {
     return next(
       new HttpError(
         error.message || "Failed to delete performance",
-        error.statusCode || 500,
-      ),
+        error.statusCode || 500
+      )
     );
   }
 };
@@ -155,15 +196,15 @@ const deleteImage = async (req, res, next) => {
   try {
     const deletedImage = await performancesService.deleteSingleImage(
       performanceId,
-      imageUrl,
+      imageUrl
     );
     return res.status(200).json({ performanceWithDeletedImage: deletedImage });
   } catch (error) {
     return next(
       new HttpError(
         error.message || "Failed to delete image",
-        error.statusCode || 500,
-      ),
+        error.statusCode || 500
+      )
     );
   }
 };

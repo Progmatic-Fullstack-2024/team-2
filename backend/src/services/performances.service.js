@@ -42,7 +42,7 @@ const list = async ({ filter, search }) => {
   // custom skip and take
   // console.log(performances);
   const filteredPerformances = performances.filter(
-    (item, index) => index >= filter.skip && index < filter.skip + filter.take,
+    (item, index) => index >= filter.skip && index < filter.skip + filter.take
   );
 
   return { data: filteredPerformances, maxSize: performances.length };
@@ -95,7 +95,7 @@ const create = async (performanceData, poster, images, creatorsIds) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to create performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -106,6 +106,7 @@ const update = async (
   poster,
   images,
   creatorsIds,
+  performanceEventIds
 ) => {
   try {
     const performanceToUpdate = await getById(performanceId);
@@ -121,7 +122,22 @@ const update = async (
     }
 
     console.log("creatorsIds:", creatorsIds);
+    console.log("performanceEventIds (after delete):", performanceEventIds);
 
+    // **Lekérjük a jelenlegi események ID-it**
+    const existingEventIds = performanceToUpdate.performanceEvents.map(
+      (event) => event.id
+    );
+
+    // **Megnézzük, mely eseményeket kell törölni**
+    const eventsToRemove =
+      Array.isArray(performanceEventIds) && performanceEventIds.length > 0
+        ? existingEventIds.filter((id) => !performanceEventIds.includes(id))
+        : [];
+
+    console.log("eventsToRemove:", eventsToRemove);
+
+    // Frissítsük a Performance rekordot
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
       data: {
@@ -132,13 +148,32 @@ const update = async (
           set: [],
           connect: creatorsIds.map((creator) => ({ id: creator.id })),
         },
+        performanceEvents: {
+          ...(Array.isArray(eventsToRemove) &&
+            eventsToRemove.length > 0 && {
+              disconnect: eventsToRemove.map((eventId) => ({ id: eventId })),
+            }),
+          ...(Array.isArray(performanceEventIds) &&
+            performanceEventIds.filter((event) => event && event.id).length >
+              0 && {
+              connect: performanceEventIds
+                .filter((event) => event && event.id) // 🚀 Kiszűrjük az undefined értékeket
+                .map((performanceEvent) => ({
+                  id: performanceEvent.id,
+                })),
+            }),
+        },
+      },
+      include: {
+        performanceEvents: true,
       },
     });
+
     return updatedPerformance;
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to update performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -152,15 +187,24 @@ const destroy = async (performanceId) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
 
 const deleteSingleImage = async (performanceId, imageUrl) => {
   try {
-    const performanceToUpdate = await getById(performanceId);
-    const { imagesURL, posterURL } = performanceToUpdate;
+    let performanceToUpdate = await getById(performanceId);
+    let { imagesURL, posterURL } = performanceToUpdate;
+
+    // Ha az imagesURL null, akkor alakítsuk át üres tömbbé
+    if (!imagesURL) {
+      imagesURL = [];
+    }
+
+    if (!Array.isArray(imagesURL)) {
+      throw new HttpError("Invalid imagesURL format in database", 500);
+    }
 
     const imageUrls = Array.isArray(imageUrl) ? imageUrl : [imageUrl];
 
@@ -169,7 +213,22 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
     console.log("posterURL: ", posterURL);
     console.log("imageUrls: ", imageUrls);
 
-    // Check iamgeUrl is posterUrl or imageUrl
+    console.log("🛠️ DEBUG: performanceId type:", typeof performanceId);
+    console.log("🛠️ DEBUG: performanceId value:", performanceId);
+
+    // **Ha nincs még kép az adatbázisban, az új képeket hozzáadjuk**
+    if (imagesURL.length === 0 && posterURL === null) {
+      console.log("📌 No images found in database. Adding new images...");
+
+      const updatedPerformance = await prisma.performance.update({
+        where: { id: performanceId },
+        data: { imagesURL: imageUrls }, // Az érkező képek hozzáadása
+      });
+
+      return updatedPerformance; // **Itt nem törlünk, csak hozzáadunk**
+    }
+
+    // Ellenőrizzük, hogy az adott képek léteznek-e az adatbázisban
     const isPoster = imageUrls.includes(posterURL);
     const isInImages = imageUrls.some((url) => imagesURL.includes(url));
 
@@ -182,15 +241,13 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
 
     const updatedData = {};
 
-    // if posterUrl - delete
     if (isPoster) {
       updatedData.posterURL = null;
     }
 
-    // if imageUrl - array - delete
     if (isInImages) {
       updatedData.imagesURL = imagesURL.filter(
-        (url) => !imageUrls.includes(url),
+        (url) => !imageUrls.includes(url)
       );
     }
 
@@ -204,7 +261,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete image",
-      error.statusCode || 500,
+      error.statusCode || 500
     );
   }
 };
