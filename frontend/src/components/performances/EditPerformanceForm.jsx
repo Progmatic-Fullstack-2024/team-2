@@ -42,6 +42,13 @@ export default function PerformanceForm({ performance }) {
     targetAudience: performance?.targetAudience || '',
 
     performanceEventId: selectedPerformanceEvents.map((performanceEvent) => performanceEvent.id),
+
+    // Future Performance
+    targetBudgetIdeal: performance.futurePerformance.targetBudgetIdeal || '',
+    targetBudget: performance.futurePerformance.targetBudget || '',
+    minimumBudget: performance.futurePerformance.minimumtargetBudget || '',
+    actualBudget: performance.futurePerformance.actualBudget || '',
+    gift: performance.futurePerformance.gift || '',
   };
 
   useEffect(() => {
@@ -123,10 +130,22 @@ export default function PerformanceForm({ performance }) {
         };
 
         try {
-          await futurePerformancesService.create(futurePerformanceData);
-          toast.success('Tervezett előadás adatai sikeresen mentve!');
+          if (performance?.futurePerformance?.id) {
+            // Ha már létezik futurePerformance, akkor frissítjük
+            await futurePerformancesService.update(
+              performance.futurePerformance.id,
+              futurePerformanceData,
+            );
+            toast.success('Tervezett előadás adatai sikeresen frissítve!');
+          } else {
+            // Ha nincs, akkor új futurePerformance-t hozunk létre
+            await futurePerformancesService.create(futurePerformanceData);
+            toast.success('Tervezett előadás adatai sikeresen mentve!');
+          }
         } catch (error) {
-          toast.error(`Hiba történt a tervezett előadás mentése során: ${error.message}`);
+          toast.error(
+            `Hiba történt a tervezett előadás mentése/frissítése során: ${error.message}`,
+          );
         }
       }
 
@@ -213,86 +232,39 @@ export default function PerformanceForm({ performance }) {
               </label>
             </div>
 
-            {/* Tervezett előadás adatai, csak ha be van pipálva */}
             {values.plannedPerformance && (
               <div className="mb-4 bg-gray-100 p-4 rounded-md">
                 <h3 className="font-bold text-gray-800 mb-2">Tervezett előadás adatai</h3>
-                <div className="mb-4">
-                  <label htmlFor="targetBudgetIdeal" className="text-gray-800 font-bold">
-                    Ideális költségvetés
-                  </label>
-                  <Field
-                    type="number"
-                    name="targetBudgetIdeal"
-                    className="w-full border p-2 rounded my-1 text-gray-800"
-                  />
-                  <ErrorMessage
-                    name="targetBudgetIdeal"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
 
-                <div className="mb-4">
-                  <label htmlFor="targetBudget" className="text-gray-800 font-bold">
-                    Cél költségvetés
-                  </label>
-                  <Field
-                    type="number"
-                    name="targetBudget"
-                    className="w-full border p-2 rounded my-1 text-gray-800"
-                  />
-                  <ErrorMessage
-                    name="targetBudget"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
+                {['targetBudgetIdeal', 'targetBudget', 'minimumBudget', 'actualBudget'].map(
+                  (field) => {
+                    const labels = {
+                      targetBudgetIdeal: 'Ideális költségvetés',
+                      targetBudget: 'Cél költségvetés',
+                      minimumBudget: 'Minimum költségvetés',
+                      actualBudget: 'Aktuális költségvetés',
+                    };
 
-                <div className="mb-4">
-                  <label htmlFor="minimumBudget" className="text-gray-800 font-bold">
-                    Minimum költségvetés
-                  </label>
-                  <Field
-                    type="number"
-                    name="minimumBudget"
-                    className="w-full border p-2 rounded my-1 text-gray-800"
-                  />
-                  <ErrorMessage
-                    name="minimumBudget"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="actualBudget" className="text-gray-800 font-bold">
-                    Aktuális költségvetés
-                  </label>
-                  <Field
-                    type="number"
-                    name="actualBudget"
-                    className="w-full border p-2 rounded my-1 text-gray-800"
-                  />
-                  <ErrorMessage
-                    name="actualBudget"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="gift" className="text-gray-800 font-bold">
-                    Ajándék
-                  </label>
-                  <Field
-                    type="text"
-                    name="gift"
-                    placeholder="Ajándék részletezése"
-                    className="w-full border p-2 rounded my-1 text-gray-800"
-                  />
-                  <ErrorMessage name="gift" component="div" className="text-red-500 text-sm" />
-                </div>
+                    return (
+                      <div key={field} className="mb-4">
+                        <label htmlFor={field} className="text-gray-800 font-bold">
+                          {labels[field]}
+                        </label>
+                        <Field
+                          type="number"
+                          name={field}
+                          placeholder={performance?.futurePerformance?.[field] || ''}
+                          className="w-full border p-2 rounded my-1 text-gray-800"
+                        />
+                        <ErrorMessage
+                          name={field}
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
+                    );
+                  },
+                )}
               </div>
             )}
 
