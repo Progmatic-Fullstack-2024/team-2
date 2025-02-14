@@ -132,7 +132,7 @@ export default function BookingModal({
 
         <DefaultButton
           text="Foglalás"
-          disabled={ticketCount === 0}
+          disabled={ticketCount === 0 || qrCode}
           onClick={() => handleBooking()}
         />
         {!qrCode && (
