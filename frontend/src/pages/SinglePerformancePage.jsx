@@ -58,7 +58,6 @@ export default function DetailsPage() {
   };
 
   const closeModal = () => setSelectedImage(null);
-  // const handleBookingClick = () => setIsBookingModalOpen(true);
 
   const closeBookingModal = () => {
     setIsBookingModalOpen(false);
@@ -138,7 +137,6 @@ export default function DetailsPage() {
 
           <div className="flex justify-around">
             <DefaultButton onClick={handleBack} text="Vissza" />
-            {/* <DefaultButton onClick={handleBookingClick} text="Foglalás" /> */}
           </div>
         </div>
       </div>
