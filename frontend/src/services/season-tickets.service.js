@@ -18,5 +18,4 @@ const getById = async ({ id }) => {
   }
 };
 
-
 export default { list, getById };

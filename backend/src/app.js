@@ -14,7 +14,7 @@ import paymentRoutes from "./routes/payment.routes.js";
 import genresRoutes from "./routes/genres.routes.js";
 import seasonTicketsRoutes from "./routes/season-tickets.routes.js";
 import performanceEventsRoutes from "./routes/performanceEvents.routes.js";
-import bookingRoutes from "./routes/booking.routes.js"
+import bookingRoutes from "./routes/booking.routes.js";
 
 const app = express();
 

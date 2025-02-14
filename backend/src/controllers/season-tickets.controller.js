@@ -41,6 +41,4 @@ const getById = async (req, res, next) => {
   }
 };
 
-
-
 export default { list, create, getById };

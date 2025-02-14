@@ -1,8 +1,12 @@
-import DefaultButton from '../components/misc/DefaultButton';
-import handleDate from '../utils/handleDates';
-import bookingService from '../services/booking.service';
 import { useEffect, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+import DefaultButton from './misc/DefaultButton';
 import AuthContext from '../contexts/AuthContext';
+import bookingService from '../services/booking.service';
+import handleDate from '../utils/handleDates';
 
 export default function BookingModal({
   isOpen,
@@ -17,6 +21,7 @@ export default function BookingModal({
 }) {
   if (!isOpen) return null;
 
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [seasonTickets, setSeasonTickets] = useState([]);
   const [soldTickets, setsoldTickets] = useState([]);
@@ -28,20 +33,19 @@ export default function BookingModal({
       const tickets = await bookingService.getByUserId({ userId });
       setSeasonTickets(tickets);
     } catch (error) {
-      console.error('Hiba történt a bérletek lekérésekor:', error);
+      toast.error('Hiba történt a bérletek lekérésekor:', error);
     }
   };
 
   const getSoldTickets = async () => {
     try {
-      const soldTickets = await bookingService.getSoldTickets({ performanceEventId });
-      setsoldTickets(soldTickets);
+      const bookedTickets = await bookingService.getSoldTickets({ performanceEventId });
+      setsoldTickets(bookedTickets);
     } catch (error) {
-      console.error('Hiba történt a jegyek lekérésekor:', error);
+      toast.error('Hiba történt a jegyek lekérésekor:', error);
     }
   };
 
-  // const availableSpots = selectedEvent?.spots - soldTickets ?? 0;
   const availableSpots = (selectedEvent?.spots ?? 0) - (soldTickets ?? 0);
 
   const selectedSeasonTicket = seasonTickets.find((ticket) => ticket.id === selectedTicket);
@@ -55,28 +59,47 @@ export default function BookingModal({
   }, []);
 
   const handleTicketCountChange = (change) => {
-    setTicketCount((prev) => Math.max(1, prev + change));
+    setTicketCount((prev) => Math.max(0, prev + change));
   };
 
+  // const handleBooking = async () => {
+  //   try {
+  //     await bookingService.buyTicket({
+  //       performanceEventId,
+  //       userId,
+  //       userSeasonTicketId: selectedTicket,
+  //       seats: ticketCount,
+  //     });
+  //     await toast.promise(Promise.resolve(), {
+  //       pending: 'Foglalás folyamatban...',
+  //       success: 'Sikeres foglalás! 👏',
+  //     });
+  //     navigate(-1);
+  //   } catch (error) {
+  //     toast.error('Hiba történt a foglaláskor:', error);
+  //   }
+  // };
+
   const handleBooking = async () => {
-    if (!selectedTicket) {
-      console.error('Nincs kiválasztva bérlet!');
-      return;
-    }
-  
     try {
       await bookingService.buyTicket({
         performanceEventId,
         userId,
-        userSeasonTicketId: selectedTicket, 
+        userSeasonTicketId: selectedTicket,
         seats: ticketCount,
       });
-      console.log('Sikeres foglalás!');
+  
+      toast.success("Sikeres foglalás! 👏");
+  
+      // 3.5 másodperc várakozás a toast megjelenítésére
+      setTimeout(() => {
+        navigate(-1);
+      }, 3500);
     } catch (error) {
-      console.error('Hiba történt a foglaláskor:', error);
+      toast.error("Hiba történt a foglaláskor!");
     }
   };
-
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-5 rounded-lg shadow-lg w-96">
@@ -105,11 +128,16 @@ export default function BookingModal({
 
         <label className="block mb-2">Jegyek száma</label>
         <div className="flex items-center mb-4">
-          <button className="px-3 py-1 border rounded" onClick={() => handleTicketCountChange(-1)}>
+          <button
+            type="button"
+            className="px-3 py-1 border rounded"
+            onClick={() => handleTicketCountChange(-1)}
+          >
             -
           </button>
           <span className="mx-4">{ticketCount}</span>
           <button
+            type="button"
             className="px-3 py-1 border rounded"
             disabled={ticketCount >= isSeasonTicketStillHasSeats}
             onClick={() => handleTicketCountChange(1)}
@@ -118,8 +146,12 @@ export default function BookingModal({
           </button>
         </div>
 
-        <DefaultButton text="Foglalás" onClick={() => handleBooking()}/>
-        <button className="block mt-4 text-red-500 underline" onClick={onClose}>
+        <DefaultButton
+          text="Foglalás"
+          disabled={ticketCount === 0}
+          onClick={() => handleBooking()}
+        />
+        <button type="button" className="block mt-4 text-red-500 underline" onClick={onClose}>
           Mégse
         </button>
       </div>

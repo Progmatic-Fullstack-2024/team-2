@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import BookingModal from '../components/BookingModal';
 import CreatorsList from '../components/creators/CreatorsList';
 import DefaultButton from '../components/misc/DefaultButton';
 import Gallery from '../components/misc/Galery';
@@ -8,7 +9,6 @@ import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
 import PerformanceDates from '../components/performances/PerformanceDates';
 import performanceService from '../services/performances.service';
-import BookingModal from '../components/BookingModal';
 
 export default function DetailsPage() {
   const { id } = useParams();
@@ -20,7 +20,7 @@ export default function DetailsPage() {
   const [error, setError] = useState(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState('');
-  const [ticketCount, setTicketCount] = useState(1);
+  const [ticketCount, setTicketCount] = useState(0);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
@@ -35,15 +35,6 @@ export default function DetailsPage() {
 
     fetchPerformanceById(id);
   }, [id]);
-
-  // const toggleDateSelection = (date) => {
-  //   setSelectedDates((prevSelected) =>
-  //     prevSelected.includes(date)
-  //       ? prevSelected.filter((d) => d !== date)
-  //       : [...prevSelected, date],
-  //   );
-  //   setIsBookingModalOpen(true);
-  // };
 
   const toggleDateSelection = (event) => {
     setSelectedDates([event.performanceDate]); // Csak az aktuálisan kiválasztott dátumot tároljuk
@@ -94,7 +85,6 @@ export default function DetailsPage() {
     if (window.history.length > 2) {
       navigate(-1);
     } else {
-      navigate('/');
       navigate('/');
     }
   };
