@@ -38,7 +38,6 @@ const getPerformanceEventSoldSeats = async ({ performanceEventId }) => {
     (sum, item) => sum + (item.seats || 0),
     0
   );
-console.log(soldSeats);
   return soldSeats;
 };
 

@@ -12,8 +12,7 @@ const getByUserId = async ({ userId }) => {
 
   const getSoldTickets = async ({ performanceEventId }) => {
     try {
-      const response = await axiosInstance.get(`/api/booking/${performanceEventId}`);
-      console.log(response.data)
+      const response = await axiosInstance.get(`/api/booking/event/${performanceEventId}`);
       return response.data;
     } catch (error) {
       throw error.response ? error.response.data : error;

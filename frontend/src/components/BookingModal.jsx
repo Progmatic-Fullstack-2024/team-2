@@ -33,11 +33,9 @@ export default function BookingModal({
   };
 
   const getSoldTickets = async () => {
-    console.log("getSoldTickets")
     try {
       const soldTickets = await bookingService.getSoldTickets({ performanceEventId });
       setsoldTickets(soldTickets);
-      console.log(soldTickets)
     } catch (error) {
       console.error('Hiba történt a jegyek lekérésekor:', error);
     }
