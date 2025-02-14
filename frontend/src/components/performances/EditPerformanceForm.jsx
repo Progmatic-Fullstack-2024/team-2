@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import AddPerformanceEventModal from './AddPerformanceEventModal';
 import getCreators from '../../services/creators.service';
 import performancesService from '../../services/performances.service';
+import formatDate from '../../utils/formatDate';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformanceForm({ performance }) {
@@ -277,39 +278,49 @@ export default function PerformanceForm({ performance }) {
               <label htmlFor="performanceEvents" className="text-gray-800 font-bold">
                 Előadás eseményei <span className="text-red-500">*</span>
               </label>
-              {selectedPerformanceEvents.map((_, index) => (
-                <div key={_.id} className="flex items-center mb-2">
-                  <Field
-                    as="select"
-                    name={`performanceEventId[${index}]`}
-                    className="w-full border p-2 rounded text-gray-800"
-                    disabled
-                  >
-                    <option key={_.id} value={_.id}>
-                      {_.id || 'Névtelen esemény'}
-                    </option>
-                  </Field>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updatedEvents = [...selectedPerformanceEvents];
-                      updatedEvents.splice(index, 1);
-                      setSelectedPerformanceEvents(updatedEvents);
-                      setFieldValue(
-                        'performanceEventId',
-                        updatedEvents.map((e) => e.id),
-                      );
-                    }}
-                    className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
-                  >
-                    Törlés
-                  </button>
-                </div>
-              ))}
+              <ul className="mt-2">
+                {selectedPerformanceEvents.length > 0 ? (
+                  selectedPerformanceEvents.map((_, index) => (
+                    <li
+                      key={_.id}
+                      className="flex items-center justify-between bg-gray-100 p-2 rounded mb-2"
+                    >
+                      <span className="text-gray-800">
+                        {formatDate(_.performanceDate) || 'Névtelen esemény'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updatedEvents = [...selectedPerformanceEvents];
+                          updatedEvents.splice(index, 1);
+                          setSelectedPerformanceEvents(updatedEvents);
+                          setFieldValue(
+                            'performanceEventId',
+                            updatedEvents.map((e) => e.id),
+                          );
+                        }}
+                        className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
+                      >
+                        Törlés
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500">Nincs hozzáadott esemény</li>
+                )}
+              </ul>
               <ErrorMessage
                 name="performanceEventId"
                 component="div"
                 className="text-red-500 text-sm"
+              />
+            </div>
+
+            <div className="mb-4 mt-4 flex justify-center">
+              <DefaultButton
+                text="Új előadás időpont hozzáadása"
+                type="button"
+                onClick={() => setIsModalOpen(true)}
               />
             </div>
 
@@ -393,13 +404,7 @@ export default function PerformanceForm({ performance }) {
           </Form>
         )}
       </Formik>
-      <div className="mb-4 mt-4 flex justify-center">
-        <DefaultButton
-          text="Új előadás időpont hozzáadása"
-          type="button"
-          onClick={() => setIsModalOpen(true)}
-        />
-      </div>
+      
       {isModalOpen && (
         <AddPerformanceEventModal
           isOpen={isModalOpen}
