@@ -24,7 +24,7 @@ export default function OwnSeatsTable({ data }) {
   return (
     <table className="mx-auto ">
       <thead>
-        <tr className="border-b-2 mt-2 border-gray-900">
+        <tr className="border-b-2 mt-2 border-gray-900 odd:bg-c-secondary even:bg-c-secondary-dark">
           <th className="px-3">Dátum</th>
           <th className="px-3">Színház</th>
           <th className="px-3">előadás címe</th>

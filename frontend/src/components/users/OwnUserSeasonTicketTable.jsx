@@ -39,7 +39,10 @@ export default function OwnUserSeasonTicketTable({ data, performance }) {
       </thead>
       <tbody>
         {tableData.map((row, index) => (
-          <tr key={index} className="border-b border-gray-900">
+          <tr
+            key={index}
+            className="border-b border-gray-900 odd:bg-c-secondary even:bg-c-secondary-dark"
+          >
             <td className="px-3 ">{row.name}</td>
             <td className="px-3 ">{row.endDate}</td>
             <td className="px-3 text-center">{row.seat}</td>
