@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 import AddPerformanceEventModal from './AddPerformanceEventModal';
 import getCreators from '../../services/creators.service';
+import futurePerformancesService from '../../services/futurePerformances.service';
 import performancesService from '../../services/performances.service';
 import formatDate from '../../utils/formatDate';
 import DefaultButton from '../misc/DefaultButton';
@@ -109,6 +110,26 @@ export default function PerformanceForm({ performance }) {
       if (!response) throw new Error('Hiba történt az előadás módosításakor.');
 
       toast.success('Előadás sikeresen módosítva!');
+
+      // Ha tervezett előadás be van pipálva, hozzunk létre egy futurePerformances rekordot
+      if (values.plannedPerformance) {
+        const futurePerformanceData = {
+          targetBudgetIdeal: values.targetBudgetIdeal,
+          targetBudget: values.targetBudget,
+          minimumBudget: values.minimumBudget,
+          actualBudget: values.actualBudget,
+          gift: values.gift,
+          performanceId: performance.id,
+        };
+
+        try {
+          await futurePerformancesService.create(futurePerformanceData);
+          toast.success('Tervezett előadás adatai sikeresen mentve!');
+        } catch (error) {
+          toast.error(`Hiba történt a tervezett előadás mentése során: ${error.message}`);
+        }
+      }
+
       setTimeout(() => {
         navigate('/theater-admin');
       }, 1000);
@@ -165,7 +186,7 @@ export default function PerformanceForm({ performance }) {
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ setFieldValue, values }) => (
           <Form>
-            {/* Színház neve */}
+            {/* Előadás neve */}
             <div className="mb-4">
               <label htmlFor="title" className="text-gray-800 font-bold">
                 Előadás neve
@@ -178,6 +199,102 @@ export default function PerformanceForm({ performance }) {
               />
               <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
             </div>
+
+            {/* Tervezett előadás checkbox */}
+            <div className="mb-4 flex items-center">
+              <Field
+                type="checkbox"
+                name="plannedPerformance"
+                className="mr-2"
+                onChange={(e) => setFieldValue('plannedPerformance', e.target.checked)}
+              />
+              <label htmlFor="plannedPerformance" className="text-gray-800 font-bold">
+                Tervezett előadás
+              </label>
+            </div>
+
+            {/* Tervezett előadás adatai, csak ha be van pipálva */}
+            {values.plannedPerformance && (
+              <div className="mb-4 bg-gray-100 p-4 rounded-md">
+                <h3 className="font-bold text-gray-800 mb-2">Tervezett előadás adatai</h3>
+                <div className="mb-4">
+                  <label htmlFor="targetBudgetIdeal" className="text-gray-800 font-bold">
+                    Ideális költségvetés
+                  </label>
+                  <Field
+                    type="number"
+                    name="targetBudgetIdeal"
+                    className="w-full border p-2 rounded my-1 text-gray-800"
+                  />
+                  <ErrorMessage
+                    name="targetBudgetIdeal"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="targetBudget" className="text-gray-800 font-bold">
+                    Cél költségvetés
+                  </label>
+                  <Field
+                    type="number"
+                    name="targetBudget"
+                    className="w-full border p-2 rounded my-1 text-gray-800"
+                  />
+                  <ErrorMessage
+                    name="targetBudget"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="minimumBudget" className="text-gray-800 font-bold">
+                    Minimum költségvetés
+                  </label>
+                  <Field
+                    type="number"
+                    name="minimumBudget"
+                    className="w-full border p-2 rounded my-1 text-gray-800"
+                  />
+                  <ErrorMessage
+                    name="minimumBudget"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="actualBudget" className="text-gray-800 font-bold">
+                    Aktuális költségvetés
+                  </label>
+                  <Field
+                    type="number"
+                    name="actualBudget"
+                    className="w-full border p-2 rounded my-1 text-gray-800"
+                  />
+                  <ErrorMessage
+                    name="actualBudget"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="gift" className="text-gray-800 font-bold">
+                    Ajándék
+                  </label>
+                  <Field
+                    type="text"
+                    name="gift"
+                    placeholder="Ajándék részletezése"
+                    className="w-full border p-2 rounded my-1 text-gray-800"
+                  />
+                  <ErrorMessage name="gift" component="div" className="text-red-500 text-sm" />
+                </div>
+              </div>
+            )}
 
             <div className="mb-4">
               <label htmlFor="theaterId" className="text-gray-800 font-bold">
@@ -404,7 +521,7 @@ export default function PerformanceForm({ performance }) {
           </Form>
         )}
       </Formik>
-      
+
       {isModalOpen && (
         <AddPerformanceEventModal
           isOpen={isModalOpen}
