@@ -43,7 +43,7 @@ const list = async ({ filter, search }) => {
   // custom skip and take
   // console.log(performances);
   const filteredPerformances = performances.filter(
-    (item, index) => index >= filter.skip && index < filter.skip + filter.take,
+    (item, index) => index >= filter.skip && index < filter.skip + filter.take
   );
 
   return { data: filteredPerformances, maxSize: performances.length };
@@ -60,6 +60,7 @@ const listAll = async () => {
         },
       },
       genre: true,
+      futurePerformance: true,
     },
   });
   return allPerformances;
@@ -96,7 +97,7 @@ const create = async (performanceData, poster, images, creatorsIds) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to create performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -107,7 +108,7 @@ const update = async (
   poster,
   images,
   creatorsIds,
-  performanceEventIds,
+  performanceEventIds
 ) => {
   try {
     const performanceToUpdate = await getById(performanceId);
@@ -127,7 +128,7 @@ const update = async (
 
     // **Lekérjük a jelenlegi események ID-it**
     const existingEventIds = performanceToUpdate.performanceEvents.map(
-      (event) => event.id,
+      (event) => event.id
     );
 
     // **Megnézzük, mely eseményeket kell törölni**
@@ -174,7 +175,7 @@ const update = async (
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to update performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -188,7 +189,7 @@ const destroy = async (performanceId) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -248,7 +249,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
 
     if (isInImages) {
       updatedData.imagesURL = imagesURL.filter(
-        (url) => !imageUrls.includes(url),
+        (url) => !imageUrls.includes(url)
       );
     }
 
@@ -262,7 +263,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete image",
-      error.statusCode || 500,
+      error.statusCode || 500
     );
   }
 };

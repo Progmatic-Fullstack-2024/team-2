@@ -9,4 +9,13 @@ const create = async (futurePerformanceData) => {
   }
 };
 
-export default { create };
+const getById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/api/future-performances/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { create, getById };
