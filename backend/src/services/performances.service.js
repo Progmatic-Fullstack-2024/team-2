@@ -8,6 +8,7 @@ const getById = async (performanceId) => {
     include: {
       performanceEvents: true,
       creators: true,
+      futurePerformance: true,
     },
   });
   if (!performance) throw new HttpError("Performance not found", 404);
