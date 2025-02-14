@@ -2,17 +2,30 @@ import userService from "../services/user.service.js";
 import HttpError from "../utils/HttpError.js";
 
 const listUsers = async (req, res, next) => {
-  const { orderBy, direction, page } = req.query;
+  const { orderBy, direction, page, search, field, filter } = req.query;
   let calcLimit;
-  if (page) calcLimit = req.query.limit ? req.query.limit : 10;
+  let numpage;
+  if (page) {
+    calcLimit = req.query.limit ? req.query.limit : 10;
+    calcLimit = Number(calcLimit);
+    if (Number.isNaN(calcLimit)) calcLimit = 10;
+    numpage = Number(page);
+    if (Number.isNaN(numpage)) {
+      numpage = undefined;
+      calcLimit = undefined;
+    }
+  }
   if (direction && direction !== "asc" && direction !== "desc")
     next(new HttpError("Bad value of direction!"), 401);
   try {
     const users = await userService.getAllUser(
       orderBy,
       direction,
-      page,
+      numpage,
       calcLimit,
+      search,
+      field,
+      filter,
     );
     res.json(users);
   } catch (error) {
@@ -94,7 +107,8 @@ const passwordChange = async (req, res, next) => {
 };
 
 const countUsers = async (req, res) => {
-  const userNumber = await userService.countUsers();
+  const { search, field, filter } = req.query;
+  const userNumber = await userService.countUsers(search, field, filter);
   res.status(201).json({ numberOfUsers: userNumber });
 };
 

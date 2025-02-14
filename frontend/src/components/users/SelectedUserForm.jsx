@@ -34,6 +34,7 @@ export default function SelectedUserForm() {
   const [navigate, setNavigate] = useState(undefined);
   const [theater, setTheater] = useState([{ id: '-', name: 'Nincs megadva' }]);
   const [isTheaterAdmin, setIsTheaterAdmin] = useState(false);
+  const [userNullMsg, setUserNullMsg] = useState('Betöltés...');
   const locationData = useLocation();
   const navigateTo = useNavigate();
 
@@ -114,7 +115,7 @@ export default function SelectedUserForm() {
         setIsTheaterAdmin(false);
       }
     } catch (e) {
-      return <h2>User nem található</h2>;
+      setUserNullMsg('Hiba: A keresett felhasználó nem található');
     }
     initialValues = inicializeForm();
     return null;
@@ -407,7 +408,7 @@ export default function SelectedUserForm() {
           </Formik>
         </div>
       ) : (
-        <h2>Betöltés...</h2>
+        <h2 className="py-24 text-center">{userNullMsg}</h2>
       )}
     </div>
   );

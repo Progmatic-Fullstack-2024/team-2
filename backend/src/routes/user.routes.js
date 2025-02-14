@@ -4,6 +4,7 @@ import { isAdmin, isAuthenticated } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
+router.get("/usercount", isAdmin, userController.countUsers);
 router.get("/own", isAuthenticated, userController.getOwnUser);
 router.get("/:id", isAdmin, userController.getUser);
 router.get("/", isAdmin, userController.listUsers);
