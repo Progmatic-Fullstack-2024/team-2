@@ -57,7 +57,7 @@ const destroyMany = async (eventIds) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete performance events",
-      error.status || 500
+      error.status || 500,
     );
   }
 };

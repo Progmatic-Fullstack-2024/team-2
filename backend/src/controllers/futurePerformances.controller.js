@@ -89,7 +89,7 @@ const update = async (req, res, next) => {
         actualBudget,
         gift,
         performanceId,
-      }
+      },
     );
     return res.status(200).json(futurePerformanceToUpdate);
   } catch (error) {
