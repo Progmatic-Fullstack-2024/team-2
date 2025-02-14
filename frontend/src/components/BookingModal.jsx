@@ -25,6 +25,7 @@ export default function BookingModal({
   const { user } = useContext(AuthContext);
   const [seasonTickets, setSeasonTickets] = useState([]);
   const [soldTickets, setsoldTickets] = useState([]);
+  const [qrCode, setQrCode] = useState(null);
   const userId = user.id;
   const performanceEventId = selectedEvent.id;
 
@@ -62,44 +63,27 @@ export default function BookingModal({
     setTicketCount((prev) => Math.max(0, prev + change));
   };
 
-  // const handleBooking = async () => {
-  //   try {
-  //     await bookingService.buyTicket({
-  //       performanceEventId,
-  //       userId,
-  //       userSeasonTicketId: selectedTicket,
-  //       seats: ticketCount,
-  //     });
-  //     await toast.promise(Promise.resolve(), {
-  //       pending: 'Foglalás folyamatban...',
-  //       success: 'Sikeres foglalás! 👏',
-  //     });
-  //     navigate(-1);
-  //   } catch (error) {
-  //     toast.error('Hiba történt a foglaláskor:', error);
-  //   }
-  // };
-
   const handleBooking = async () => {
     try {
-      await bookingService.buyTicket({
+      const ticket = await bookingService.buyTicket({
         performanceEventId,
         userId,
         userSeasonTicketId: selectedTicket,
         seats: ticketCount,
       });
-  
-      toast.success("Sikeres foglalás! 👏");
-  
-      // 3.5 másodperc várakozás a toast megjelenítésére
-      setTimeout(() => {
-        navigate(-1);
-      }, 3500);
+      setQrCode(ticket.qrImage);
+      toast.success('Sikeres foglalás! 👏');
     } catch (error) {
-      toast.error("Hiba történt a foglaláskor!");
+      toast.error('Hiba történt a foglaláskor!');
     }
   };
-  
+
+  const handleClose = () => {
+    setTicketCount(0);  // Visszaállítja a jegyszámot 0-ra
+    setSelectedTicket(""); // Alaphelyzetbe állítja a kiválasztott bérletet
+    onClose(); // Meghívja az eredeti `onClose` függvényt
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-5 rounded-lg shadow-lg w-96">
@@ -118,7 +102,7 @@ export default function BookingModal({
           {seasonTickets.length > 0 ? (
             seasonTickets.map((ticket, index) => (
               <option key={index} value={ticket.id}>
-                {`${ticket.SeasonTicket.name} Lej.: ${handleDate(ticket.expirationDate)} Megvehető helyek: ${ticket.remainingSeats}`}
+                {`${ticket.SeasonTicket.name} Exp.: ${handleDate(ticket.expirationDate)} Megvehető helyek: ${ticket.remainingSeats}`}
               </option>
             ))
           ) : (
@@ -151,9 +135,20 @@ export default function BookingModal({
           disabled={ticketCount === 0}
           onClick={() => handleBooking()}
         />
-        <button type="button" className="block mt-4 text-red-500 underline" onClick={onClose}>
-          Mégse
-        </button>
+        {!qrCode && (
+          <button type="button" className="block mt-4 text-red-500 underline" onClick={handleClose}>
+            Mégse
+          </button>
+        )}
+        {qrCode && (
+          <div className="text-center mt-4">
+            <img src={qrCode} alt="Jegy QR-kódja" className="mx-auto w-48 h-48" />
+            <a href={qrCode} download="jegy_qr_kod.png">
+              <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">Letöltés 📥</button>
+            </a>
+            <DefaultButton text="Vissza" onClick={() => navigate(-1)} />
+          </div>
+        )}
       </div>
     </div>
   );

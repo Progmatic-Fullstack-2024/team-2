@@ -1,3 +1,4 @@
+import QRCode from "qrcode";
 import prisma from "../models/prisma-client.js";
 
 const getByUserId = async ({ userId }) => {
@@ -47,10 +48,12 @@ const buyTicket = async ({
   userSeasonTicketId,
   seats,
 }) => {
+  const qrData = `${userId}-${performanceEventId}-${Date.now()}`;
+  const qrImage = await QRCode.toDataURL(qrData);
   const ticketsBought = await prisma.userVisitedPerformance.create({
     data: {
       seats,
-      qrImage: "dfgb678dfghj9öfghj",
+      qrImage,
       userSeasonTicket: {
         connect: { id: userSeasonTicketId }, // Kapcsolódás a meglévő bérlethez
       },
