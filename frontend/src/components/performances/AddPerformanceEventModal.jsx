@@ -1,9 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
-import { toast } from 'react-toastify'; // ✅ Toastify importálása
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 import performanceEventService from '../../services/perormanceEvent.service';
+import DefaultButton from '../misc/DefaultButton';
 
 const AddPerformanceEventModal = function AddPerformanceEventModal({
   isOpen,
@@ -13,7 +14,6 @@ const AddPerformanceEventModal = function AddPerformanceEventModal({
 }) {
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // Ha a modal nincs nyitva, akkor ne renderelje
   if (!isOpen) return null;
 
   const validationSchema = Yup.object().shape({
@@ -34,13 +34,11 @@ const AddPerformanceEventModal = function AddPerformanceEventModal({
 
       console.log('Backend válasz:', newEvent); // 🔍 Itt látjuk, mit ad vissza a backend
 
-      // ✅ Sikeres üzenet toasttal
       toast.success('Új esemény időpont sikeresen hozzáadva');
 
       onEventAdded(newEvent);
       resetForm();
 
-      // ✅ Időzített bezárás, hogy a toast üzenet látható legyen egy pillanatig
       setTimeout(() => {
         onClose();
       }, 1000);
@@ -74,7 +72,7 @@ const AddPerformanceEventModal = function AddPerformanceEventModal({
 
               <div>
                 <label className="block text-sm font-medium">
-                  Előadás dátuma (YYYY-MM-DD HH:mm):
+                  Előadás dátuma (YYYY-MM-DD HH.mm):
                 </label>
                 <Field type="text" name="performanceDate" className="w-full p-2 border rounded" />
                 <ErrorMessage
@@ -85,16 +83,18 @@ const AddPerformanceEventModal = function AddPerformanceEventModal({
               </div>
 
               <div className="flex justify-end space-x-2">
-                <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
-                  Mégse
-                </button>
-                <button
+                <DefaultButton
+                  text="Mégse"
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 bg-gray-300 rounded"
+                />
+                <DefaultButton
+                  text="Hozzáadás"
                   type="submit"
                   disabled={isSubmitting}
                   className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  {isSubmitting ? 'Mentés...' : 'Hozzáadás'}
-                </button>
+                />
               </div>
             </Form>
           )}

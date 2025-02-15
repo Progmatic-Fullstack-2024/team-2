@@ -24,7 +24,7 @@ export default function NewPerformanceForm({ lecture }) {
   const [imagesPreview, setImagesPreview] = useState([]);
   // const [theaterOptions, setTheaterOptions] = useState([]);
   const [creatorOptions, setCreatorOptions] = useState([]);
-  const [selectedCreators, setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
+  const [setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
 
   const targetAgeOptions = [
     { label: 'Felnőtt', value: 'adult' },
