@@ -115,7 +115,7 @@ export default function SideBar({ params }) {
   };
 
   return (
-    <div className="min-w-fit laptop:min-w-52 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text sticky top-24 rounded-lg overflow-hidden">
+    <div className="hidden tablet:flex min-w-fit laptop:min-w-52 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text sticky top-24 rounded-lg overflow-hidden">
       {fetchReady ? (
         filterData.map((element) => (
           <MenuButton

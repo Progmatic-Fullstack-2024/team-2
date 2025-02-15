@@ -11,7 +11,7 @@ export default function MenuLink({
 }) {
   return (
     <Link
-      className={`h-full px-2 flex items-center font-bold text-base hover:text-${hoverColor} cursor-pointer active:scale-95`}
+      className={`h-full pe-1 tablet:px-2 flex items-center font-bold text-base hover:text-${hoverColor} cursor-pointer active:scale-95`}
       onClick={() => window.scrollTo(0, 0)}
       to={to}
     >

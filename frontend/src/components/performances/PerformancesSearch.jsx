@@ -24,10 +24,10 @@ export default function PerformancesSearch({ params }) {
   };
 
   return (
-    <div className="h-fit min-h-32 w-full min-w- mb-2 bg-c-secondary/10 p-5 rounded-md">
+    <div className="h-fit min-h-32 w-full mb-2 bg-c-secondary/10 p-2 tablet:p-5 rounded-md">
       <form
         id="inputForm"
-        className="w-full min-w-96 tablet:w-1/2 self-start mb-6"
+        className="w-full min-w-80 tablet:w-1/2 self-start mb-6"
         onSubmit={handleSubmit}
       >
         <div className="relative flex items-center p-1 ">
@@ -72,7 +72,6 @@ export default function PerformancesSearch({ params }) {
             props={{ searchParams, setSearchParams }}
             initialValue={searchParams.get('sort')}
             searchVariable="sort"
-            width={32}
           />
           <DropdownButton
             key="limitMenuButton"
@@ -80,7 +79,6 @@ export default function PerformancesSearch({ params }) {
             props={{ searchParams, setSearchParams }}
             initialValue={searchParams.get('limit')}
             searchVariable="limit"
-            width={20}
             reload
           />
         </div>

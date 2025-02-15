@@ -51,7 +51,7 @@ export default function PerformanceCard({ data }) {
   return (
     <Link
       to={`/performances/${data.id}`}
-      className="h-80 tablet:w-64  flex flex-col justify-between w-full 
+      className="h-80 w-full tablet:w-64 flex flex-col justify-between w-full 
       text-c-text 
       ring-1 ring-c-secondary-light/20
       transition-transform ease-out tablet:hover:scale-105 cursor-pointer
@@ -64,8 +64,8 @@ export default function PerformanceCard({ data }) {
         }}
       >
         <div
-          className=" z-10 flex flex-col h-fit bg-c-background/90 mt-auto mb-1 px-3 border-t border-c-secondary/50
-         translate-y-[5.5em] transition-translate duration-300 ease-out group-hover:translate-y-[5px]"
+          className=" z-10 flex flex-col h-fit bg-c-background/90 mt-auto px-3 border-t border-c-secondary/50
+         tablet:translate-y-[5.5em] transition-translate duration-300 ease-out group-hover:tablet:translate-y-[5px]"
         >
           <h1 className="pt-1 mb-2 text-2xl font-semibold overflow-hidden group-hover:text-c-secondary">
             {data.title}

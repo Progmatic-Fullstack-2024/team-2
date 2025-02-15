@@ -25,7 +25,7 @@ export default function ImageTitle({ title, description, image = 'title_bg_3.jpg
   return (
     <div className="w-screen relative ">
       <img
-        className="object-cover z-1 h-72 w-full brightness-[55%] blur-[1px] saturate-[30%]"
+        className="object-cover z-1 h-48 tablet:h-72 w-full brightness-[55%] blur-[1px] saturate-[30%]"
         alt={`${title}-image`}
         src={`/${image}`}
       />
