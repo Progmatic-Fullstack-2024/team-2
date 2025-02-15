@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import CustomCalendar from './CustomCalendar';
+import SvgIcon from '../../misc/SvgIcon';
 
 export default function MenuButton({ data, textColor = 'c-text', handleChange, searchParams }) {
   const { name, searchName, options, searchOptions, type } = data;
@@ -43,21 +44,10 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
     <div>
       <button className={buttonClass} type="button" onClick={toggleMenu}>
         {name}
-        <svg
-          className={`w-2.5 h-2.5 ms-auto ${dropdownMenuOpen && 'rotate-180'}`}
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 10 6"
-        >
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="m1 1 4 4 4-4"
-          />
-        </svg>
+        <SvgIcon
+          icon="arrow-left"
+          className={`w-2.5 h-2.5 ms-auto ${dropdownMenuOpen ? 'rotate-90' : '-rotate-90'}`}
+        />
       </button>
 
       <div
@@ -74,7 +64,7 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
           <ul className="text-md ">
             {options.map((value, index) => (
               <li
-                key={value}
+                key={value + index}
                 className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-background/30 `}
               >
                 <label

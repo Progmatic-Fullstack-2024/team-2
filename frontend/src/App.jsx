@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 // Components
 import Footer from './components/Footer';
@@ -27,6 +28,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
+        <ToastContainer position="top-right" autoClose={3000} />
         <Header />
         <main className="bg-c-background">
           <div className="w-full min-h-screen">

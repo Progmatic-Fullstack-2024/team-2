@@ -60,6 +60,12 @@ async function main() {
     "Zenés Varázslat",
   ];
 
+  const seasonTicketsNames = [
+    { name: "Kismenü", price: 5000, durationDay: 30, seatQuantity: 1 },
+    { name: "Happy Meal", price: 9000, durationDay: 30, seatQuantity: 2 },
+    { name: "Hárman Párban", price: 12500, durationDay: 30, seatQuantity: 3 },
+    { name: "Családi", price: 22500, durationDay: 30, seatQuantity: 5 },
+  ];
   // Generate random users for theater admins and followers
   const users = await Promise.all(
     Array.from({ length: 10 }).map((_, i) =>
@@ -113,6 +119,18 @@ async function main() {
     ),
   );
 
+  const seasonTicketsPromise = await Promise.all(
+    seasonTicketsNames.map((item, index) =>
+      prisma.seasonTicket.create({
+        data: {
+          name: item.name,
+          price: item.price,
+          durationDay: item.durationDay,
+          seatQuantity: item.seatQuantity,
+        },
+      }),
+    ),
+  );
   // Create performances for each theater with pre-defined titles
   for (const [i, theater] of theaters.entries()) {
     for (let j = 0; j < 5; j++) {
@@ -147,7 +165,6 @@ async function main() {
           performanceId: performance.id,
           performanceDate: new Date(`2025-03-${10 + j}T20:00:00Z`),
           spots: 100 + j * 20,
-          soldSpots: j * 10,
         },
       });
 
@@ -162,6 +179,7 @@ async function main() {
       //       gift: `Gift for ${performanceTitle}`,
       //     },
       //   });
+      // Create 25 unique creators with pre-defined names
     }
   }
 

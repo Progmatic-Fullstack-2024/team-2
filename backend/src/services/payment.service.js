@@ -11,11 +11,11 @@ const stripe = new Stripe(STRIPE_SECRET_KEY, {
 const config = () => STRIPE_PUBLIC_KEY;
 
 const createPaymentIntent = async ({ currency = "EUR", amount = 2000 }) => {
-  // ide kell majd elküldeni a fizetési részleteket (pénznem, mennyiség stb....)
-
   const paymentIntent = await stripe.paymentIntents.create({
     currency,
     amount,
+    metadata: { mydata: "asdasd" },
+
     automatic_payment_methods: { enabled: true },
   });
 
