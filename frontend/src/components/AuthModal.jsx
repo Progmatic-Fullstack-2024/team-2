@@ -18,20 +18,21 @@ export default function AuthModal({ onClose, formType = 'login' }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div
-        className={`rounded mx-4 bg-c-secondary-light relative ${
-          currentForm === 'register' ? 'w-full h-full overflow-y-auto' : 'max-w-sm h-1/2'
-        }`}
+        className={
+          currentForm === 'register'
+            ? 'relative bg-c-secondary-light rounded-md w-full max-w-md'
+            : 'relative bg-c-secondary-light rounded-md w-full max-w-xs'
+        }
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
+          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
           aria-label="Close"
         >
           <X size={24} />
         </button>
-
-        <div className="h-full flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
           {currentForm === 'login' ? (
             <LoginForm onSwitch={switchForm} onClose={onClose} />
           ) : (

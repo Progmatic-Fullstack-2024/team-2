@@ -1,20 +1,29 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import ImageTitle from '../components/misc/ImageTitle';
 import Unautorized from '../components/Unautorized.jsx';
 import ListUserstable from '../components/users/ListUserstable.jsx';
+import UserMenu from '../components/users/UserMenu.jsx';
 import AuthContext from '../contexts/AuthContext';
 
 export default function ListUsers() {
   const { user } = useContext(AuthContext);
+  const [filterParam, setFilterParam] = useState('');
+
+  const menuHandler = (param) => {
+    if (param === 'filter=all') param = '';
+    setFilterParam(param);
+  };
   return (
     <>
       <ImageTitle title="Felhasználok listázása" description="" />
-      <div className=" min-h-screen flex flex-col items-center m-0">
+      <div className="  m-1 mx-1">
         {user && user.role === 'admin' ? (
           <div className="mt-28">
-            <h1 className="my-1 text-center text-2xl text-white">Felhasználók listája</h1>
-            <ListUserstable />
+            <div className="w-full mx-auto">
+              <UserMenu func={menuHandler} />
+            </div>
+            <ListUserstable param={filterParam} />
           </div>
         ) : (
           <Unautorized text="Kérlek előbb jeletkezz be adminisztátorként!" />

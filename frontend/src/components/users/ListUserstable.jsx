@@ -4,7 +4,7 @@ import OrderArrow from './OrderArrows.jsx';
 import UserTableRow from './UserTableRow.jsx';
 import userHandle from '../../services/userhandle.service.js';
 
-export default function listUserstable() {
+export default function listUserstable({ param }) {
   const [users, setUsers] = useState(null);
   const [sortDirection, setSortDirection] = useState(1);
   const [nameSort, setNameSort] = useState(false);
@@ -33,22 +33,35 @@ export default function listUserstable() {
       params = 'orderBy=email&direction=';
     }
     params += direction === 1 ? 'asc' : 'desc';
+    if (param !== '') params += `&${param}`;
     await loadList(params);
   };
 
   useEffect(() => {
-    loadList();
-  }, []);
+    let params = '';
+    if (emailSort) params = 'orderBy=email&direction=';
+    if (nameSort) params = 'orderBy=name&direction=';
+    if (emailSort || nameSort) {
+      params += sortDirection === 1 ? 'asc' : 'desc';
+      if (param !== '') params += '&';
+    }
+    params += param;
+    loadList(params);
+  }, [param]);
   const startIndex = 1;
 
   return (
-    <div className="w-full mx-auto my-40 bg-c-secondary-light p-12 rounded-md">
+    <div className="w-full mx-auto my-40 bg-c-secondary-light p-5 rounded-md overflow-x-auto ">
       {users ? (
-        <table className="table-auto border-solid p-2 border-gray-950 border border-separate rounded ">
+        <table className="w-full table-fix border-solid p-2 border-gray-950 border border-separate rounded">
           <thead>
             <tr className="font-bold">
-              <td className="border-solid p-2 border-gray-950 border rounded">Sorszám</td>
-              <td className="border-solid p-2 border-gray-950 border rounded">
+              <td className="border-solid p-2 border-gray-950 border rounded hidden desktop:table-cell">
+                Sor-
+                <br />
+                szám
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
                 <div className="flex fex-row gap-2">
                   <span>Vezetéknév</span>
                   <OrderArrow
@@ -59,8 +72,21 @@ export default function listUserstable() {
                   />
                 </div>
               </td>
-              <td className="border-solid p-2 border-gray-950 border rounded">Keresztnév</td>
-              <td className="border-solid p-2 border-gray-950 border rounded">
+              <td className="border-solid p-2 border-gray-950 border rounded tablet:hidden">
+                <div className="flex fex-row gap-2">
+                  <span>Név</span>
+                  <OrderArrow
+                    selected={nameSort}
+                    direction={sortDirection}
+                    func={sortHandler}
+                    column="name"
+                  />
+                </div>
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
+                Keresztnév
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded w-sx">
                 <div className="flex fex-row gap-2">
                   <span>E-mail cím</span>
                   <OrderArrow
@@ -71,8 +97,12 @@ export default function listUserstable() {
                   />
                 </div>
               </td>
-              <td className="border-solid p-2 border-gray-950 border rounded">telefon</td>
-              <td className="border-solid p-2 border-gray-950 border rounded">Születési dátum</td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
+                telefon
+              </td>
+              <td className="border-solid p-2 border-gray-950 border rounded hidden tablet:table-cell">
+                Születési dátum
+              </td>
               <td className="border-solid p-2 border-gray-950 border rounded">Szerepkör</td>
               <td className="border-solid p-2 border-gray-950 border rounded">
                 {String.fromCharCode(160)}
