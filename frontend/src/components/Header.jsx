@@ -144,7 +144,7 @@ export default function Header() {
                   },
                 }}
               >
-                <MenuItem onClick={() => navigate('/')}>Felhasználók kezelése</MenuItem>
+                <MenuItem onClick={() => navigate('/userlist')}>Felhasználók kezelése</MenuItem>
                 <MenuItem onClick={() => navigate('/')}>Színházak kezelése</MenuItem>
               </Menu>
             </div>

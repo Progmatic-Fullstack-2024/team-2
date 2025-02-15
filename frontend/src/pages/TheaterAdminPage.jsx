@@ -18,7 +18,6 @@ export default function TheaterAdminPage() {
         .then((theaterData) => {
           setTheater(theaterData);
         })
-        .catch('error')
         .finally(() => setLoading(false));
     } else {
       setLoading(false);

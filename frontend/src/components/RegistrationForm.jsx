@@ -7,7 +7,7 @@ import DefaultButton from './misc/DefaultButton';
 
 function FormField({ label, name, type = 'text', required = false }) {
   return (
-    <div className="mb-4">
+    <div>
       <label htmlFor={name} className="text-gray-800 font-bold">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
@@ -51,7 +51,7 @@ export default function RegistrationForm({ onSwitch }) {
   };
 
   return (
-    <div className="w-1/2 mx-auto my-40 bg-c-secondary-light p-12 rounded-md">
+    <div className="p-2 bg-c-secondary-light">
       <h2 className="font-bold text-gray-800 text-2xl mb-6">Regisztráció</h2>
 
       {successMsg && (
@@ -73,13 +73,13 @@ export default function RegistrationForm({ onSwitch }) {
           <FormField label="Jelszavad" name="password" type="password" required />
           <FormField label="Jelszavad mégegyszer" name="confirmPassword" type="password" required />
 
-          <div className="flex justify-center">
+          <div className="flex mt-4 justify-center">
             <DefaultButton text="Regisztráció" type="submit" />
           </div>
         </Form>
       </Formik>
 
-      <div className="text-black flex justify-center mt-5">
+      <div className="text-black flex py-2 justify-center">
         Már regisztráltál?
         <button
           type="button"

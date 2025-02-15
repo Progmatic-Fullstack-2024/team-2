@@ -20,6 +20,13 @@ const optionsTheaterImg = {
   folder: "theater-images",
 };
 
+// const optionsPerformanceImg = {
+//   use_filename: true,
+//   unique_filename: true,
+//   overwrite: false,
+//   folder: "performance-images",
+// };
+
 // Function to upload a single file const
 export const uploadSingleFile = async (file) => {
   if (file) {

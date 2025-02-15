@@ -73,6 +73,15 @@ const setTheaterAdmin = async (userId, theaterId) => {
   }
 };
 
+const countUsers = async (params) => {
+  try {
+    const response = await axiosInstance.get(`users/usercount?${params}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
 export default {
   getAllUsers,
   getOwnUser,
@@ -82,4 +91,5 @@ export default {
   deleteUser,
   deleteTheaterAdmin,
   setTheaterAdmin,
+  countUsers,
 };

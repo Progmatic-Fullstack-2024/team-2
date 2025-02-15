@@ -47,7 +47,7 @@ export default function NewPerformanceForm({ lecture }) {
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
-    values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
+    values.creatorId.forEach((creator) => formData.append('creatorIds', creator));
 
     if (values.posterURL) {
       formData.append('poster', values.posterURL);
@@ -61,7 +61,7 @@ export default function NewPerformanceForm({ lecture }) {
     }
 
     try {
-      const response = await createPerformance(formData);
+      const response = await createPerformance.createPerformance(formData);
 
       if (!response.ok) throw new Error('Hiba történt az előadás létrehozásakor.');
 
@@ -127,7 +127,7 @@ export default function NewPerformanceForm({ lecture }) {
       </h2>
       <Formik
         initialValues={initialValues}
-        validationSchema={performanceValidationSchema}
+        validationSchema={performanceValidationSchema.performanceValidationSchema}
         onSubmit={handleSubmit}
       >
         {({ setFieldValue, values }) => (
