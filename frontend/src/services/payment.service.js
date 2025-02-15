@@ -21,4 +21,16 @@ const createPaymentIntent = async (params) => {
   }
 };
 
-export default { getConfig, createPaymentIntent };
+const registerPayment = async (params) => {
+  const { userId, seasonTicketId } = params;
+  try {
+    const response = await axiosInstance.post('/api/user-season-ticket', {
+      data: { userId, seasonTicketId },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { getConfig, createPaymentIntent, registerPayment };

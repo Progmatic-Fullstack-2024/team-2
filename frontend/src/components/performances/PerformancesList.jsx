@@ -9,7 +9,7 @@ export default function PerformancesList({ performances }) {
       )}
       {performances.length > 0
         ? performances.map((perf) => (perf ? <PerformanceCard data={perf} key={perf.id} /> : null))
-        : [...Array(4)].map((v, index) => <PerformanceCardEmpty keey={index} hidden />)}
+        : [...Array(4)].map((v, index) => <PerformanceCardEmpty key={index} hidden />)}
     </section>
   );
 }

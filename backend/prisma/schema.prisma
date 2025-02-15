@@ -144,6 +144,7 @@ model UserSeasonTicket {
   UserVisitedPerformance UserVisitedPerformance[]
 }
 
+
 enum Profession {
   actor
   director
