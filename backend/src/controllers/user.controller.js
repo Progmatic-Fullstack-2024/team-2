@@ -112,6 +112,21 @@ const countUsers = async (req, res) => {
   res.status(201).json({ numberOfUsers: userNumber });
 };
 
+const createNewPassword = async (req, res) => {
+  const { email, lastname, firstname } = req.body;
+  let outAnswer = "";
+  if (email && lastname && firstname) {
+    const answer = await userService.createNewPassword(
+      email,
+      lastname,
+      firstname,
+    );
+    if (answer.accepted) outAnswer = ` mail send:${answer.accepted}`;
+    else outAnswer = ` mail not sent error: ${answer}`;
+    res.status(201).json({ result: outAnswer });
+  } else res.status(400).json({ error: "parameter missing" });
+};
+
 export default {
   listUsers,
   getUser,
@@ -120,4 +135,5 @@ export default {
   deleteUser,
   passwordChange,
   countUsers,
+  createNewPassword,
 };

@@ -61,6 +61,9 @@ export default function LoginForm({ onSwitch, onClose }) {
           Regisztrálj
         </button>
       </div>
+      <p className="text-gray-900">
+        <a href="newpassword">Elfelejtett jelszó</a>
+      </p>
     </div>
   );
 }
