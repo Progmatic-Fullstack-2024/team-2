@@ -43,12 +43,15 @@ export default function PerformanceForm({ performance }) {
 
     performanceEventId: selectedPerformanceEvents.map((performanceEvent) => performanceEvent.id),
 
-    // Future Performance
-    targetBudgetIdeal: performance.futurePerformance.targetBudgetIdeal || '',
-    targetBudget: performance.futurePerformance.targetBudget || '',
-    minimumBudget: performance.futurePerformance.minimumtargetBudget || '',
-    actualBudget: performance.futurePerformance.actualBudget || '',
-    gift: performance.futurePerformance.gift || '',
+    // Ha van futurePerformance, akkor alapértelmezetten legyen bepipálva
+    plannedPerformance: !!performance?.futurePerformance,
+
+    // Ha nincs, akkor a mezők legyenek üresek (elkerüli a hibát)
+    targetBudgetIdeal: performance?.futurePerformance?.targetBudgetIdeal ?? '',
+    targetBudget: performance?.futurePerformance?.targetBudget ?? '',
+    minimumBudget: performance?.futurePerformance?.minimumBudget ?? '',
+    actualBudget: performance?.futurePerformance?.actualBudget ?? '',
+    gift: performance?.futurePerformance?.gift ?? '',
   };
 
   useEffect(() => {
@@ -225,6 +228,7 @@ export default function PerformanceForm({ performance }) {
                 type="checkbox"
                 name="plannedPerformance"
                 className="mr-2"
+                checked={values.plannedPerformance} // Beállítja az alapértelmezett állapotot
                 onChange={(e) => setFieldValue('plannedPerformance', e.target.checked)}
               />
               <label htmlFor="plannedPerformance" className="text-gray-800 font-bold">
@@ -253,7 +257,7 @@ export default function PerformanceForm({ performance }) {
                         <Field
                           type="number"
                           name={field}
-                          placeholder={performance?.futurePerformance?.[field] || ''}
+                          placeholder={performance?.futurePerformance?.[field] || 'Összeg'}
                           className="w-full border p-2 rounded my-1 text-gray-800"
                         />
                         <ErrorMessage
