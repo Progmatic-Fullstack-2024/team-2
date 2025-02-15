@@ -1,7 +1,10 @@
 import prisma from "../models/prisma-client.js";
 
 const list = async () => {
-  const response = await prisma.seasonTicket.findMany();
+  const response = await prisma.seasonTicket.findMany({
+    orderBy: { price: "asc" },
+  });
+  console.log("response");
   return response;
 };
 
