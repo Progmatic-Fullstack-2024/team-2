@@ -16,6 +16,7 @@ import seasonTicketsRoutes from "./routes/season-tickets.routes.js";
 import performanceEventsRoutes from "./routes/performanceEvents.routes.js";
 import userSeasonTicketRoutes from "./routes/user-season-ticket.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
+
 const app = express();
 
 app.use(cors({ origin: FRONTEND_URL }));
