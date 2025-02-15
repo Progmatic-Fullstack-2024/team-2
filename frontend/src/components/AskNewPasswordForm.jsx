@@ -56,7 +56,7 @@ export default function AskNewPasswordForm() {
   };
 
   return (
-    <div className="w-2/3 mx-auto bg-c-secondary-light p-12  px-auto rounded-md relative">
+    <div className="w-2/3 mx-auto bg-c-secondary-light p-12 mt-5 px-auto rounded-md relative">
       <NewPasswordResult visilable={resultVisilable} msg={msg} callBack={closeResult} />
       <Formik
         initialValues={initialValues}
