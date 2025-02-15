@@ -1,12 +1,15 @@
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import paymentService from '../../services/payment.service.js';
 import Spinner from '../misc/Spinner';
-// payment_intent=pi_3QoT9zGdxLWFMrcP0SxyeeUd&payment_intent_client_secret=pi_3QoT9zGdxLWFMrcP0SxyeeUd_secret_pLfg0pybzJAuil8QBnwyFPL6y&redirect_status=succeeded
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ stripeData }) {
   const stripe = useStripe();
   const elements = useElements();
+
+  const navigate = useNavigate();
 
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -14,11 +17,7 @@ export default function CheckoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
+    if (!stripe || !elements) return;
 
     setIsProcessing(true);
 
@@ -27,9 +26,16 @@ export default function CheckoutForm() {
       confirmParams: {
         return_url: `${window.location.origin}/payment/completion`,
       },
+      redirect: 'if_required',
     });
 
-    if (error.type === 'card_error' || error.type === 'validation_error') {
+    if (!error) {
+      paymentService.registerPayment({
+        userId: stripeData.userId,
+        seasonTicketId: stripeData.seasonTicketId,
+      });
+      navigate(`/payment/completion`);
+    } else if (error.type === 'card_error' || error.type === 'validation_error') {
       setMessage(error.message);
     } else {
       setMessage('An unexpected error occured.');

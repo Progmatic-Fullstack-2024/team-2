@@ -31,20 +31,24 @@ const list = async ({ filter, search }) => {
       title: { contains: search, mode: "insensitive" },
     },
     include: {
+      // performanceEvents: orderBy === "performanceDate" ? orderBy : true,
       performanceEvents: true,
       theater: true,
       genre: !!filter.genre,
       creators: !!filter.creators,
     },
-    orderBy,
+
+    orderBy:
+      Object.keys(orderBy)[0] === "performanceDate" ? undefined : orderBy,
   });
   if (!performances) throw new HttpError("Performances not found", 404);
   // custom skip and take
   // console.log(performances);
+
   const filteredPerformances = performances.filter(
     (item, index) => index >= filter.skip && index < filter.skip + filter.take,
   );
-
+  // console.log(filteredPerformances);
   return { data: filteredPerformances, maxSize: performances.length };
 };
 

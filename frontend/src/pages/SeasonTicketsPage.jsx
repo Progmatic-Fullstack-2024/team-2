@@ -29,10 +29,17 @@ export default function SeasonTickets() {
         title="Bérletvásárlás"
         description="Választhatsz különböző bérletcsomagok közül..."
       />
-      <div className=" w-full p-20 flex flex-wrap flex-cols justify-center gap-10">
-        {seasonTickets.map((item, index) => (
-          <SeasonTicketsCard key={item.id} data={item} index={index} />
-        ))}
+      <div className="mx-auto w-fit flex items-center justify-center my-20 ">
+        <div className="max-h-[700px] w-[600px] hidden laptop:flex ">
+          <img src="season-ticket-bg.png" className="bg-cover" alt="season-ticket-picture" />
+          <div className="w-[150px] h-full absolute float-right bg-gradient-to-r from-10% from-c-background  to-transparent" />
+        </div>
+
+        <div className="w-full tablet:ms-10 flex flex-wrap flex-col items-start justify-center gap-5">
+          {seasonTickets.map((item, index) => (
+            <SeasonTicketsCard key={item.id} data={item} index={index} />
+          ))}
+        </div>
       </div>
     </>
   );

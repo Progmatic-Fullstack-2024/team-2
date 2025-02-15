@@ -37,19 +37,6 @@ model Genre {
   perfomances Performance[] @relation("Performance_Genre")
 }
 
-model UserVisitedPerformance {
-  id                    String                @id @default(cuid())
-  qrImage               String
-  userId                String
-  performanceEventsId   String 
-  userSeasonTicketId    String 
-  seats                 Int
-
-  userSeasonTicket      UserSeasonTicket      @relation(fields: [userSeasonTicketId], references: [id])
-  user                  User                  @relation(fields: [userId], references: [id])
-  performanceEvents     PerformanceEvents     @relation(fields: [performanceEventsId], references: [id])
-}
-
 model Performance {
   id                      String              @id @default(cuid())
   title                   String
@@ -71,7 +58,6 @@ model Performance {
 model PerformanceEvents {
   id                     String                   @id @default(cuid())
   spots                  Int
-  soldSpots              Int                      @default(0)
   performanceId          String
   performanceDate        DateTime                 @default(now())
   premiere               Performance?             @relation("premiere")
@@ -137,13 +123,25 @@ model SeasonTicket {
 }
 
 model UserSeasonTicket {
-  id                     String                   @id
+  id                     String                   @id @default(cuid())
   userId                 String
   seasonTicketId         String
   created                DateTime                 @default(now())
   SeasonTicket           SeasonTicket             @relation(fields: [seasonTicketId], references: [id])
   User                   User                     @relation(fields: [userId], references: [id])
   UserVisitedPerformance UserVisitedPerformance[]
+}
+
+model UserVisitedPerformance {
+  id                  String            @id @default(cuid())
+  qrImage             String
+  userId              String
+  seats               Int
+  performanceEventsId String
+  userSeasonTicketId  String
+  PerformanceEvents   PerformanceEvents @relation(fields: [performanceEventsId], references: [id])
+  User                User              @relation(fields: [userId], references: [id])
+  UserSeasonTicket    UserSeasonTicket  @relation(fields: [userSeasonTicketId], references: [id])
 }
 
 enum Profession {
