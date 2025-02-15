@@ -104,6 +104,10 @@ export default function BookingModal({
           placeholder="Válassz bérletet"
           getOptionLabel={(e) => <div className="whitespace-pre-wrap">{e.label}</div>}
           noOptionsMessage={() => 'Nem található bérlet'}
+          onChange={(e) => {
+            setSelectedTicket(e.value); // Bérlet kiválasztása
+            setTicketCount(0); // Jegyek száma nullázása
+          }}
         />
 
         <label className="block mb-2">Jegyek száma</label>
