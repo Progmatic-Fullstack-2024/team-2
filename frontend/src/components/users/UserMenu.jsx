@@ -9,7 +9,6 @@ export default function UserMenu({ func }) {
   const [phoneChecked, setPhoneChecked] = useState(false);
   const [filter, setFilter] = useState('all');
   const [searchValue, setSearchValue] = useState('');
-  const [firstRender, setFirstRender] = useState(true);
   const [pageSize, setPageSize] = useState(Infinity);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
@@ -32,12 +31,11 @@ export default function UserMenu({ func }) {
 
   const pagination = async (params) => {
     const count = await userHandle.countUsers(params);
-    let newParam = params;
+    let newParam = '';
     let size = 0;
     if (count) size = count.numberOfUsers;
     if (pageSize < size) {
-      if (newParam !== '') newParam += '&';
-      newParam += `page=${page}&limit=${pageSize}`;
+      newParam = `page=${page}&limit=${pageSize}`;
       setIsPage(true);
       const lastPage = Math.ceil(size / pageSize);
       setMaxPage(lastPage);
@@ -48,27 +46,28 @@ export default function UserMenu({ func }) {
     return newParam;
   };
 
-  const searchHandler = async () => {
-    let searchText = getSearchText();
-    if (filter !== 'all') searchText += `&filter=${filter}`;
-    searchText = await pagination(searchText);
-    func(searchText);
-  };
-
   const changeSearchValue = (event) => {
     setSearchValue(event.target.value);
   };
 
+  const reLoadPage = async () => {
+    let searchParam = '';
+    let param = '';
+    if (searchValue !== '') searchParam = getSearchText();
+    param += searchParam;
+    if (filter !== 'all') {
+      if (param !== '') param += `&`;
+      param = `filter=${filter}`;
+    }
+    const paginationParam = await pagination(param);
+    param += param !== '' ? '&' : '';
+    param += paginationParam;
+    func(param);
+  };
+
   const inputHandler = async (event) => {
     if (event.target.name === 'filter') {
-      let param = '';
       setFilter(event.target.value);
-      if (searchValue !== '') {
-        param = `${getSearchText()}&`;
-      }
-      if (event.target.value !== 'all') param += `filter=${event.target.value}`;
-      param = await pagination(param);
-      func(param);
     } else {
       switch (event.target.name) {
         case 'lastName':
@@ -109,20 +108,9 @@ export default function UserMenu({ func }) {
     setPage(newPage);
   };
 
-  const rePagination = async () => {
-    let param = await pagination('');
-    if (searchValue !== '') param += getSearchText();
-    func(param);
-  };
-
   useEffect(() => {
-    if (!firstRender) searchHandler();
-    else setFirstRender(false);
-  }, [searchValue]);
-
-  useEffect(() => {
-    rePagination();
-  }, [page, pageSize]);
+    reLoadPage();
+  });
 
   return (
     <form className=" w-full p-2  bg-c-secondary rounded-md place-content-between">
