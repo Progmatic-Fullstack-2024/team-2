@@ -6,6 +6,8 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import Completion from './components/payment/Completion.jsx';
 import { AuthProvider } from './contexts/AuthContext';
+// Pages
+import AskNewPasswordPage from './pages/AskNewPasswordPage.jsx';
 import BrowsingPage from './pages/BrowsingPage.jsx';
 import EditPerformancePage from './pages/EditPerformancePage.jsx';
 import EditTheaterPage from './pages/EditTheaterPage.jsx';
@@ -45,6 +47,7 @@ function App() {
               <Route path="/userhandler" element={<SelectedUser />} />
               <Route path="/season-tickets" element={<SeasonTicketsPage />} />
               <Route path="/browse" element={<BrowsingPage />} />
+              <Route path="/newpassword" element={<AskNewPasswordPage />} />
             </Routes>
           </div>
           <Footer />
