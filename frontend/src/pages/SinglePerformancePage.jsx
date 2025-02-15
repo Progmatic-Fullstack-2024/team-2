@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import AuthContext from '../contexts/AuthContext';
+import AuthModal from '../components/AuthModal';
 import BookingModal from '../components/BookingModal';
 import CreatorsList from '../components/creators/CreatorsList';
 import DefaultButton from '../components/misc/DefaultButton';
@@ -12,6 +14,7 @@ import performanceService from '../services/performances.service';
 
 export default function DetailsPage() {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [performance, setPerformance] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -19,9 +22,11 @@ export default function DetailsPage() {
   const [selectedDates, setSelectedDates] = useState([]);
   const [error, setError] = useState(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState('');
   const [ticketCount, setTicketCount] = useState(0);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const isLoggedIn = user !== null;
 
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
@@ -39,7 +44,8 @@ export default function DetailsPage() {
   const toggleDateSelection = (event) => {
     setSelectedDates([event.performanceDate]); // Csak az aktuálisan kiválasztott dátumot tároljuk
     setSelectedEvent(event); // Teljes performanceEvent mentése
-    setIsBookingModalOpen(true);
+    if(isLoggedIn) setIsBookingModalOpen(true)
+      else setIsAuthModalOpen(true);
   };
 
   const handleNextImage = () => {
@@ -103,6 +109,14 @@ export default function DetailsPage() {
     ];
   };
 
+  // const toggleAuthModal = () => {
+  //   setIsAuthModalOpen(true);
+  // };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+  };
+
   return (
     <>
       <ImageTitle title={performance.title} />
@@ -133,6 +147,7 @@ export default function DetailsPage() {
             events={performance.performanceEvents}
             selectedDates={selectedDates}
             onToggleDate={toggleDateSelection}
+            // onRequireAuth={toggleAuthModal} 
           />
 
           <div className="flex justify-around">
@@ -153,6 +168,7 @@ export default function DetailsPage() {
         selectedDates={selectedDates}
         selectedEvent={selectedEvent}
       />
+      {isAuthModalOpen && <AuthModal onClose={closeAuthModal} />}
     </>
   );
 }

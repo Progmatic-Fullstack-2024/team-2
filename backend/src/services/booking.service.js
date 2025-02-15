@@ -54,7 +54,7 @@ const buyTicket = async ({
     data: {
       seats,
       qrImage,
-      UserSeasonTicket: {
+      userSeasonTicket: {
         connect: { id: userSeasonTicketId }, // Kapcsolódás a meglévő bérlethez
       },
       user: {

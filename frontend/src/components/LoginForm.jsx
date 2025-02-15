@@ -29,7 +29,6 @@ export default function LoginForm({ onSwitch, onClose }) {
     const success = await login(values);
     if (success) {
       onClose();
-      navigate('/');
     }
   };
 

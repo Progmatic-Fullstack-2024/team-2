@@ -1,4 +1,19 @@
-export default function PerformanceDates({ events, selectedDates, onToggleDate }) {
+import { useState, useContext } from "react";
+import AuthContext from "../../contexts/AuthContext";
+import AuthModal from "../AuthModal";
+
+export default function PerformanceDates({ events, selectedDates, onToggleDate}) {
+//   const { user } = useContext(AuthContext);
+//   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+//   const userId = user?.id;
+// console.log(userId);
+//   const handleDateClick = (event) => {
+//     if (userId === null) {
+//       setIsAuthModalOpen(true); // Ha nincs bejelentkezve, AuthModal nyitás
+//     } else {
+//       onToggleDate(event); // Ha be van jelentkezve, a dátumot választja
+//     }
+//   };
   return (
     <div>
       <label className="block text-lg font-semibold mt-4">Következő előadás időpontok:</label>
@@ -20,6 +35,8 @@ export default function PerformanceDates({ events, selectedDates, onToggleDate }
                 }`}
                 // onClick={() => onToggleDate(event.performanceDate)}
                 onClick={() => onToggleDate(event)}
+                // onClick={() => (userId ? onToggleDate(event) : onRequireAuth())}
+                // onClick={() => handleDateClick(event)}
               >
                 {new Date(event.performanceDate).toLocaleString('hu-HU')}
               </button>
@@ -27,6 +44,7 @@ export default function PerformanceDates({ events, selectedDates, onToggleDate }
           })}
         </div>
       )}
+      {/* <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} /> */}
     </div>
   );
 }
