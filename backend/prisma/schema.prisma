@@ -38,16 +38,15 @@ model Genre {
 }
 
 model UserVisitedPerformance {
-  id                    String                @id @default(cuid())
-  qrImage               String
-  userId                String
-  performanceEventsId   String 
-  userSeasonTicketId    String 
-  seats                 Int
-
-  userSeasonTicket      UserSeasonTicket      @relation(fields: [userSeasonTicketId], references: [id])
-  user                  User                  @relation(fields: [userId], references: [id])
-  performanceEvents     PerformanceEvents     @relation(fields: [performanceEventsId], references: [id])
+  id                  String            @id @default(cuid())
+  qrImage             String
+  userId              String
+  seats               Int
+  performanceEventsId String
+  userSeasonTicketId  String
+  performanceEvents   PerformanceEvents @relation(fields: [performanceEventsId], references: [id])
+  user                User              @relation(fields: [userId], references: [id])
+  userSeasonTicket    UserSeasonTicket  @relation(fields: [userSeasonTicketId], references: [id])
 }
 
 model Performance {
@@ -69,13 +68,13 @@ model Performance {
 }
 
 model PerformanceEvents {
-  id                      String                    @id @default(cuid())
-  spots                   Int
-  performanceId           String
-  performanceDate         DateTime                  @default(now())
-  userVisitedPerformance  UserVisitedPerformance []
-  premiere                Performance?              @relation("premiere")
-  performance             Performance               @relation(fields: [performanceId], references: [id])
+  id                     String                   @id @default(cuid())
+  spots                  Int
+  performanceId          String
+  performanceDate        DateTime                 @default(now())
+  premiere               Performance?             @relation("premiere")
+  performance            Performance              @relation(fields: [performanceId], references: [id])
+  userVisitedPerformance UserVisitedPerformance[]
 }
 
 model FuturePerformances {
