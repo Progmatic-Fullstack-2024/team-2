@@ -7,8 +7,6 @@ import UserHandle from '../services/userhandle.service.js';
 import DefaultButton from './misc/DefaultButton.jsx';
 import NewPasswordResult from './NewPasswordResult.jsx';
 
-
-
 export default function AskNewPasswordForm() {
   const [msg, setMsg] = useState('');
   const [resultVisilable, setResultVisilable] = useState(false);

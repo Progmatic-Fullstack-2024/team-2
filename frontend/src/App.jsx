@@ -23,7 +23,6 @@ import SelectedUser from './pages/SelectedUser.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
 import TheaterAdminPage from './pages/TheaterAdminPage.jsx';
 
-
 function App() {
   return (
     <Router>
