@@ -1,5 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -24,6 +24,7 @@ export default function NewPerformanceForm({ lecture }) {
   const [imagesPreview, setImagesPreview] = useState([]);
   // const [theaterOptions, setTheaterOptions] = useState([]);
   const [creatorOptions, setCreatorOptions] = useState([]);
+  const [selectedCreators, setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
 
   const targetAgeOptions = [
     { label: 'Felnőtt', value: 'adult' },
@@ -42,11 +43,32 @@ export default function NewPerformanceForm({ lecture }) {
     targetAudience: '', // default empty targetAdudience
   };
 
+  useEffect(() => {
+    const fetchCreators = async () => {
+      try {
+        const creators = await getCreators.getCreators();
+        console.log('Alkotók betöltve:', creators); // 🔍 Ellenőrzés a konzolon
+        setCreatorOptions(creators);
+
+        // Ha az előadásnak már vannak alkotói, beállítjuk őket
+        if (performance?.creatorId) {
+          setSelectedCreators(performance.creatorId);
+        }
+      } catch (error) {
+        console.error('Hiba történt az alkotók betöltésekor:', error); // 🔍 Hibakeresés
+        toast.error('Hiba történt az alkotók betöltésekor.');
+      }
+    };
+
+    fetchCreators();
+  }, [performance]);
+
   const handleSubmit = async (values, { resetForm }) => {
     const formData = new FormData();
     formData.append('title', values.title);
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
+
     values.creatorId.forEach((creator) => formData.append('creatorIds', creator));
 
     if (values.posterURL) {
@@ -101,16 +123,16 @@ export default function NewPerformanceForm({ lecture }) {
     setImagesPreview(updatedPreviews);
   };
 
-  const fetchCreators = async () => {
-    if (creatorOptions.length === 0) {
-      try {
-        const creators = await getCreators();
-        setCreatorOptions(creators);
-      } catch (error) {
-        toast.error('Hiba történt az alkotók betöltésekor.');
-      }
-    }
-  };
+  // const fetchCreators = async () => {
+  //   if (creatorOptions.length === 0) {
+  //     try {
+  //       const creators = await getCreators();
+  //       setCreatorOptions(creators);
+  //     } catch (error) {
+  //       toast.error('Hiba történt az alkotók betöltésekor.');
+  //     }
+  //   }
+  // };
 
   const handleBack = () => {
     if (window.history.length > 2) {
@@ -171,7 +193,9 @@ export default function NewPerformanceForm({ lecture }) {
                     name={`creatorId[${index}]`}
                     className="w-full border p-2 rounded text-gray-800"
                   >
-                    <option value="">Válassz egy alkotót</option>
+                    <option value={_.id} key={_.id}>
+                      {_.name ? _.name : 'Válassz egy alkotót!'}
+                    </option>
                     {creatorOptions.map((creator) => (
                       <option key={creator.id} value={creator.id}>
                         {creator.name}
@@ -188,17 +212,6 @@ export default function NewPerformanceForm({ lecture }) {
                     className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
                   >
                     Törlés
-                  </button>
-                  <button
-                    type="button"
-                    onClick={fetchCreators}
-                    className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                  >
-                    <img
-                      src="creatorSearchIcon.svg"
-                      alt="Alkotó keresése ikon"
-                      className="w-6 h-6"
-                    />
                   </button>
                 </div>
               ))}
