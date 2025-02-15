@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import DefaultButton from './misc/DefaultButton';
@@ -85,10 +85,13 @@ export default function BookingModal({
     onClose(); // Meghívja az eredeti `onClose` függvényt
   };
 
-  const options = seasonTickets.map((ticket, index) => ({
+  const options = seasonTickets.map((ticket) => ({
     label: `${ticket.SeasonTicket.name} \nExp.: ${handleDate(ticket.expirationDate)} \nMegvehető helyek: ${ticket.remainingSeats}`,
     value: ticket.id,
   }));
+
+  const getLabel = (e) => <div className="whitespace-pre-wrap">{e.label}</div>;
+
 
   return (
     <div className="mx-2 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -102,7 +105,7 @@ export default function BookingModal({
           menuPlacement="auto"
           options={options}
           placeholder="Válassz bérletet"
-          getOptionLabel={(e) => <div className="whitespace-pre-wrap">{e.label}</div>}
+          getOptionLabel={getLabel}
           noOptionsMessage={() => 'Nem található bérlet'}
           onChange={(e) => {
             setSelectedTicket(e.value); // Bérlet kiválasztása
@@ -144,7 +147,7 @@ export default function BookingModal({
           <div className="text-center mt-4">
             <img src={qrCode} alt="Jegy QR-kódja" className="mx-auto w-48 h-48" />
             <a href={qrCode} download="jegy_qr_kod.png">
-              <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">Letöltés 📥</button>
+              <button type='button' className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">Letöltés 📥</button>
             </a>
             <DefaultButton text="Vissza" onClick={() => navigate(-1)} />
           </div>

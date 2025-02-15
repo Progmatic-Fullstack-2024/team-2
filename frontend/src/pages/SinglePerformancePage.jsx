@@ -1,7 +1,6 @@
-import { useEffect, useState, useContext} from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import AuthContext from '../contexts/AuthContext';
 import AuthModal from '../components/AuthModal';
 import BookingModal from '../components/BookingModal';
 import CreatorsList from '../components/creators/CreatorsList';
@@ -10,6 +9,7 @@ import Gallery from '../components/misc/Galery';
 import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
 import PerformanceDates from '../components/performances/PerformanceDates';
+import AuthContext from '../contexts/AuthContext';
 import performanceService from '../services/performances.service';
 
 export default function DetailsPage() {
@@ -44,8 +44,8 @@ export default function DetailsPage() {
   const toggleDateSelection = (event) => {
     setSelectedDates([event.performanceDate]); // Csak az aktuálisan kiválasztott dátumot tároljuk
     setSelectedEvent(event); // Teljes performanceEvent mentése
-    if(isLoggedIn) setIsBookingModalOpen(true)
-      else setIsAuthModalOpen(true);
+    if (isLoggedIn) setIsBookingModalOpen(true);
+    else setIsAuthModalOpen(true);
   };
 
   const handleNextImage = () => {
@@ -147,7 +147,7 @@ export default function DetailsPage() {
             events={performance.performanceEvents}
             selectedDates={selectedDates}
             onToggleDate={toggleDateSelection}
-            // onRequireAuth={toggleAuthModal} 
+            // onRequireAuth={toggleAuthModal}
           />
 
           <div className="flex justify-around">
