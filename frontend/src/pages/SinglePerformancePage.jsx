@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import CreatorsList from '../components/creators/CreatorsList';
@@ -7,29 +7,37 @@ import Gallery from '../components/misc/Galery';
 import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
 import PerformanceDates from '../components/performances/PerformanceDates';
+import AuthContext from '../contexts/AuthContext';
 import performanceService from '../services/performances.service';
 
 export default function DetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [performance, setPerformance] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Képgörgetéshez
   const [selectedImage, setSelectedImage] = useState(null); // Modalhoz
   const [selectedDates, setSelectedDates] = useState('');
   const [error, setError] = useState(null);
+  const [isOwn, setIsOwn] = useState(false);
 
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
       try {
         const fetchedPerformance = await performanceService.getById(performanceId);
         setPerformance(fetchedPerformance);
+
+        if (user?.id) {
+          const ownStatus = await performanceService.isOwn(performanceId, user.id);
+          setIsOwn(ownStatus);
+        }
       } catch (err) {
         setError('Nem sikerült betölteni az előadás adatait.');
       }
     }
 
     fetchPerformanceById(id);
-  }, [id]);
+  }, [id, user]);
 
   // Date selection handling
   const toggleDateSelection = (date) => {
@@ -99,6 +107,10 @@ export default function DetailsPage() {
     ];
   };
 
+  const handleEdit = () => {
+    navigate(`/edit-performance?performanceId=${performance.id}`);
+  };
+
   return (
     <>
       <ImageTitle title={performance.title} />
@@ -139,8 +151,13 @@ export default function DetailsPage() {
             <div>
               <DefaultButton onClick={handleBack} text="Vissza" />
             </div>
+
             <div>
-              <DefaultButton text="Foglalás" />
+              {isOwn ? (
+                <DefaultButton onClick={handleEdit} text="Módosítás" />
+              ) : (
+                <DefaultButton text="Foglalás" />
+              )}
             </div>
           </div>
         </div>
