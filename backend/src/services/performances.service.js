@@ -23,6 +23,25 @@ const getByName = async (title) => {
   return performance.id;
 };
 
+const isOwn = async (id, userId) => {
+  const isOwnPerformance = await prisma.performance.findUnique({
+    where: {
+      id,
+      theater: {
+        admins: { some: { userId } },
+      },
+    },
+    include: {
+      theater: {
+        include: {
+          admins: true,
+        },
+      },
+    },
+  });
+  return isOwnPerformance;
+};
+
 const list = async ({ filter, search }) => {
   const { orderBy, where } = filter;
 
@@ -274,6 +293,7 @@ export default {
   destroy,
   list,
   listAll,
+  isOwn,
   getByName,
   deleteSingleImage,
   getById,

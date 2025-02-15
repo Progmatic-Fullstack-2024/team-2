@@ -15,6 +15,7 @@ function converDate(date) {
 }
 
 let previousId = null;
+const spanClass = 'col-span-2 text-end truncate font-semibold hover:text-wrap hover:text-white ';
 
 export default function PerformanceCardForTheaterAdmin({ data }) {
   const [imageReady, setImageReady] = useState(false);
@@ -69,13 +70,17 @@ export default function PerformanceCardForTheaterAdmin({ data }) {
           <h1 className="pt-1 mb-2 text-2xl font-semibold overflow-hidden group-hover:text-c-secondary">
             {data.title}
           </h1>
-          <div className="mb-2 ">
+          <div className="grid grid-cols-3 grid-auto mb-2 ">
             <p>Helyszín : </p>
-            {data.performanceEvents[0] && (
-              <p className="flex justify-between">
-                Időpont :<span>{converDate(data.performanceEvents[0])}</span>{' '}
-              </p>
-            )}
+            <span className={spanClass}>{data.theater.name}</span>
+            <p>Cím :</p>
+            <span className={spanClass}>{data.theater.address}</span>
+            <p>Időpont :</p>
+            <span className={spanClass}>
+              {(data.performanceEvents[0] &&
+                converDate(data.performanceEvents[0].performanceDate)) ||
+                'Adatbázis hiba'}
+            </span>
           </div>
         </div>
       </div>
