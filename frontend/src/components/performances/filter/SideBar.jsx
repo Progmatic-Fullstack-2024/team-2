@@ -6,6 +6,7 @@ import MenuButton from './MenuButton';
 import creatorsService from '../../../services/creators.service';
 import genresService from '../../../services/genres.service';
 import theatersService from '../../../services/theaters.service';
+import DefaultButton from '../../misc/DefaultButton';
 import Spinner from '../../misc/Spinner';
 
 function convertURL(url) {
@@ -65,6 +66,9 @@ fetchGenres();
 export default function SideBar({ params }) {
   const { searchParams, setSearchParams } = params;
   const [fetchReady, setFetchReady] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuOpenClass = `${menuOpen ? 'scale-100 ' : 'scale-0'} flex origin-top-left transition transition-scale duration-150 `;
 
   useEffect(() => {
     if (filterData.length === 4) setFetchReady(true);
@@ -115,21 +119,45 @@ export default function SideBar({ params }) {
   };
 
   return (
-    <div className="hidden tablet:flex min-w-fit laptop:min-w-52 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text sticky top-24 rounded-lg overflow-hidden">
-      {fetchReady ? (
-        filterData.map((element) => (
-          <MenuButton
-            key={element.name}
-            data={element}
-            searchParams={searchParams}
-            handleChange={handleChange}
+    <div className="ms-2 mt-2 laptop:me-5 laptop:mt-0 laptop:static absolute pointer-events-none left-0 z-20 min-h-screen h-full ">
+      <div className="sticky top-[115px] laptop:top-[140px] flex flex-cols bg-c-priamry/30 ">
+        <div className="laptop:hidden tablet:ms-6 pointer-events-auto">
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Hide dropdown"
+            className={`${menuOpen ? 'fixed' : 'hidden'} backdrop-blur-sm top-0 left-0 -z-10 w-full h-full cursor-default bg-black/20`}
+            onClick={() => setMenuOpen(false)}
+            onKeyDown={() => setMenuOpen(false)}
           />
-        ))
-      ) : (
-        <div className="h-10 flex justify-center items-center">
-          <Spinner size={5} />
+          <DefaultButton
+            text="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            icon={`${menuOpen ? 'double-left' : 'double-right'}`}
+            iconSize="40px"
+          />
         </div>
-      )}
+        <div
+          className={`${
+            menuOpenClass
+          } ms-3 tablet:ms-6 bg-c-background laptop:flex laptop:scale-100 min-w-fit laptop:min-w-48 h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
+        >
+          {fetchReady ? (
+            filterData.map((element) => (
+              <MenuButton
+                key={element.name}
+                data={element}
+                searchParams={searchParams}
+                handleChange={handleChange}
+              />
+            ))
+          ) : (
+            <div className="h-10 flex justify-center items-center">
+              <Spinner size={5} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

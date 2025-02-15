@@ -24,13 +24,13 @@ export default function PerformancesSearch({ params }) {
   };
 
   return (
-    <div className="h-fit min-h-32 w-full mb-2 bg-c-secondary/10 p-2 tablet:p-5 rounded-md">
+    <div className="h-fit min-h-32 w-full mb-2 z-10 bg-gray-700 p-2 laptop:static sticky top-[105px] p-3 tablet:p-5  rounded-md">
       <form
         id="inputForm"
-        className="w-full min-w-80 tablet:w-1/2 self-start mb-6"
+        className="w-full min-w-80 max-w-[600px] self-start mb-6"
         onSubmit={handleSubmit}
       >
-        <div className="relative flex items-center p-1 ">
+        <div className="relative flex items-center p-1 ms-16 laptop:ms-0">
           <div className="absolute inset-y-0 start-2 flex items-center ps-3 pointer-events-none">
             <SvgIcon
               icon="magn-glass"

@@ -3,13 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import CustomCalendar from './CustomCalendar';
 import SvgIcon from '../../misc/SvgIcon';
 
+const LINE_HEIGHT = 35 + 1.2;
+
 export default function MenuButton({ data, textColor = 'c-text', handleChange, searchParams }) {
   const { name, searchName, options, searchOptions, type } = data;
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
   const activeCheckbox = useRef([]);
-  const optionHeight = `${type === 'calendar' ? '300' : options.length * (35 + 1) + 4}px`;
+  const optionHeight = `${type === 'calendar' ? '300' : Math.min(300, options.length * LINE_HEIGHT + 4)}px`;
 
-  const buttonClass = `w-full text-${textColor} font-bold text-lg bg-c-secondary/50 hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center text-end`;
+  const buttonClass = `pointer-events-auto w-full text-${textColor} font-bold text-lg bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center text-end`;
 
   const checkActiveCheckboxes = () => {
     if (searchParams.get(searchName)) {
@@ -52,7 +54,7 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
 
       <div
         style={{ height: dropdownMenuOpen ? optionHeight : '0px' }}
-        className={`w-full bot-0 truncate justify-self-end ${dropdownMenuOpen ? 'opacity-100' : ' opacity-100 w-0 '} transition-[height ] duration-200  ease-out block`}
+        className={`pointer-events-auto w-full bot-0 truncate justify-self-end ${dropdownMenuOpen ? 'opacity-100' : ' opacity-100 w-0 '} transition-[height ] duration-200  ease-out block`}
       >
         {type === 'calendar' ? (
           <CustomCalendar
@@ -61,7 +63,7 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
             searchOptions={searchOptions}
           />
         ) : (
-          <ul className="text-md ">
+          <ul className="text-md overflow-x-clip overflow-y-auto max-h-[300px]">
             {options.map((value, index) => (
               <li
                 key={value + index}

@@ -37,7 +37,7 @@ export default function PerformancesPage() {
         description="Keress könnyedén és gyorsan az előadások között, hogy megtaláláld a számodra legalkalmasabbat!"
       />
 
-      <div className="w-full flex flex-cols my-5 tablet:px-3 justify-center  tablet:gap-3 ">
+      <div className="relative w-full flex flex-cols my-5 tablet:px-3 justify-center  tablet:gap-3 ">
         {performances ? (
           <>
             <div>
