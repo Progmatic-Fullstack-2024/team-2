@@ -6,7 +6,7 @@ const getByUserId = async ({ userId }) => {
     where: { userId },
     include: {
       SeasonTicket: true,
-      userVisitedPerformance: true,
+      UserVisitedPerformance: true,
     },
   });
 
@@ -16,7 +16,7 @@ const getByUserId = async ({ userId }) => {
       expirationDate.getDate() + ticket.SeasonTicket.durationDay,
     );
 
-    const usedSeats = ticket.userVisitedPerformance.reduce(
+    const usedSeats = ticket.UserVisitedPerformance.reduce(
       (sum, visit) => sum + visit.seats,
       0,
     );
@@ -54,7 +54,7 @@ const buyTicket = async ({
     data: {
       seats,
       qrImage,
-      userSeasonTicket: {
+      UserSeasonTicket: {
         connect: { id: userSeasonTicketId }, // Kapcsolódás a meglévő bérlethez
       },
       user: {
