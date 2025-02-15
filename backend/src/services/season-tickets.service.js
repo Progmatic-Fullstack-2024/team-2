@@ -19,4 +19,5 @@ const getById = async ({ id }) => {
   const response = await prisma.seasonTicket.findUnique({ where: { id } });
   return response;
 };
+
 export default { list, create, getById };

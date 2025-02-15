@@ -37,6 +37,18 @@ model Genre {
   perfomances Performance[] @relation("Performance_Genre")
 }
 
+model UserVisitedPerformance {
+  id                  String            @id @default(cuid())
+  qrImage             String
+  userId              String
+  seats               Int
+  performanceEventsId String
+  userSeasonTicketId  String
+  performanceEvents   PerformanceEvents @relation(fields: [performanceEventsId], references: [id])
+  user                User              @relation(fields: [userId], references: [id])
+  userSeasonTicket    UserSeasonTicket  @relation(fields: [userSeasonTicketId], references: [id])
+}
+
 model Performance {
   id                      String              @id @default(cuid())
   title                   String
@@ -62,7 +74,7 @@ model PerformanceEvents {
   performanceDate        DateTime                 @default(now())
   premiere               Performance?             @relation("premiere")
   performance            Performance              @relation(fields: [performanceId], references: [id])
-  UserVisitedPerformance UserVisitedPerformance[]
+  userVisitedPerformance UserVisitedPerformance[]
 }
 
 model FuturePerformances {
@@ -132,17 +144,6 @@ model UserSeasonTicket {
   UserVisitedPerformance UserVisitedPerformance[]
 }
 
-model UserVisitedPerformance {
-  id                  String            @id @default(cuid())
-  qrImage             String
-  userId              String
-  seats               Int
-  performanceEventsId String
-  userSeasonTicketId  String
-  PerformanceEvents   PerformanceEvents @relation(fields: [performanceEventsId], references: [id])
-  User                User              @relation(fields: [userId], references: [id])
-  UserSeasonTicket    UserSeasonTicket  @relation(fields: [userSeasonTicketId], references: [id])
-}
 
 enum Profession {
   actor

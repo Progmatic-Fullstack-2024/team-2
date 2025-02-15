@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 // Components
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Completion from './components/payment/Completion.jsx';
 import { AuthProvider } from './contexts/AuthContext';
-// Pages
 import BrowsingPage from './pages/BrowsingPage.jsx';
 import EditPerformancePage from './pages/EditPerformancePage.jsx';
 import EditTheaterPage from './pages/EditTheaterPage.jsx';
@@ -25,6 +25,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
+        <ToastContainer position="top-right" autoClose={3000} />
         <Header />
         <main className="bg-c-background">
           <div className="w-full min-h-screen">

@@ -7,18 +7,21 @@ function UserTableRow({ user, index }) {
   if (user.birthDate) user.birthDate = user.birthDate.slice(0, 10);
   else user.birthDate = 'n.a';
   let hunRole;
+  let theater = '';
   if (user.role) {
     if (user.role === 'user') hunRole = 'Felhasználó';
     else if (user.role === 'admin') hunRole = 'Főadminisztrátor';
-    else if (user.role === 'theaterAdmin') hunRole = 'Szinházi Adminisztrátor';
-    else hunRole = 'ismeretlen';
+    else if (user.role === 'theaterAdmin') {
+      theater = user.theaterAdmin.theater.name;
+      hunRole = `Szinházi Adminisztrátor:`;
+    } else hunRole = 'ismeretlen';
   }
   const selectUser = (selectedUser) => {
     navigate('/userhandler', { state: selectedUser });
   };
 
   return (
-    <tr>
+    <tr className="odd:bg-c-secondary even:bg-c-secondary-dark">
       <td className="border-solid p-2 border-gray-950 border rounded hidden desktop:table-cell">
         {index}
       </td>
@@ -40,7 +43,12 @@ function UserTableRow({ user, index }) {
       <td className="border-solid p-2 border-gray-950 border rounded  hidden tablet:table-cell">
         {user.birthDate}
       </td>
-      <td className="border-solid p-2 border-gray-950 border rounded">{hunRole}</td>
+      <td className="border-solid p-2 border-gray-950 border rounded">
+        {hunRole}
+        {theater !== '' && (
+          <div className="bg-c-primary-dark rounded px-2 text-white">{theater}</div>
+        )}
+      </td>
       <td className="border-solid p-2 border-gray-950 border rounded">
         <DefaultButton
           type="button"
