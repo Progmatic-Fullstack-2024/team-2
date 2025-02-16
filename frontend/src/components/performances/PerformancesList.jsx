@@ -3,7 +3,7 @@ import PerformanceCardEmpty from './PerformanceCardEmpty';
 
 export default function PerformancesList({ performances }) {
   return (
-    <section className="w-full tablet:w-fit grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 py-10 gap-5 tablet:gap-10 border-y-2 border-gray-700">
+    <section className="w-full tablet:ms-3 laptop:ms-0 tablet:w-fit grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 py-10 gap-5 tablet:gap-10 border-y-2 border-gray-700">
       {performances.length > 0 || (
         <span className="ms-4 text-white font-semibold text-xl italic">Nincs találat!</span>
       )}

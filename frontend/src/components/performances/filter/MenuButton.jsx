@@ -9,9 +9,9 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
   const { name, searchName, options, searchOptions, type } = data;
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
   const activeCheckbox = useRef([]);
-  const optionHeight = `${type === 'calendar' ? '300' : Math.min(300, options.length * LINE_HEIGHT + 4)}px`;
+  const optionHeight = `${type === 'calendar' ? '370' : Math.min(300, options.length * LINE_HEIGHT + 4)}px`;
 
-  const buttonClass = `pointer-events-auto w-full text-${textColor} font-bold text-lg bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none   text-sm p-2 px-4 text-center inline-flex items-center text-end`;
+  const buttonClass = `pointer-events-auto w-full text-${textColor} font-bold text-xl laptop:text-sm bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none  p-2 px-4  inline-flex items-center text-end`;
 
   const checkActiveCheckboxes = () => {
     if (searchParams.get(searchName)) {
@@ -53,7 +53,7 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
       </button>
 
       <div
-        style={{ height: dropdownMenuOpen ? optionHeight : '0px' }}
+        style={{ maxHeight: dropdownMenuOpen ? optionHeight : '0px' }}
         className={`pointer-events-auto w-full bot-0 truncate justify-self-end ${dropdownMenuOpen ? 'opacity-100' : ' opacity-100 w-0 '} transition-[height ] duration-200  ease-out block`}
       >
         {type === 'calendar' ? (
@@ -61,13 +61,14 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
             handleChange={handleChange}
             searchName={searchName}
             searchOptions={searchOptions}
+            searchParams={searchParams}
           />
         ) : (
           <ul className="text-md overflow-x-clip overflow-y-auto max-h-[300px]">
             {options.map((value, index) => (
               <li
                 key={value + index}
-                className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-background/30 `}
+                className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-background/40 `}
               >
                 <label
                   className="ms-2 w-full px-3 pt-2 h-full text-sm font-medium text-align-center inline-block hover:underline cursor-pointer"

@@ -51,7 +51,7 @@ export default function Header() {
   return (
     <header className={headerClass}>
       <div className="flex w-full justify-end tablet:justify-between items-center">
-        <div className="hidden tablet:flex gap-10 px-3 py-2 text-xl font-bold ">
+        <div className="hidden tablet:flex gap-10 px-3 text-xl font-bold ">
           <Link to="/" className="min-w-[55px] hidden tablet:block">
             <SvgIcon
               icon="masks"
@@ -72,7 +72,7 @@ export default function Header() {
           )}
         </div>
 
-        <nav className="flex tablet:gap-1 laptop:gap-2 items-center h-16">
+        <nav className="flex tablet:gap-1 laptop:gap-2 items-center h-14">
           <MenuLink text="Home" to="/" icon="home" iconSize="50" />
           <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
           <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
@@ -123,7 +123,7 @@ export default function Header() {
                 aria-label="Admin menü megnyitása"
               />
             </div>
-            <div className="my-2">
+            <div>
               <Menu
                 anchorEl={adminMenuAnchor}
                 open={Boolean(adminMenuAnchor)}

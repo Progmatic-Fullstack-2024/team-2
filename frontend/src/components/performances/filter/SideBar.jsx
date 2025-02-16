@@ -108,8 +108,15 @@ export default function SideBar({ params }) {
         }
         break;
       case 'calendar':
-        searchParams.set('startDate', searchValue.startDate);
-        searchParams.set('endDate', searchValue.endDate);
+        console.log(searchValue);
+        searchValue.startDate
+          ? searchParams.set('startDate', searchValue.startDate)
+          : searchParams.delete('startDate');
+
+        searchValue.endDate
+          ? searchParams.set('endDate', searchValue.endDate)
+          : searchParams.delete('endDate');
+
         break;
       default:
         break;
@@ -119,9 +126,9 @@ export default function SideBar({ params }) {
   };
 
   return (
-    <div className="ms-2 mt-2 laptop:me-5 laptop:mt-0 laptop:static absolute pointer-events-none left-0 z-20 min-h-screen h-full ">
-      <div className="sticky top-[115px] laptop:top-[140px] flex flex-cols bg-c-priamry/30 ">
-        <div className="laptop:hidden tablet:ms-6 pointer-events-auto">
+    <div className="ms-2 tablet:ms-0 mt-2 tablet:mt-5 laptop:mx-2 laptop:mt-0 laptop:static absolute pointer-events-none left-0 z-20 min-h-full ">
+      <div className="sticky top-[115px] laptop:top-[140px] flex flex-cols">
+        <div className="laptop:hidden me-3 tablet:ms-3 pointer-events-auto ">
           <div
             role="button"
             tabIndex={0}
@@ -140,7 +147,7 @@ export default function SideBar({ params }) {
         <div
           className={`${
             menuOpenClass
-          } ms-3 tablet:ms-6 bg-c-background laptop:flex laptop:scale-100 min-w-fit laptop:min-w-48 h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
+          }  bg-c-secondary-darkest laptop:flex laptop:scale-100 min-w-fit laptop:min-w-48 h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
         >
           {fetchReady ? (
             filterData.map((element) => (

@@ -5,8 +5,8 @@ import SvgIcon from './SvgIcon';
 export default function MenuLink({
   text = 'link',
   to,
-  icon = '',
-  iconSize = '50px',
+  icon = null,
+  iconSize = '20px',
   hoverColor = 'c-secondary-dark',
 }) {
   return (
