@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import AddPerformanceEventModal from './AddPerformanceEventModal';
+import PerformanceDeleteModal from './PerformanceDeleteModal';
 import getCreators from '../../services/creators.service';
 import futurePerformancesService from '../../services/futurePerformances.service';
 import performancesService from '../../services/performances.service';
@@ -24,6 +25,8 @@ export default function PerformanceForm({ performance }) {
   const [deletedImages, setDeletedImages] = useState([]); // Deleted pictures
 
   const [isModalOpen, setIsModalOpen] = useState(false); // modal for adding performanceEvent
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const targetAgeOptions = [
     { label: 'Felnőtt', value: 'adult' },
@@ -202,6 +205,13 @@ export default function PerformanceForm({ performance }) {
     }
   };
 
+  // Deleting a performance
+  const handleDeleteSuccess = () => {
+    toast.success('Előadás sikeresen törölve!');
+    setIsDeleteModalOpen(false);
+    navigate('/theater-admin'); // Navigálás vissza az admin oldalra
+  };
+
   return (
     <div className="mx-auto p-12 my-40 bg-c-secondary-light rounded-md">
       <h2 className="font-bold text-gray-800 text-xl mb-6">Előadás módosítása</h2>
@@ -350,7 +360,7 @@ export default function PerformanceForm({ performance }) {
                       updatedCreators.splice(index, 1);
                       setFieldValue('creatorId', updatedCreators);
                     }}
-                    className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
+                    className="ml-2 bg-red-600 text-white px-2 py-1 rounded font-bold hover:bg-red-500 transition duration-150"
                   >
                     Törlés
                   </button>
@@ -392,7 +402,7 @@ export default function PerformanceForm({ performance }) {
                             updatedEvents.map((e) => e.id),
                           );
                         }}
-                        className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
+                        className="ml-2 bg-red-600 text-white px-2 py-1 rounded font-bold hover:bg-red-500 transition duration-150"
                       >
                         Törlés
                       </button>
@@ -497,6 +507,15 @@ export default function PerformanceForm({ performance }) {
           </Form>
         )}
       </Formik>
+      <div className="mt-5 p-2 flex justify-center">
+        <button
+          type="button"
+          className="ml-2 bg-red-600 text-white px-20 py-3 rounded font-bold hover:bg-red-500 transition duration-150"
+          onClick={() => setIsDeleteModalOpen(true)}
+        >
+          Előadás törlése
+        </button>
+      </div>
 
       {isModalOpen && (
         <AddPerformanceEventModal
@@ -505,10 +524,18 @@ export default function PerformanceForm({ performance }) {
           performanceId={performance.id}
           onEventAdded={(newEvent) => {
             console.log('Új esemény hozzáadva:', newEvent);
-            // Itt frissítheted az állapotot, ha szükséges
           }}
         />
       )}
+
+      {/* Törlési Modal */}
+      <PerformanceDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        performanceId={performance.id}
+        title={performance.title}
+        onDeleteSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 }

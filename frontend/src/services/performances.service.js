@@ -66,6 +66,15 @@ const deletePoster = async (id, imageUrl) => {
   }
 };
 
+const deletePerformance = async (performanceId) => {
+  try {
+    const response = await axiosInstance.delete(`/api/performances/${performanceId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
 export default {
   getById,
   list,
@@ -74,4 +83,5 @@ export default {
   createPerformance,
   update,
   deletePoster,
+  deletePerformance,
 };

@@ -17,13 +17,7 @@ router.post(
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },
   ]),
-  performancesController.createPerformance,
-);
-
-router.delete(
-  "/:performanceId",
-  isAdmin,
-  performancesController.destroyPerformance,
+  performancesController.createPerformance
 );
 
 router.patch(
@@ -32,8 +26,10 @@ router.patch(
     { name: "poster", maxCount: 1 },
     { name: "files", maxCount: 10 },
   ]),
-  performancesController.updatePerformance,
+  performancesController.updatePerformance
 );
+
+router.delete("/:performanceId", performancesController.destroyPerformance);
 
 router.patch("/:performanceId/image", performancesController.deleteImage);
 

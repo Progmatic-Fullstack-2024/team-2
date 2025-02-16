@@ -1,6 +1,7 @@
 import prisma from "../models/prisma-client.js";
 import { createFiles, deleteFiles, updateFiles } from "./file.service.js";
 import HttpError from "../utils/HttpError.js";
+import performanceEventsService from "./performanceEvents.service.js";
 
 const getById = async (performanceId) => {
   const performance = await prisma.performance.findUnique({
@@ -202,8 +203,25 @@ const update = async (
 const destroy = async (performanceId) => {
   try {
     const performanceToDelete = await getById(performanceId);
+
+    // Kapcsolódó performanceEvents ID-k kinyerése
+    const relatedEvents = await prisma.performanceEvents.findMany({
+      where: { performanceId },
+      select: { id: true },
+    });
+
+    const eventIds = relatedEvents.map((event) => event.id);
+
+    // Performance események törlése
+    if (eventIds.length > 0) {
+      await performanceEventsService.destroyMany(eventIds);
+    }
+
+    // Fájlok törlése (plakát és képek)
     await deleteFiles([performanceToDelete.posterURL]);
     await deleteFiles(performanceToDelete.imagesURL);
+
+    // Maga a performance törlése
     return prisma.performance.delete({ where: { id: performanceId } });
   } catch (error) {
     throw new HttpError(
@@ -215,7 +233,7 @@ const destroy = async (performanceId) => {
 
 const deleteSingleImage = async (performanceId, imageUrl) => {
   try {
-    let performanceToUpdate = await getById(performanceId);
+    const performanceToUpdate = await getById(performanceId);
     let { imagesURL, posterURL } = performanceToUpdate;
 
     // Ha az imagesURL null, akkor alakítsuk át üres tömbbé

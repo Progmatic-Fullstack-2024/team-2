@@ -65,8 +65,6 @@ const createPerformance = async (req, res, next) => {
     ? creatorIds.map((creatorId) => ({ id: creatorId }))
     : [];
 
-  // const creators = [{ id: creatorIds }];
-
   const poster = req.files.poster ? req.files.poster[0] : null;
   const images = req.files && req.files.files ? req.files.files : [];
 
