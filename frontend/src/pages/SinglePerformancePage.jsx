@@ -136,7 +136,7 @@ export default function DetailsPage() {
             onSelectImage={setSelectedImage}
           />
 
-          <p className="text-lg mb-2">{performance.description}</p>
+          <p className="text-lg mb-2 whitespace-pre-line text-justify">{performance.description}</p>
 
           <CreatorsList creators={performance.creators} />
 
