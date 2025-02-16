@@ -8,6 +8,7 @@ export default function queryFilter(query) {
     endDate,
     targetAudience,
     theater,
+    futureOnly,
   } = query;
   let { genre, creators } = query;
 
@@ -49,6 +50,13 @@ export default function queryFilter(query) {
     where: filterWhere,
     orderBy: { [orderBy || "title"]: sort || "asc" },
   };
+
+  // For filtering futurePerformances only
+  if (futureOnly === "true") {
+    andFilters.push({
+      futurePerformance: { isNot: null },
+    });
+  }
 
   return filter;
 }

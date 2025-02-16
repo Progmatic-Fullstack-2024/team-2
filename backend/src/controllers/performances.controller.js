@@ -16,6 +16,7 @@ const listPerformances = async (req, res, next) => {
   // startDate - returns performances AFTER this date
   // endDate - returns performances BEFORE this date
   // targetAudience - needs exact targetAudience name
+  // futureOnly=true - filters only performances witch have futurePerformaanceDetails
 
   try {
     const performances = await performancesService.list({
