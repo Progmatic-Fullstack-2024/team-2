@@ -212,6 +212,21 @@ export default function PerformanceForm({ performance }) {
     navigate('/theater-admin'); // Navigálás vissza az admin oldalra
   };
 
+  // Deletin future performance
+  const handlePlannedPerformanceDelete = async (setFieldValue) => {
+    if (!performance?.futurePerformance?.id) return;
+
+    try {
+      await futurePerformancesService.destroy(performance.futurePerformance.id);
+      toast.success('Tervezett előadás sikeresen törölve!');
+
+      // Csak a checkboxot állítjuk false-ra
+      setFieldValue('plannedPerformance', false);
+    } catch (error) {
+      toast.error(`Hiba történt a tervezett előadás törlése során: ${error.message}`);
+    }
+  };
+
   return (
     <div className="mx-auto p-12 my-40 bg-c-secondary-light rounded-md">
       <h2 className="font-bold text-gray-800 text-xl mb-6">Előadás módosítása</h2>
@@ -281,7 +296,7 @@ export default function PerformanceForm({ performance }) {
                 )}
                 <div className="mb-4">
                   <label htmlFor="theaterId" className="text-gray-800 font-bold">
-                    Ajándék
+                    Ajándék az adományozónak
                   </label>
                   <div className="flex items-center">
                     <Field
@@ -292,6 +307,14 @@ export default function PerformanceForm({ performance }) {
                   </div>
                   <ErrorMessage name="gift" component="div" className="text-red-500 text-sm" />
                 </div>
+                <p className="mb-4">Ha bemutattad az előadást, vagy véget ért a gyűjtésed:</p>
+                <button
+                  type="button"
+                  className="ml-2 bg-red-600 text-white px-2 py-1 rounded font-bold hover:bg-red-500 transition duration-150"
+                  onClick={() => handlePlannedPerformanceDelete(setFieldValue)}
+                >
+                  Tervezett előadás kategória Törlése
+                </button>
               </div>
             )}
 
