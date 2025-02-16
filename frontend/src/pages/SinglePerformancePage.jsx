@@ -6,6 +6,7 @@ import DefaultButton from '../components/misc/DefaultButton';
 import Gallery from '../components/misc/Galery';
 import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
+import FuturePerformanceDetails from '../components/performances/FuturePerformanceDetails';
 import PerformanceDates from '../components/performances/PerformanceDates';
 import AuthContext from '../contexts/AuthContext';
 import performanceService from '../services/performances.service';
@@ -124,6 +125,9 @@ export default function DetailsPage() {
           />
         </div>
 
+        {/* Jövőbeni előadás adatai */}
+        <FuturePerformanceDetails futurePerformance={performance.futurePerformance} />
+
         {/* Description div */}
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
           <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
@@ -153,11 +157,9 @@ export default function DetailsPage() {
             </div>
 
             <div>
-              {isOwn ? (
-                <DefaultButton onClick={handleEdit} text="Módosítás" />
-              ) : (
-                <DefaultButton text="Foglalás" />
-              )}
+              {isOwn && <DefaultButton onClick={handleEdit} text="Módosítás" />}
+              {!isOwn && performance.futurePerformance?.id && <DefaultButton text="Támogatom" />}
+              {!isOwn && !performance.futurePerformance?.id && <DefaultButton text="Foglalás" />}
             </div>
           </div>
         </div>
