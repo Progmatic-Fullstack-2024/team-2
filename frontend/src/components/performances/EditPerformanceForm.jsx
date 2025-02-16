@@ -279,6 +279,19 @@ export default function PerformanceForm({ performance }) {
                     );
                   },
                 )}
+                <div className="mb-4">
+                  <label htmlFor="theaterId" className="text-gray-800 font-bold">
+                    Ajándék
+                  </label>
+                  <div className="flex items-center">
+                    <Field
+                      type="text"
+                      name="gift"
+                      className="w-full border p-2 rounded my-1 text-gray-800 bg-gray-100"
+                    />
+                  </div>
+                  <ErrorMessage name="gift" component="div" className="text-red-500 text-sm" />
+                </div>
               </div>
             )}
 
