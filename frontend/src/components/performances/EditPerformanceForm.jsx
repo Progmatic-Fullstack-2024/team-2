@@ -61,7 +61,6 @@ export default function PerformanceForm({ performance }) {
     const fetchCreators = async () => {
       try {
         const creators = await getCreators.getCreators();
-        console.log('Alkotók betöltve:', creators); // 🔍 Ellenőrzés a konzolon
         setCreatorOptions(creators);
 
         // Ha az előadásnak már vannak alkotói, beállítjuk őket
@@ -69,7 +68,6 @@ export default function PerformanceForm({ performance }) {
           setSelectedCreators(performance.creatorId);
         }
       } catch (error) {
-        console.error('Hiba történt az alkotók betöltésekor:', error); // 🔍 Hibakeresés
         toast.error('Hiba történt az alkotók betöltésekor.');
       }
     };
@@ -102,8 +100,6 @@ export default function PerformanceForm({ performance }) {
         formData.append('files', image);
       }
     });
-
-    console.log('Küldött adatok:', values);
 
     try {
       // Összegyűjtjük az összes törlendő képet egy tömbbe
@@ -559,7 +555,7 @@ export default function PerformanceForm({ performance }) {
           onClose={() => setIsModalOpen(false)}
           performanceId={performance.id}
           onEventAdded={(newEvent) => {
-            console.log('Új esemény hozzáadva:', newEvent);
+            toast.success('Új esemény hozzáadva:', newEvent);
           }}
         />
       )}

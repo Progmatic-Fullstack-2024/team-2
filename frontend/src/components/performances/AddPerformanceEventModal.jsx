@@ -23,16 +23,12 @@ const AddPerformanceEventModal = function AddPerformanceEventModal({
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setErrorMessage(null);
-    console.log('Beküldött adatok:', values);
-    console.log('Performance ID:', performanceId);
 
     try {
       const newEvent = await performanceEventService.create({
         ...values,
         performanceId,
       });
-
-      console.log('Backend válasz:', newEvent); // 🔍 Itt látjuk, mit ad vissza a backend
 
       toast.success('Új esemény időpont sikeresen hozzáadva');
 
@@ -43,7 +39,6 @@ const AddPerformanceEventModal = function AddPerformanceEventModal({
         onClose();
       }, 1000);
     } catch (error) {
-      console.error('Backend hiba:', error);
       setErrorMessage(error.error || 'Hiba történt az adatmentés során');
     } finally {
       setSubmitting(false);

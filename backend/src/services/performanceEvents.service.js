@@ -1,4 +1,5 @@
 import prisma from "../models/prisma-client.js";
+import HttpError from "../utils/HttpError.js";
 
 const list = async () => {
   const allPerformanceEvents = await prisma.performanceEvents.findMany();

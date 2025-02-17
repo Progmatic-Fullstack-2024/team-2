@@ -58,7 +58,7 @@ const create = async (req, res, next) => {
     });
     return res.status(201).json(newFuturePerformance);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -93,7 +93,7 @@ const update = async (req, res, next) => {
     );
     return res.status(200).json(futurePerformanceToUpdate);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 

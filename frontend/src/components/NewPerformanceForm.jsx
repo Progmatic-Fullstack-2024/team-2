@@ -47,7 +47,6 @@ export default function NewPerformanceForm({ lecture }) {
     const fetchCreators = async () => {
       try {
         const creators = await getCreators.getCreators();
-        console.log('Alkotók betöltve:', creators); // 🔍 Ellenőrzés a konzolon
         setCreatorOptions(creators);
 
         // Ha az előadásnak már vannak alkotói, beállítjuk őket
@@ -55,7 +54,6 @@ export default function NewPerformanceForm({ lecture }) {
           setSelectedCreators(performance.creatorId);
         }
       } catch (error) {
-        console.error('Hiba történt az alkotók betöltésekor:', error); // 🔍 Hibakeresés
         toast.error('Hiba történt az alkotók betöltésekor.');
       }
     };

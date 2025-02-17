@@ -17,7 +17,6 @@ export default function DetailsPage() {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const [performance, setPerformance] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
