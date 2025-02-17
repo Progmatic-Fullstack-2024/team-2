@@ -9,7 +9,13 @@ const transporter = mailer.createTransport({
   },
 });
 
-export default async function sendMail(adress, subject, text, isHtml = false) {
+export default async function sendMail(
+  adress,
+  subject,
+  text,
+  attechment,
+  isHtml = false,
+) {
   let mailObject;
   if (isHtml)
     mailObject = {
@@ -25,6 +31,7 @@ export default async function sendMail(adress, subject, text, isHtml = false) {
       subject,
       text,
     };
+  if (attechment) mailObject.attachments = attechment;
 
   try {
     const result = await transporter.sendMail(mailObject);

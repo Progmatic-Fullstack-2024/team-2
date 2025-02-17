@@ -91,7 +91,14 @@ const sendQrCodeMail = async (userId, theater, title, date, time, qrImage) => {
   <br/>
   Üdvözlettel<br/>
   Theatron csapata`;
-  const answer = await sendMail(user.email, subject, text, true);
+  const attechment = [
+    {
+      filename: "qrcode.png",
+      content: qrImage.substr(qrImage.indexOf(",") + 1),
+      encoding: "base64",
+    },
+  ];
+  const answer = await sendMail(user.email, subject, text, attechment, true);
   if (answer.accepted) result = "OK";
   else result = "fail";
   return result;
