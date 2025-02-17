@@ -77,10 +77,12 @@ const listAll = async () => {
         select: {
           id: true,
           name: true,
+          address: true,
         },
       },
       genre: true,
       futurePerformance: true,
+      creators: true,
     },
   });
   return allPerformances;

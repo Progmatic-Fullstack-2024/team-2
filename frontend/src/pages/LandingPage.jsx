@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 // Components
 import ImageTitle from '../components/misc/ImageTitle';
 // import PerformancesList from '../components/performances/PerformancesList';
+import ListingFuturePerformances from '../components/performances/ListingFuturePerformances';
 import PerformancesByTheaters from '../components/performances/PerformancesByTheaters';
 import PerformancesNextWeek from '../components/performances/PerformancesNextWeek';
 import performancesService from '../services/performances.service';
@@ -42,6 +43,9 @@ export default function PerformancesPage() {
       </div>
       <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto">
         {performances ? <PerformancesByTheaters performances={performances} /> : null}
+      </div>
+      <div className="w-full max-w-screen-desktop flex flex-col items-center mx-auto">
+        {performances ? <ListingFuturePerformances performances={performances} /> : null}
       </div>
     </>
   );
