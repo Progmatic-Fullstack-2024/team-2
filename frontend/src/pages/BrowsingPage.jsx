@@ -57,7 +57,7 @@ export default function BrowsingPage() {
   return (
     <>
       <ImageTitle
-        title="Theatron"
+        title="BreakThe4th"
         description="Üdvözlünk a világ első színházi bérlet applikációjában! Válaszd ki a darabot, a helyed és már mehetsz is!"
       />
 

@@ -92,7 +92,6 @@ export default function BookingModal({
 
   const getLabel = (e) => <div className="whitespace-pre-wrap">{e.label}</div>;
 
-
   return (
     <div className="mx-2 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-5 rounded-lg shadow-lg w-96">
@@ -147,7 +146,9 @@ export default function BookingModal({
           <div className="text-center mt-4">
             <img src={qrCode} alt="Jegy QR-kódja" className="mx-auto w-48 h-48" />
             <a href={qrCode} download="jegy_qr_kod.png">
-              <button type='button' className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">Letöltés 📥</button>
+              <button type="button" className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">
+                Letöltés 📥
+              </button>
             </a>
             <DefaultButton text="Vissza" onClick={() => navigate(-1)} />
           </div>

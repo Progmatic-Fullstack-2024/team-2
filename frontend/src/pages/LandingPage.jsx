@@ -33,7 +33,7 @@ export default function PerformancesPage() {
   return (
     <>
       <ImageTitle
-        title="Theatron"
+        title="BreakThe4th"
         description="Üdvözlünk a világ első színházi bérlet applikációjában! Válaszd ki a darabot, a helyed és már mehetsz is!"
       />
 

@@ -1,4 +1,5 @@
 import { Menu, MenuItem } from '@mui/material';
+// import Bt4thLogo from '/Modified_Bt4th.svg';
 import { useContext, useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
@@ -7,7 +8,7 @@ import AuthModal from './AuthModal';
 import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
-import SvgIcon from './misc/SvgIcon';
+
 
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
@@ -53,12 +54,10 @@ export default function Header() {
       <div className="flex w-full justify-between items-center">
         <div className="flex gap-4 px-3 py-2 text-xl font-bold ">
           <Link to="/" className="min-w-[55px] hidden tablet:block">
-            <SvgIcon
-              icon="masks"
-              stroke="c-text"
-              size="50px"
-              fill="white"
-              className="cursor-pointer hover:scale-110 transition-transform duration-100"
+            <img
+              src="Modified_Bt4th.svg"
+              alt="BreakThe4th Logo"
+              className="w-[50px] h-[50px] sm:w-[25px] sm:h-[25px] cursor-pointer hover:scale-110 transition-transform duration-100"
             />
           </Link>
 
@@ -72,13 +71,13 @@ export default function Header() {
           )}
         </div>
 
-        <nav className="flex laptop:gap-2 items-center h-16">
+        <nav className="flex sm: gap-0 tablet:gap-1 laptop:gap-2 items-center h-16">
           <MenuLink text="Home" to="/" icon="home" iconSize="50" />
-          <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
-          <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
+          <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50" />
+          <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50" />
           {user ? (
             <>
-              <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="cart" iconSize="50px" />
+              <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="cart" iconSize="50" />
               <MenuLink text="Profilom" to="/ownUser" icon="user" iconSize="50" />
               <DefaultButton
                 text="Kijelentkezés"
