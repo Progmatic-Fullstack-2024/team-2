@@ -3,16 +3,6 @@ import { Link } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
 
-function converDate(date) {
-  return new Date(date).toLocaleTimeString('hun', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
 let previousId = null;
 const spanClass = 'col-span-2 text-end truncate font-semibold hover:text-wrap hover:text-white ';
 
@@ -51,7 +41,7 @@ export default function PerformanceCard({ data }) {
   return (
     <Link
       to={`/performances/${data.id}`}
-      className="h-80 w-full tablet:w-64 flex flex-col justify-between w-full 
+      className="h-80 w-full tablet:min-w-60 tablet:max-w-64 flex flex-col justify-between w-full 
       text-c-text 
       ring-1 ring-c-secondary-light/20
       transition-transform ease-out tablet:hover:scale-105 cursor-pointer
@@ -77,8 +67,7 @@ export default function PerformanceCard({ data }) {
             <span className={spanClass}>{data.theater.address}</span>
             <p>Időpont :</p>
             <span className={spanClass}>
-              {(data.performanceEvents[0] &&
-                converDate(data.performanceEvents[0].performanceDate)) ||
+              {(data.performanceEvents[0] && data.performanceEvents[0].performanceDate) ||
                 'Adatbázis hiba'}
             </span>
           </div>

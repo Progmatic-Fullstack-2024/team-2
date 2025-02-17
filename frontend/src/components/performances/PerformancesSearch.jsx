@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import DropdownButton from '../misc/DropdownButton';
 import SvgIcon from '../misc/SvgIcon';
+import SideBar from './filter/SideBar';
 
 export default function PerformancesSearch({ params }) {
   const { searchParams, setSearchParams, maxSize } = params;
@@ -25,6 +26,7 @@ export default function PerformancesSearch({ params }) {
 
   return (
     <div className="h-fit min-h-32 w-full mb-2 z-10 bg-c-secondary-darkest p-2 laptop:static sticky top-[97px] p-3 tablet:p-5  rounded-md">
+      <SideBar params={{ searchParams, setSearchParams }} className="laptop:hidden" />
       <form
         id="inputForm"
         className="w-full min-w-80 max-w-[600px] self-start mb-6"

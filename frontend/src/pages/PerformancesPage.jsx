@@ -40,22 +40,27 @@ export default function PerformancesPage() {
       <div className="relative w-full flex flex-cols my-5 justify-center ">
         {performances ? (
           <>
-            <SideBar params={{ searchParams, setSearchParams }} />
-
-            <div className="w-full flex flex-cols tablet:flex-row items-center tablet:items-start justify-center">
-              <div className="w-full min-h-screen flex flex-col items-start gap-5">
+            <div className="w-full flex flex-cols tablet:flex-row items-center  justify-center">
+              <SideBar
+                params={{ searchParams, setSearchParams }}
+                className={'hidden laptop:block '}
+              />
+              <div className="w-full laptop:w-fit min-h-screen flex flex-col items-start gap-3">
                 <PerformancesSearch
                   params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
                 />
-                <Pagination
-                  key="PaginationTop"
-                  params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-                />
-                <PerformancesList performances={performances.data} />
-                <Pagination
-                  key="PaginationBot"
-                  params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
-                />
+                <div className="w-full tablet:w-fit mx-auto flex flex-col gap-5">
+                  <Pagination
+                    key="PaginationTop"
+                    params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+                  />
+
+                  <PerformancesList performances={performances.data} />
+                  <Pagination
+                    key="PaginationBot"
+                    params={{ searchParams, setSearchParams, maxSize: performances.maxSize }}
+                  />
+                </div>
               </div>
             </div>
           </>

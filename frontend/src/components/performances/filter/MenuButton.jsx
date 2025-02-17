@@ -8,22 +8,23 @@ const LINE_HEIGHT = 35 + 1.2;
 export default function MenuButton({ data, textColor = 'c-text', handleChange, searchParams }) {
   const { name, searchName, options, searchOptions, type } = data;
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
-  const activeCheckbox = useRef([]);
+  // const activeCheckbox = useRef([]);
+  const [activeCheckbox, setActiveCheckbox] = useState([]);
   const optionHeight = `${type === 'calendar' ? '370' : Math.min(300, options.length * LINE_HEIGHT + 4)}px`;
 
   const buttonClass = `pointer-events-auto w-full text-${textColor} font-bold text-xl laptop:text-sm bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none  p-2 px-4  inline-flex items-center text-end`;
 
   const checkActiveCheckboxes = () => {
     if (searchParams.get(searchName)) {
-      activeCheckbox.current = searchParams.get(searchName).split(',');
+      setActiveCheckbox(searchParams.get(searchName).split(','));
     } else {
-      activeCheckbox.current = [];
+      setActiveCheckbox([]);
     }
   };
 
   useEffect(() => {
     checkActiveCheckboxes();
-    if (activeCheckbox.current.length > 0 && !dropdownMenuOpen) setDropdownMenuOpen(true);
+    if (activeCheckbox.length > 0 && !dropdownMenuOpen) setDropdownMenuOpen(true);
   }, [searchParams]);
 
   const toggleMenu = () => {
@@ -33,11 +34,11 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
   const setChecked = ({ index }) => {
     let checked = false;
     if (type === 'checkbox') {
-      checked = activeCheckbox.current.includes(searchOptions[index]);
+      checked = activeCheckbox.includes(searchOptions[index]);
     } else if (type === 'radio') {
-      checked = activeCheckbox.current.includes(searchOptions[index])
+      checked = activeCheckbox.includes(searchOptions[index])
         ? true
-        : !activeCheckbox.current.lenght && index === 0;
+        : !activeCheckbox.lenght && index === 0;
     }
     return checked && 'checked';
   };
