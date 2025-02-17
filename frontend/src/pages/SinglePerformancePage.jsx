@@ -156,10 +156,10 @@ export default function DetailsPage() {
               <DefaultButton onClick={handleBack} text="Vissza" />
             </div>
 
-            <div>
+            <div className="flex justify-around">
               {isOwn && <DefaultButton onClick={handleEdit} text="Módosítás" />}
               {!isOwn && performance.futurePerformance?.id && <DefaultButton text="Támogatom" />}
-              {!isOwn && !performance.futurePerformance?.id && <DefaultButton text="Foglalás" />}
+              {/* {!isOwn && !performance.futurePerformance?.id && <DefaultButton text="Foglalás" />} */}
             </div>
           </div>
         </div>
