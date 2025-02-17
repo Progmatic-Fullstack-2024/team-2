@@ -55,3 +55,9 @@ export const userValidationSchemaForPassword = Yup.object({
     .oneOf([Yup.ref('newPassword')], 'A jelszavak nem egyeznek!')
     .required('Az új jelszó megerősítése kötelező!'),
 });
+
+export const userValidationSchemaForNewPassword = Yup.object({
+  lastName: Yup.string().required('A vezetéknév megadása kötelező!'),
+  firstName: Yup.string().required('A keresztnév megadása kötelező!'),
+  email: Yup.string().email('Valós emailt adj meg!').required('Email megadása kötelező!'),
+});

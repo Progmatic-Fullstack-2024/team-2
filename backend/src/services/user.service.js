@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import prisma from "../models/prisma-client.js";
 import HttpError from "../utils/HttpError.js";
 import theaterAdmin from "./theaterAdmin.service.js";
+import sendmail from "../utils/Mailing.service.js";
 import { getEmailExists } from "./auth.service.js";
 
 const createFilterObject = (search, field, filter) => {
@@ -57,6 +58,17 @@ const deleteOldUserVisitedPerformance = (user) => {
         user.UserVisitedPerformance.splice(i, 1);
     }
   }
+};
+
+const generatePassword = () => {
+  const letter =
+    "qwertzuiopasdfghjklyxcvbnm#&1234567890QWERTZUIOPASDFGHJKLYXCVBNM";
+  let password = "";
+  for (let i = 0; i < 6; i += 1) {
+    const number = Math.round(Math.random() * letter.length);
+    password += letter[number];
+  }
+  return password;
 };
 
 const getAllUser = async (
@@ -238,6 +250,29 @@ const countUsers = async (search, field, filter) => {
   return userNumber;
 };
 
+const createNewPassword = async (email, lastname, firstname) => {
+  let answer = "Mail not sent";
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (lastname === user.lastName && firstname === user.firstName) {
+    const password = generatePassword();
+    const hashedPassword = await bcrypt.hash(password, 5);
+    const subject = "Új jelszó megküldése";
+    const text = `Kedves ${lastname} ${firstname}! 
+
+    Az új jelszava a következő: ${password}
+    Ha nem ön kérte a jelszóváltoztatást kérem haladéktalanul jeleze!
+    
+    Üdvözlettel
+    Theatron csapata`;
+    answer = await sendmail(email, subject, text);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+  } else answer = "Bad data, query refused";
+  return answer;
+};
+
 export default {
   getAllUser,
   getUserById,
@@ -246,4 +281,5 @@ export default {
   deleteUser,
   passwordChange,
   countUsers,
+  createNewPassword,
 };

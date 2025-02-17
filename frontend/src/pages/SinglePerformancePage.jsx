@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import AuthModal from '../components/AuthModal';
@@ -8,6 +8,7 @@ import DefaultButton from '../components/misc/DefaultButton';
 import Gallery from '../components/misc/Galery';
 import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
+import FuturePerformanceDetails from '../components/performances/FuturePerformanceDetails';
 import PerformanceDates from '../components/performances/PerformanceDates';
 import AuthContext from '../contexts/AuthContext';
 import performanceService from '../services/performances.service';
@@ -27,19 +28,25 @@ export default function DetailsPage() {
   const [ticketCount, setTicketCount] = useState(0);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const isLoggedIn = user !== null;
+  const [isOwn, setIsOwn] = useState(false);
 
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
       try {
         const fetchedPerformance = await performanceService.getById(performanceId);
         setPerformance(fetchedPerformance);
+
+        if (user?.id) {
+          const ownStatus = await performanceService.isOwn(performanceId, user.id);
+          setIsOwn(ownStatus);
+        }
       } catch (err) {
         setError('Nem sikerült betölteni az előadás adatait.');
       }
     }
 
     fetchPerformanceById(id);
-  }, [id]);
+  }, [id, user]);
 
   const toggleDateSelection = (event) => {
     setSelectedDates([event.performanceDate]); // Csak az aktuálisan kiválasztott dátumot tároljuk
@@ -117,6 +124,10 @@ export default function DetailsPage() {
     setIsAuthModalOpen(false);
   };
 
+  const handleEdit = () => {
+    navigate(`/edit-performance?performanceId=${performance.id}`);
+  };
+
   return (
     <>
       <ImageTitle title={performance.title} />
@@ -129,6 +140,9 @@ export default function DetailsPage() {
           />
         </div>
 
+        {/* Jövőbeni előadás adatai */}
+        <FuturePerformanceDetails futurePerformance={performance.futurePerformance} />
+
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
           <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
 
@@ -139,7 +153,7 @@ export default function DetailsPage() {
             onSelectImage={setSelectedImage}
           />
 
-          <p className="text-lg mb-2">{performance.description}</p>
+          <p className="text-lg mb-2 whitespace-pre-line text-justify">{performance.description}</p>
 
           <CreatorsList creators={performance.creators} />
 
@@ -151,7 +165,15 @@ export default function DetailsPage() {
           />
 
           <div className="flex justify-around">
-            <DefaultButton onClick={handleBack} text="Vissza" />
+            <div>
+              <DefaultButton onClick={handleBack} text="Vissza" />
+            </div>
+
+            <div className="flex justify-around">
+              {isOwn && <DefaultButton onClick={handleEdit} text="Módosítás" />}
+              {!isOwn && performance.futurePerformance?.id && <DefaultButton text="Támogatom" />}
+              {/* {!isOwn && !performance.futurePerformance?.id && <DefaultButton text="Foglalás" />} */}
+            </div>
           </div>
         </div>
       </div>

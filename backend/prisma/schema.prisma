@@ -141,7 +141,7 @@ model UserSeasonTicket {
   created                DateTime                 @default(now())
   SeasonTicket           SeasonTicket             @relation(fields: [seasonTicketId], references: [id])
   User                   User                     @relation(fields: [userId], references: [id])
-  UserVisitedPerformance UserVisitedPerformance[]
+  userVisitedPerformance UserVisitedPerformance[]
 }
 
 
