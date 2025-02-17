@@ -35,6 +35,7 @@ const getByUserId = async (userId) => {
           performances: {
             include: {
               performanceEvents: true,
+              theater: true,
             },
           },
         },
