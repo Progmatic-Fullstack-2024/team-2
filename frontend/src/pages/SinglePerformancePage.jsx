@@ -128,7 +128,6 @@ export default function DetailsPage() {
         {/* Jövőbeni előadás adatai */}
         <FuturePerformanceDetails futurePerformance={performance.futurePerformance} />
 
-        {/* Description div */}
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
           <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
 
