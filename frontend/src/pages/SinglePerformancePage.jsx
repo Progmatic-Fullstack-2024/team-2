@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import AuthModal from '../components/AuthModal';
+import BookingModal from '../components/BookingModal';
 import CreatorsList from '../components/creators/CreatorsList';
 import DefaultButton from '../components/misc/DefaultButton';
 import Gallery from '../components/misc/Galery';
@@ -13,13 +15,20 @@ import performanceService from '../services/performances.service';
 
 export default function DetailsPage() {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [performance, setPerformance] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Képgörgetéshez
-  const [selectedImage, setSelectedImage] = useState(null); // Modalhoz
-  const [selectedDates, setSelectedDates] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedDates, setSelectedDates] = useState([]);
   const [error, setError] = useState(null);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState('');
+  const [ticketCount, setTicketCount] = useState(0);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const isLoggedIn = user !== null;
   const [isOwn, setIsOwn] = useState(false);
 
   useEffect(() => {
@@ -40,24 +49,21 @@ export default function DetailsPage() {
     fetchPerformanceById(id);
   }, [id, user]);
 
-  // Date selection handling
-  const toggleDateSelection = (date) => {
-    setSelectedDates(
-      (prevSelected) =>
-        prevSelected.includes(date)
-          ? prevSelected.filter((d) => d !== date) // Ha már benne van, törli
-          : [...prevSelected, date], // Ha nincs benne, hozzáadja
-    );
+  const toggleDateSelection = (event) => {
+    setSelectedDates([event.performanceDate]); // Csak az aktuálisan kiválasztott dátumot tároljuk
+    setSelectedEvent(event); // Teljes performanceEvent mentése
+    if (isLoggedIn) setIsBookingModalOpen(true);
+    else setIsAuthModalOpen(true);
   };
-  // Képgörgetés kezelése
+
   const handleNextImage = () => {
-    if (performance && performance.imagesURL) {
+    if (performance?.imagesURL) {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % performance.imagesURL.length);
     }
   };
 
   const handlePreviousImage = () => {
-    if (performance && performance.imagesURL) {
+    if (performance?.imagesURL) {
       setCurrentImageIndex(
         (prevIndex) =>
           (prevIndex - 1 + performance.imagesURL.length) % performance.imagesURL.length,
@@ -65,8 +71,12 @@ export default function DetailsPage() {
     }
   };
 
-  // Modal bezárása
   const closeModal = () => setSelectedImage(null);
+
+  const closeBookingModal = () => {
+    setIsBookingModalOpen(false);
+    setSelectedDates((prevSelected) => prevSelected.slice(0, -1));
+  };
 
   if (error) {
     return (
@@ -89,7 +99,6 @@ export default function DetailsPage() {
       navigate(-1);
     } else {
       navigate('/');
-      navigate('/');
     }
   };
 
@@ -108,6 +117,14 @@ export default function DetailsPage() {
     ];
   };
 
+  // const toggleAuthModal = () => {
+  //   setIsAuthModalOpen(true);
+  // };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+  };
+
   const handleEdit = () => {
     navigate(`/edit-performance?performanceId=${performance.id}`);
   };
@@ -115,8 +132,7 @@ export default function DetailsPage() {
   return (
     <>
       <ImageTitle title={performance.title} />
-      <div className="min-h-screen flex flex-col items-center justify-center p-10  text-c-primary-dark">
-        {/* Poster div */}
+      <div className="min-h-screen flex flex-col items-center justify-center p-10 text-c-primary-dark">
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden flex items-center justify-center">
           <img
             src={performance.posterURL || 'https://via.placeholder.com/640x360?text=Nincs+plakát'}
@@ -131,7 +147,6 @@ export default function DetailsPage() {
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
           <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
 
-          {/* Gallery */}
           <Gallery
             images={getGalleryImages()}
             onPrev={handlePreviousImage}
@@ -143,11 +158,11 @@ export default function DetailsPage() {
 
           <CreatorsList creators={performance.creators} />
 
-          {/* Select Dates */}
           <PerformanceDates
             events={performance.performanceEvents}
             selectedDates={selectedDates}
             onToggleDate={toggleDateSelection}
+            // onRequireAuth={toggleAuthModal}
           />
 
           <div className="flex justify-around">
@@ -164,8 +179,19 @@ export default function DetailsPage() {
         </div>
       </div>
 
-      {/* Teljes méretű kép megjelenítése */}
       <ImageModal image={selectedImage} onClose={closeModal} />
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={closeBookingModal}
+        selectedTicket={selectedTicket}
+        setSelectedTicket={setSelectedTicket}
+        ticketCount={ticketCount}
+        setTicketCount={setTicketCount}
+        performance={performance}
+        selectedDates={selectedDates}
+        selectedEvent={selectedEvent}
+      />
+      {isAuthModalOpen && <AuthModal onClose={closeAuthModal} />}
     </>
   );
 }

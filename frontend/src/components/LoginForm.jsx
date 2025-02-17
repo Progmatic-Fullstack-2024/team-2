@@ -1,6 +1,5 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
@@ -22,14 +21,12 @@ function FormField({ name, type = 'text', placeholder }) {
 
 export default function LoginForm({ onSwitch, onClose }) {
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
   const initialValues = { email: '', password: '' };
 
   const handleLogin = async (values) => {
     const success = await login(values);
     if (success) {
       onClose();
-      navigate('/');
     }
   };
 
@@ -61,6 +58,9 @@ export default function LoginForm({ onSwitch, onClose }) {
           Regisztrálj
         </button>
       </div>
+      <p className="text-gray-900">
+        <a href="newpassword">Elfelejtett jelszó</a>
+      </p>
     </div>
   );
 }

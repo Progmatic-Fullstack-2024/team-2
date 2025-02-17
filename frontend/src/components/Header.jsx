@@ -73,12 +73,12 @@ export default function Header() {
         </div>
 
         <nav className="flex laptop:gap-2 items-center h-16">
-          <MenuLink text="Home" to="/" icon="star" iconSize="50" />
+          <MenuLink text="Home" to="/" icon="home" iconSize="50" />
           <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
           <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
           {user ? (
             <>
-              <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="camera" iconSize="50px" />
+              <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="cart" iconSize="50px" />
               <MenuLink text="Profilom" to="/ownUser" icon="user" iconSize="50" />
               <DefaultButton
                 text="Kijelentkezés"
