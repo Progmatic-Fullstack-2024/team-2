@@ -40,12 +40,15 @@ export default function PerformancesPage() {
       <ImageTitle title="BreakThe4th" description="Minden, ami független! Minden, ami színház!" />
 
       {/* Hogyan működik? */}
-      <div className="max-w-6xl w-full mx-auto bg-c-secondary-dark bg-opacity-10 shadow-lg rounded-2xl p-12 my-16 px-6 sm:px-12 lg:px-20">
-        <h2 className="text-4xl font-bold text-c-text mb-6">Hogyan működik?</h2>
-        <p className="text-lg text-c-text/80 mb-6">
-          Először is, lépj be! <br /> Vagy, ha még nem tetted, regisztrálj!
-        </p>
-        <DefaultButton onClick={() => setAuthModalOpen(true)} text="Belépek!" />
+      {/* Hogyan működik? */}
+      <div className="relative max-w-6xl w-full mx-auto bg-cover bg-center bg-fixed bg-[url('/H1.png')] shadow-lg rounded-2xl my-16 sm:px-12 lg:px-20">
+        <div className="relative z-10 bg-black bg-opacity-40 p-6 rounded-lg">
+          <h2 className="text-4xl font-bold text-white mb-6">Hogyan működik?</h2>
+          <p className="text-lg text-white/80 mb-6">
+            Először is, lépj be! <br /> Vagy, ha még nem tetted, regisztrálj!
+          </p>
+          <DefaultButton onClick={() => setAuthModalOpen(true)} text="Belépek!" />
+        </div>
       </div>
 
       {/* AuthModal megjelenítése */}
@@ -56,50 +59,64 @@ export default function PerformancesPage() {
       )}
 
       {/* Böngészés */}
-      <div className="max-w-6xl w-full mx-auto bg-c-secondary-dark bg-opacity-10 shadow-lg rounded-2xl p-12 my-16 px-6 sm:px-12 lg:px-20">
-        <h2 className="text-4xl font-bold text-c-text mb-6">Böngészd az előadásokat!</h2>
-        <p className="text-lg text-c-text/80 mb-6">
-          Egy helyen találod Magyarország legszínesebb független színházi kínálatát.
-        </p>
-        <DefaultButton onClick={() => navigate('/browse')} text="Böngéssz!" />
-        {performances && <PerformancesByTheaters performances={performances} />}
+      <div className="relative max-w-6xl w-full mx-auto bg-cover bg-center bg-fixed bg-[url('/H1.png')] shadow-lg rounded-2xl my-16 sm:px-12 lg:px-20">
+        <div className="relative z-10 bg-black bg-opacity-40 p-6 rounded-lg">
+          <h2 className="text-4xl font-bold text-c-text mb-6">Böngészd az előadásokat!</h2>
+          <p className="text-lg text-c-text/80 mb-6">
+            Egy helyen találod Magyarország legszínesebb független színházi kínálatát.
+          </p>
+          <DefaultButton onClick={() => navigate('/browse')} text="Böngéssz!" />
+          {performances && <PerformancesByTheaters performances={performances} />}
+        </div>
       </div>
 
       {/* Előadások a következő héten */}
-      <div className="max-w-6xl w-full mx-auto bg-c-secondary-dark bg-opacity-10 shadow-lg rounded-2xl p-12 my-16 px-6 sm:px-12 lg:px-20">
-        <h2 className="text-4xl font-bold text-c-text mb-6">
-          Izgalmas! Személyre szabott ajánlások!
-        </h2>
-        <p className="text-lg text-c-text/80 mb-6">
-          Nézd meg az elkövetkező napok legjobb előadásait, és foglalj időben jegyet!
-        </p>
-        {performances && <PerformancesNextWeek performances={performances} />}
+      <div className="relative max-w-6xl w-full mx-auto bg-cover bg-center bg-fixed bg-[url('/H1.png')] shadow-lg rounded-2xl my-16 sm:px-12 lg:px-20">
+        <div className="relative z-10 bg-black bg-opacity-40 p-6 rounded-lg">
+          <h2 className="text-4xl font-bold text-c-text mb-6">
+            Izgalmas! Személyre szabott ajánlások!
+          </h2>
+          <p className="text-lg text-c-text/80 mb-6">
+            Nézd meg az elkövetkező napok legjobb előadásait, és foglalj időben jegyet!
+          </p>
+          {performances && <PerformancesNextWeek performances={performances} />}
+        </div>
       </div>
 
       {/* Bérletvásárlás */}
-      <div className="max-w-6xl w-full mx-auto bg-c-secondary-dark bg-opacity-10 shadow-lg rounded-2xl p-12 my-16 px-6 sm:px-12 lg:px-20">
-        <h2 className="text-4xl font-bold text-c-text mb-6">Hogyan tudsz jegyet foglalni?</h2>
-        <p className="text-lg text-c-text/80 mb-6">
-          Nézz szét bérleteink között, válaszd ki, amelyik tetszik, vedd meg, és foglalj előadást!
-        </p>
-        <DefaultButton onClick={() => navigate('/season-tickets')} text="Vásárolj bérletet" />
+      <div className="relative max-w-6xl w-full mx-auto bg-cover bg-center bg-fixed bg-[url('/H1.png')] shadow-lg rounded-2xl my-16 sm:px-12 lg:px-20">
+        <div className="relative z-10 bg-black bg-opacity-40 p-6 rounded-lg">
+          <h2 className="text-4xl font-bold text-c-text mb-6">Hogyan tudsz jegyet foglalni?</h2>
+          <p className="text-lg text-c-text/80 mb-6">
+            Nézz szét bérleteink között, válaszd ki, amelyik tetszik, vedd meg, és foglalj előadást!
+          </p>
+          <DefaultButton onClick={() => navigate('/season-tickets')} text="Vásárolj bérletet" />
+        </div>
       </div>
 
       {/* Támogatás */}
-      <div className="max-w-6xl w-full mx-auto bg-c-secondary-dark bg-opacity-10 shadow-lg rounded-2xl p-12 my-16 px-6 sm:px-12 lg:px-20">
-        <h2 className="text-4xl font-bold text-c-text mb-6">Nem állunk meg itt!</h2>
-        <p className="text-lg text-c-text/80 mb-6">
-          A BreakThe4th oldalon támogathatod kedvenc csapataid előadásterveit! Válj te is mecénássá!
-        </p>
-        {performances && <ListingFuturePerformances performances={performances} />}
+      <div className="relative max-w-6xl w-full mx-auto bg-cover bg-center bg-fixed bg-[url('/H1.png')] shadow-lg rounded-2xl my-16 sm:px-12 lg:px-20">
+        <div className="relative z-10 bg-black bg-opacity-40 p-6 rounded-lg">
+          <h2 className="text-4xl font-bold text-c-text mb-6">Nem állunk meg itt!</h2>
+          <p className="text-lg text-c-text/80 mb-6">
+            A BreakThe4th oldalon támogathatod kedvenc csapataid előadásterveit! Válj te is
+            mecénássá!
+          </p>
+          {performances && <ListingFuturePerformances performances={performances} />}
+        </div>
       </div>
-      <div className="max-w-6xl w-full mx-auto bg-c-secondary-dark bg-opacity-10 shadow-lg rounded-2xl p-12 my-16 px-6 sm:px-12 lg:px-20">
-        <h2 className="text-4xl font-bold text-c-text mb-6">Részletes keresés</h2>
-        <p className="text-lg text-c-text/80 mb-6">
-          Itt megtalálsz mindent, keress dátum, színház szerint. Pipáld csak be a tervezett
-          előadásokat és már segítheted is a kedvenc színházadat, hogy létrehozza az új bemutatóját!
-        </p>
-        <DefaultButton onClick={() => navigate('/performances')} text="Keress" />
+
+      {/* Részletes keresés */}
+      <div className="relative max-w-6xl w-full mx-auto bg-cover bg-center bg-fixed bg-[url('/H1.png')] shadow-lg rounded-2xl my-16 sm:px-12 lg:px-20">
+        <div className="relative z-10 bg-black bg-opacity-40 p-6 rounded-lg">
+          <h2 className="text-4xl font-bold text-c-text mb-6">Részletes keresés</h2>
+          <p className="text-lg text-c-text/80 mb-6">
+            Itt megtalálsz mindent, keress dátum, színház szerint. Pipáld csak be a tervezett
+            előadásokat és már segítheted is a kedvenc színházadat, hogy létrehozza az új
+            bemutatóját!
+          </p>
+          <DefaultButton onClick={() => navigate('/performances')} text="Keress" />
+        </div>
       </div>
     </>
   );
