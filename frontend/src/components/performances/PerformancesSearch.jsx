@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import DropdownButton from '../misc/DropdownButton';
 import SvgIcon from '../misc/SvgIcon';
@@ -6,6 +6,7 @@ import SvgIcon from '../misc/SvgIcon';
 export default function PerformancesSearch({ params }) {
   const { searchParams, setSearchParams, maxSize } = params;
   const titleSearchRef = useRef(null);
+  const [futureOnly, setFutureOnly] = useState(searchParams.get('futureOnly') === 'true');
 
   useEffect(() => {
     titleSearchRef.current.value = searchParams.get('search');
@@ -20,6 +21,17 @@ export default function PerformancesSearch({ params }) {
       searchParams.delete('search');
     }
 
+    setSearchParams(searchParams);
+  };
+
+  const handleFutureOnlyChange = (e) => {
+    const isChecked = e.target.checked;
+    setFutureOnly(isChecked);
+    if (isChecked) {
+      searchParams.set('futureOnly', 'true');
+    } else {
+      searchParams.delete('futureOnly');
+    }
     setSearchParams(searchParams);
   };
 
@@ -84,6 +96,18 @@ export default function PerformancesSearch({ params }) {
             reload
           />
         </div>
+      </div>
+      <div className="mt-3 px-4 py-2 shadow-lg rounded-lg inline-flex items-center gap-3">
+        <input
+          type="checkbox"
+          id="futureOnly"
+          checked={futureOnly}
+          onChange={handleFutureOnlyChange}
+          className="cursor-pointer"
+        />
+        <label htmlFor="futureOnly" className="text-c-text cursor-pointer">
+          Csak a tervezett előadások megjelenítése
+        </label>
       </div>
     </div>
   );

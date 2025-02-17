@@ -77,6 +77,9 @@ export default function BrowsingPage() {
       {rareGenres.length > 0 &&
         renderPerformanceBrowse({ genre: rareGenres.map((genre) => genre.name) }, 'Egyéb műfaj')}
 
+      {/* Tervezett előadások */}
+      {renderPerformanceBrowse({ futureOnly: 'true' }, 'Tervezett előadások:')}
+
       {/* Performances per theater */}
       {theaters.length > 0 &&
         theaters.map((theater) =>

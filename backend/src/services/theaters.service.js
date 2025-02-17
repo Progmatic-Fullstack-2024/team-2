@@ -28,7 +28,12 @@ const getById = async (id) => {
   const getTheaterById = await prisma.theater.findUnique({
     where: { id },
     include: {
-      performances: true,
+      performances: {
+        include: {
+          theater: true,
+          performanceEvents: true,
+        },
+      },
       admins: {
         include: {
           user: {
