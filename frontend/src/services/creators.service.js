@@ -18,4 +18,13 @@ const getCreatorsAllData = async () => {
   }
 };
 
-export default { getCreators, getCreatorsAllData };
+const getCreatorById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/api/creators/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { getCreators, getCreatorsAllData, getCreatorById };

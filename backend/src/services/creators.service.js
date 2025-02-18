@@ -28,7 +28,12 @@ const getById = async (id) => {
   const creatorById = await prisma.creator.findUnique({
     where: { id },
     include: {
-      performances: true,
+      performances: {
+        include: {
+          theater: true,
+          performanceEvents: true,
+        },
+      },
       company: true,
     },
   });

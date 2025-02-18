@@ -77,6 +77,7 @@ export default function Header() {
           <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
           <MenuLink text="Előadások" to="/performances" icon="masks" iconSize="50px" />
           <MenuLink text="Színházak" to="/theater" icon="theater" iconSize="50px" />
+          <MenuLink text="Alkotók" to="/creators" icon="creator" iconSize="50px" />
           {user ? (
             <>
               <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="cart" iconSize="50px" />
