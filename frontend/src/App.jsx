@@ -22,7 +22,9 @@ import PerformancesPage from './pages/PerformancesPage';
 import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 import SelectedUser from './pages/SelectedUser.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
+import SingleTheaterPage from './pages/SingleTheaterPage.jsx';
 import TheaterAdminPage from './pages/TheaterAdminPage.jsx';
+import TheatersPage from './pages/TheatersPage.jsx';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <div className="w-full min-h-screen">
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/theater" element={<TheatersPage />} />
+              <Route path="/theater/:id" element={<SingleTheaterPage />} />
               <Route path="/theater-admin" element={<TheaterAdminPage />} />
               <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
               <Route path="/userlist" element={<ListUsers />} />

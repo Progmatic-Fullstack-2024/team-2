@@ -75,7 +75,8 @@ export default function Header() {
         <nav className="flex laptop:gap-2 items-center h-16">
           <MenuLink text="Home" to="/" icon="home" iconSize="50" />
           <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
-          <MenuLink text="Előadások" to="/performances" icon="camera" iconSize="50px" />
+          <MenuLink text="Előadások" to="/performances" icon="masks" iconSize="50px" />
+          <MenuLink text="Színházak" to="/theater" icon="theater" iconSize="50px" />
           {user ? (
             <>
               <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="cart" iconSize="50px" />

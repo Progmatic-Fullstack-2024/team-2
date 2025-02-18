@@ -79,7 +79,7 @@ export default function PerformanceCard({ data }) {
             <span className={spanClass}>
               {(data.performanceEvents[0] &&
                 converDate(data.performanceEvents[0].performanceDate)) ||
-                'Adatbázis hiba'}
+                'Készülőben...'}
             </span>
           </div>
         </div>

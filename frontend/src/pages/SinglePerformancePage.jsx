@@ -12,12 +12,14 @@ import FuturePerformanceDetails from '../components/performances/FuturePerforman
 import PerformanceDates from '../components/performances/PerformanceDates';
 import AuthContext from '../contexts/AuthContext';
 import performanceService from '../services/performances.service';
+import theaterService from '../services/theaters.service';
 
 export default function DetailsPage() {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [performance, setPerformance] = useState(null);
+  const [theater, setTheater] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -39,6 +41,10 @@ export default function DetailsPage() {
         if (user?.id) {
           const ownStatus = await performanceService.isOwn(performanceId, user.id);
           setIsOwn(ownStatus);
+        }
+        if (fetchedPerformance?.theaterId) {
+          const fetchedTheater = await theaterService.getById(fetchedPerformance.theaterId);
+          setTheater(fetchedTheater);
         }
       } catch (err) {
         setError('Nem sikerült betölteni az előadás adatait.');
@@ -67,6 +73,12 @@ export default function DetailsPage() {
         (prevIndex) =>
           (prevIndex - 1 + performance.imagesURL.length) % performance.imagesURL.length,
       );
+    }
+  };
+
+  const handleTheaterNavigation = () => {
+    if (theater?.id) {
+      navigate(`/theater/${theater.id}`);
     }
   };
 
@@ -144,7 +156,16 @@ export default function DetailsPage() {
         <FuturePerformanceDetails futurePerformance={performance.futurePerformance} />
 
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
-          <h1 className="text-3xl font-bold mb-4">{performance.title}</h1>
+          <h1 className="text-3xl font-bold mb-2">{performance.title}</h1>
+
+          {/* ÚJ: Színház neve és navigációs gomb */}
+          {theater && (
+            <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-2 mb-8">
+              <div className="flex justify-end items-center">
+                <DefaultButton text={`${theater.name}`} onClick={handleTheaterNavigation} />
+              </div>
+            </div>
+          )}
 
           <Gallery
             images={getGalleryImages()}
