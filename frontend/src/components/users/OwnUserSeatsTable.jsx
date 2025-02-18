@@ -2,11 +2,11 @@ export default function OwnSeatsTable({ data }) {
   const tableData = [];
 
   for (let i = 0; i < data.length; i += 1) {
-    const eventDate = new Date(data[i].PerformanceEvents.performanceDate);
+    const eventDate = new Date(data[i].performanceEvents.performanceDate);
     if (eventDate > Date.now()) {
-      const { title } = data[i].PerformanceEvents.performance;
+      const { title } = data[i].performanceEvents.performance;
       const { seats } = data[i];
-      const theater = data[i].PerformanceEvents.performance.theater.name;
+      const theater = data[i].performanceEvents.performance.theater.name;
       const date = eventDate.toISOString().substring(0, 10);
       const time = eventDate.toISOString().substring(11, 16);
       tableData.push({
@@ -19,10 +19,12 @@ export default function OwnSeatsTable({ data }) {
     }
   }
 
+  if (tableData.length === 0) return null;
+
   return (
     <table className="mx-auto ">
       <thead>
-        <tr className="border-b-2 mt-2 border-gray-900">
+        <tr className="border-b-2 mt-2 border-gray-900 odd:bg-c-secondary even:bg-c-secondary-dark">
           <th className="px-3">Dátum</th>
           <th className="px-3">Színház</th>
           <th className="px-3">előadás címe</th>

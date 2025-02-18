@@ -1,10 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import AddPerformanceEventModal from './AddPerformanceEventModal';
+import PerformanceDeleteModal from './PerformanceDeleteModal';
 import getCreators from '../../services/creators.service';
+import futurePerformancesService from '../../services/futurePerformances.service';
 import performancesService from '../../services/performances.service';
+import formatDate from '../../utils/formatDate';
 import DefaultButton from '../misc/DefaultButton';
 
 export default function PerformanceForm({ performance }) {
@@ -13,8 +17,16 @@ export default function PerformanceForm({ performance }) {
   const [posterPreview, setPosterPreview] = useState(performance?.posterURL || null);
   const [imagesPreview, setImagesPreview] = useState(performance?.imagesURL || []);
   const [creatorOptions, setCreatorOptions] = useState([]);
+  const [selectedCreators, setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
+  const [selectedPerformanceEvents, setSelectedPerformanceEvents] = useState(
+    performance?.performanceEvents || [],
+  );
   const [isPosterDeleted, setIsPosterDeleted] = useState(false); // Deleted poster
   const [deletedImages, setDeletedImages] = useState([]); // Deleted pictures
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // modal for adding performanceEvent
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const targetAgeOptions = [
     { label: 'Felnőtt', value: 'adult' },
@@ -26,12 +38,42 @@ export default function PerformanceForm({ performance }) {
   const initialValues = {
     title: performance?.title || '',
     theaterId: performance?.theaterId || '',
-    creatorId: [''],
+    creatorId: selectedCreators.map((creator) => creator.id), // 🔥 Itt állítjuk be a kiválasztott alkotókat
     description: performance?.description || '',
     posterURL: null,
     imagesURL: performance?.imagesURL || [],
     targetAudience: performance?.targetAudience || '',
+
+    performanceEventId: selectedPerformanceEvents.map((performanceEvent) => performanceEvent.id),
+
+    // Ha van futurePerformance, akkor alapértelmezetten legyen bepipálva
+    plannedPerformance: !!performance?.futurePerformance,
+
+    // Ha nincs, akkor a mezők legyenek üresek (elkerüli a hibát)
+    targetBudgetIdeal: performance?.futurePerformance?.targetBudgetIdeal ?? '',
+    targetBudget: performance?.futurePerformance?.targetBudget ?? '',
+    minimumBudget: performance?.futurePerformance?.minimumBudget ?? '',
+    actualBudget: performance?.futurePerformance?.actualBudget ?? '',
+    gift: performance?.futurePerformance?.gift ?? '',
   };
+
+  useEffect(() => {
+    const fetchCreators = async () => {
+      try {
+        const creators = await getCreators.getCreators();
+        setCreatorOptions(creators);
+
+        // Ha az előadásnak már vannak alkotói, beállítjuk őket
+        if (performance?.creatorId) {
+          setSelectedCreators(performance.creatorId);
+        }
+      } catch (error) {
+        toast.error('Hiba történt az alkotók betöltésekor.');
+      }
+    };
+
+    fetchCreators();
+  }, [performance]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const formData = new FormData();
@@ -39,7 +81,11 @@ export default function PerformanceForm({ performance }) {
     formData.append('theaterId', values.theaterId);
     formData.append('description', values.description);
 
-    values.creatorId.forEach((creator) => formData.append('creatorId[]', creator));
+    values.creatorId.forEach((creator) => formData.append('creatorIds', creator));
+
+    values.performanceEventId.forEach((performanceEvent) =>
+      formData.append('performanceEventIds', performanceEvent),
+    );
 
     if (values.targetAudience) {
       formData.append('targetAudience', values.targetAudience);
@@ -73,6 +119,38 @@ export default function PerformanceForm({ performance }) {
       if (!response) throw new Error('Hiba történt az előadás módosításakor.');
 
       toast.success('Előadás sikeresen módosítva!');
+
+      // Ha tervezett előadás be van pipálva, hozzunk létre egy futurePerformances rekordot
+      if (values.plannedPerformance) {
+        const futurePerformanceData = {
+          targetBudgetIdeal: values.targetBudgetIdeal,
+          targetBudget: values.targetBudget,
+          minimumBudget: values.minimumBudget,
+          actualBudget: values.actualBudget,
+          gift: values.gift,
+          performanceId: performance.id,
+        };
+
+        try {
+          if (performance?.futurePerformance?.id) {
+            // Ha már létezik futurePerformance, akkor frissítjük
+            await futurePerformancesService.update(
+              performance.futurePerformance.id,
+              futurePerformanceData,
+            );
+            toast.success('Tervezett előadás adatai sikeresen frissítve!');
+          } else {
+            // Ha nincs, akkor új futurePerformance-t hozunk létre
+            await futurePerformancesService.create(futurePerformanceData);
+            toast.success('Tervezett előadás adatai sikeresen mentve!');
+          }
+        } catch (error) {
+          toast.error(
+            `Hiba történt a tervezett előadás mentése/frissítése során: ${error.message}`,
+          );
+        }
+      }
+
       setTimeout(() => {
         navigate('/theater-admin');
       }, 1000);
@@ -102,16 +180,6 @@ export default function PerformanceForm({ performance }) {
     setImagesPreview((prev) => [...prev, ...files.map((file) => URL.createObjectURL(file))]);
   };
 
-  // const removeImage = (index, setFieldValue, images) => {
-  //   const updatedImages = [...images];
-  //   updatedImages.splice(index, 1);
-  //   setFieldValue('imagesURL', updatedImages);
-
-  //   const updatedPreviews = [...imagesPreview];
-  //   updatedPreviews.splice(index, 1);
-  //   setImagesPreview(updatedPreviews);
-  // };
-
   const removeImage = (index, setFieldValue, images) => {
     const updatedImages = [...images];
     const removedImage = updatedImages.splice(index, 1)[0]; // 🔹 Törölt kép URL-je
@@ -125,22 +193,33 @@ export default function PerformanceForm({ performance }) {
     }
   };
 
-  const fetchCreators = async () => {
-    if (creatorOptions.length === 0) {
-      try {
-        const creators = await getCreators();
-        setCreatorOptions(creators);
-      } catch (error) {
-        toast.error('Hiba történt az alkotók betöltésekor.');
-      }
-    }
-  };
-
   const handleBack = () => {
     if (window.history.length > 2) {
       navigate(-1);
     } else {
       navigate('/');
+    }
+  };
+
+  // Deleting a performance
+  const handleDeleteSuccess = () => {
+    toast.success('Előadás sikeresen törölve!');
+    setIsDeleteModalOpen(false);
+    navigate('/theater-admin'); // Navigálás vissza az admin oldalra
+  };
+
+  // Deletin future performance
+  const handlePlannedPerformanceDelete = async (setFieldValue) => {
+    if (!performance?.futurePerformance?.id) return;
+
+    try {
+      await futurePerformancesService.destroy(performance.futurePerformance.id);
+      toast.success('Tervezett előadás sikeresen törölve!');
+
+      // Csak a checkboxot állítjuk false-ra
+      setFieldValue('plannedPerformance', false);
+    } catch (error) {
+      toast.error(`Hiba történt a tervezett előadás törlése során: ${error.message}`);
     }
   };
 
@@ -150,7 +229,7 @@ export default function PerformanceForm({ performance }) {
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ setFieldValue, values }) => (
           <Form>
-            {/* Színház neve */}
+            {/* Előadás neve */}
             <div className="mb-4">
               <label htmlFor="title" className="text-gray-800 font-bold">
                 Előadás neve
@@ -163,6 +242,77 @@ export default function PerformanceForm({ performance }) {
               />
               <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
             </div>
+
+            {/* Tervezett előadás checkbox */}
+            <div className="mb-4 flex items-center">
+              <Field
+                type="checkbox"
+                name="plannedPerformance"
+                className="mr-2"
+                checked={values.plannedPerformance} // Beállítja az alapértelmezett állapotot
+                onChange={(e) => setFieldValue('plannedPerformance', e.target.checked)}
+              />
+              <label htmlFor="plannedPerformance" className="text-gray-800 font-bold">
+                Tervezett előadás
+              </label>
+            </div>
+
+            {values.plannedPerformance && (
+              <div className="mb-4 bg-gray-100 p-4 rounded-md">
+                <h3 className="font-bold text-gray-800 mb-2">Tervezett előadás adatai</h3>
+
+                {['targetBudgetIdeal', 'targetBudget', 'minimumBudget', 'actualBudget'].map(
+                  (field) => {
+                    const labels = {
+                      targetBudgetIdeal: 'Ideális költségvetés',
+                      targetBudget: 'Cél költségvetés',
+                      minimumBudget: 'Minimum költségvetés',
+                      actualBudget: 'Aktuális költségvetés',
+                    };
+
+                    return (
+                      <div key={field} className="mb-4">
+                        <label htmlFor={field} className="text-gray-800 font-bold">
+                          {labels[field]}
+                        </label>
+                        <Field
+                          type="number"
+                          name={field}
+                          placeholder={performance?.futurePerformance?.[field] || 'Összeg'}
+                          className="w-full border p-2 rounded my-1 text-gray-800"
+                        />
+                        <ErrorMessage
+                          name={field}
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
+                    );
+                  },
+                )}
+                <div className="mb-4">
+                  <label htmlFor="theaterId" className="text-gray-800 font-bold">
+                    Ajándék az adományozónak
+                  </label>
+                  <div className="flex items-center">
+                    <Field
+                      type="text"
+                      name="gift"
+                      className="w-full border p-2 rounded my-1 text-gray-800 bg-gray-100"
+                    />
+                  </div>
+                  <ErrorMessage name="gift" component="div" className="text-red-500 text-sm" />
+                </div>
+                <p className="mb-4">Ha bemutattad az előadást, vagy véget ért a gyűjtésed:</p>
+                <button
+                  type="button"
+                  className="ml-2 bg-red-600 text-white px-2 py-1 rounded font-bold hover:bg-red-500 transition duration-150"
+                  onClick={() => handlePlannedPerformanceDelete(setFieldValue)}
+                >
+                  Tervezett előadás kategória Törlése
+                </button>
+              </div>
+            )}
 
             <div className="mb-4">
               <label htmlFor="theaterId" className="text-gray-800 font-bold">
@@ -226,7 +376,9 @@ export default function PerformanceForm({ performance }) {
                     name={`creatorId[${index}]`}
                     className="w-full border p-2 rounded text-gray-800"
                   >
-                    <option value="">Válassz egy alkotót</option>
+                    <option value={_.id} key={_.id}>
+                      {_.name ? _.name : 'Válassz egy alkotót!'}
+                    </option>
                     {creatorOptions.map((creator) => (
                       <option key={creator.id} value={creator.id}>
                         {creator.name}
@@ -240,20 +392,9 @@ export default function PerformanceForm({ performance }) {
                       updatedCreators.splice(index, 1);
                       setFieldValue('creatorId', updatedCreators);
                     }}
-                    className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
+                    className="ml-2 bg-red-600 text-white px-2 py-1 rounded font-bold hover:bg-red-500 transition duration-150"
                   >
                     Törlés
-                  </button>
-                  <button
-                    type="button"
-                    onClick={fetchCreators}
-                    className="ml-2 bg-gray-200 p-2 rounded hover:bg-gray-300"
-                  >
-                    <img
-                      src="creatorSearchIcon.svg"
-                      alt="Alkotó keresése ikon"
-                      className="w-6 h-6"
-                    />
                   </button>
                 </div>
               ))}
@@ -266,6 +407,56 @@ export default function PerformanceForm({ performance }) {
                 />
               </div>
               <ErrorMessage name="creatorId" component="div" className="text-red-500 text-sm" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="performanceEvents" className="text-gray-800 font-bold">
+                Előadás eseményei <span className="text-red-500">*</span>
+              </label>
+              <ul className="mt-2">
+                {selectedPerformanceEvents.length > 0 ? (
+                  selectedPerformanceEvents.map((_, index) => (
+                    <li
+                      key={_.id}
+                      className="flex items-center justify-between bg-gray-100 p-2 rounded mb-2"
+                    >
+                      <span className="text-gray-800">
+                        {formatDate(_.performanceDate) || 'Névtelen esemény'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updatedEvents = [...selectedPerformanceEvents];
+                          updatedEvents.splice(index, 1);
+                          setSelectedPerformanceEvents(updatedEvents);
+                          setFieldValue(
+                            'performanceEventId',
+                            updatedEvents.map((e) => e.id),
+                          );
+                        }}
+                        className="ml-2 bg-red-600 text-white px-2 py-1 rounded font-bold hover:bg-red-500 transition duration-150"
+                      >
+                        Törlés
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500">Nincs hozzáadott esemény</li>
+                )}
+              </ul>
+              <ErrorMessage
+                name="performanceEventId"
+                component="div"
+                className="text-red-500 text-sm"
+              />
+            </div>
+
+            <div className="mb-4 mt-4 flex justify-center">
+              <DefaultButton
+                text="Új előadás időpont hozzáadása"
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+              />
             </div>
 
             <div className="mb-4">
@@ -348,6 +539,35 @@ export default function PerformanceForm({ performance }) {
           </Form>
         )}
       </Formik>
+      <div className="mt-5 p-2 flex justify-center">
+        <button
+          type="button"
+          className="ml-2 bg-red-600 text-white px-20 py-3 rounded font-bold hover:bg-red-500 transition duration-150"
+          onClick={() => setIsDeleteModalOpen(true)}
+        >
+          Előadás törlése
+        </button>
+      </div>
+
+      {isModalOpen && (
+        <AddPerformanceEventModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          performanceId={performance.id}
+          onEventAdded={(newEvent) => {
+            toast.success('Új esemény hozzáadva:', newEvent);
+          }}
+        />
+      )}
+
+      {/* Törlési Modal */}
+      <PerformanceDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        performanceId={performance.id}
+        title={performance.title}
+        onDeleteSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 }

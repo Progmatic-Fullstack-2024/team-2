@@ -57,7 +57,7 @@ export default function BrowsingPage() {
   return (
     <>
       <ImageTitle
-        title="Theatron"
+        title="BreakThe4th"
         description="Üdvözlünk a világ első színházi bérlet applikációjában! Válaszd ki a darabot, a helyed és már mehetsz is!"
       />
 
@@ -76,6 +76,9 @@ export default function BrowsingPage() {
       {/* Other genres */}
       {rareGenres.length > 0 &&
         renderPerformanceBrowse({ genre: rareGenres.map((genre) => genre.name) }, 'Egyéb műfaj')}
+
+      {/* Tervezett előadások */}
+      {renderPerformanceBrowse({ futureOnly: 'true' }, 'Tervezett előadások:')}
 
       {/* Performances per theater */}
       {theaters.length > 0 &&

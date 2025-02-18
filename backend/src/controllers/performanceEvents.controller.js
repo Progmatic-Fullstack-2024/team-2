@@ -23,6 +23,8 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   const { spots, performanceId, performanceDate } = req.body;
 
+  console.log(performanceDate);
+
   try {
     if (!performanceDate) {
       return res.status(400).json({ error: "Missing performanceDate" });
@@ -52,7 +54,7 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const { id } = req.params;
-  const { spots, soldSpots, performanceId } = req.body;
+  const { spots, performanceId } = req.body;
   let { performanceDate } = req.body;
 
   if (performanceDate) {
@@ -70,7 +72,6 @@ const update = async (req, res, next) => {
   try {
     const performanceEventUpdated = await performanceEventsService.update(id, {
       spots: Number(spots),
-      soldSpots: Number(soldSpots),
       performanceId,
       performanceDate,
     });

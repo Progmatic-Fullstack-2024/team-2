@@ -1,6 +1,7 @@
 import prisma from "../models/prisma-client.js";
 import { createFiles, deleteFiles, updateFiles } from "./file.service.js";
 import HttpError from "../utils/HttpError.js";
+import performanceEventsService from "./performanceEvents.service.js";
 
 function converDate(date) {
 	return new Date(date).toLocaleTimeString("hun", {
@@ -44,6 +45,25 @@ const getByName = async (title) => {
 	return performance.id;
 };
 
+const isOwn = async (id, userId) => {
+	const isOwnPerformance = await prisma.performance.findUnique({
+		where: {
+			id,
+			theater: {
+				admins: { some: { userId } },
+			},
+		},
+		include: {
+			theater: {
+				include: {
+					admins: true,
+				},
+			},
+		},
+	});
+	return isOwnPerformance;
+};
+
 const list = async ({ filter, search }) => {
 	const { orderBy, where } = filter;
 
@@ -59,58 +79,17 @@ const list = async ({ filter, search }) => {
 			creators: !!filter.creators,
 		},
 
-		orderBy: "performanceDate" in orderBy ? undefined : orderBy,
+		orderBy: Object.keys(orderBy)[0] === "performanceDate" ? undefined : orderBy,
 	});
 	if (!performances) throw new HttpError("Performances not found", 404);
+	// custom skip and take
+	// console.log(performances);
 
-	// create new data for each performanceEvent
-	// if the performnace has no events, it wiil skip it
-
-	let expandedPerformances = [];
-	for (let perf of performances) {
-		for (let event of perf.performanceEvents) {
-			let newPerf = perf;
-			newPerf.performanceEvents = [event];
-			expandedPerformances.push(newPerf);
-		}
-	}
-
-	// sort by DATE
-	if ("performanceDate" in orderBy) {
-		if (orderBy["performanceDate"] === "asc") {
-			expandedPerformances.sort(
-				(a, b) => a.performanceEvents[0].performanceDate - b.performanceEvents[0].performanceDate
-			);
-		} else if (orderBy["performanceDate"] === "desc") {
-			expandedPerformances.sort(
-				(a, b) => b.performanceEvents[0].performanceDate - a.performanceEvents[0].performanceDate
-			);
-		}
-	}
-
-	// need for testing - lists dates of the array
-	function listPerf(title, perfArray) {
-		console.log(title);
-		const textArray = [];
-		for (let perf of perfArray) {
-			textArray.push(perf.performanceEvents[0].performanceDate);
-		}
-		console.log(textArray);
-	}
-
-	// apply custom SKIP and TAKE
-	const filteredPerformances = expandedPerformances.filter(
+	const filteredPerformances = performances.filter(
 		(item, index) => index >= filter.skip && index < filter.skip + filter.take
 	);
-
-	// convert dates in array
-	for (let perf of filteredPerformances) {
-		perf.performanceEvents[0].performanceDate = converDate(
-			perf.performanceEvents[0].performanceDate
-		);
-	}
-
-	return { data: filteredPerformances, maxSize: expandedPerformances.length };
+	// console.log(filteredPerformances);
+	return { data: filteredPerformances, maxSize: performances.length };
 };
 
 const listAll = async () => {

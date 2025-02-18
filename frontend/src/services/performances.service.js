@@ -27,6 +27,15 @@ const listAll = async () => {
   }
 };
 
+const isOwn = async (id, userId) => {
+  try {
+    const response = await axiosInstance.get(`/api/performances/isOwn/${id}/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
 const createPerformance = async (performanceData) => {
   try {
     const response = await axiosInstance.post('/api/performances', performanceData);
@@ -57,11 +66,22 @@ const deletePoster = async (id, imageUrl) => {
   }
 };
 
+const deletePerformance = async (performanceId) => {
+  try {
+    const response = await axiosInstance.delete(`/api/performances/${performanceId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
 export default {
   getById,
   list,
   listAll,
+  isOwn,
   createPerformance,
   update,
   deletePoster,
+  deletePerformance,
 };
