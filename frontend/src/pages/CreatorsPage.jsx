@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
+import CreatorsList from '../components/creators/CreatorsList';
 import ImageTitle from '../components/misc/ImageTitle';
-import TheatersList from '../components/theaters/TheatersList';
-import theatersService from '../services/theaters.service';
+import creatorsService from '../services/creators.service';
 
-export default function TheatersPage() {
-  const [theaters, setTheaters] = useState([]);
+export default function CreatorsPage() {
+  const [creators, setCreators] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchTheaters = async () => {
+  const fetchCreators = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await theatersService.getTheaters();
-      setTheaters(data);
+      const data = await creatorsService.getCreatorsAllData();
+      setCreators(data);
     } catch (err) {
-      console.error('Hiba történt a színházak lekérése közben:', err);
+      toast.error('Hiba történt a színházak lekérése közben:', err);
       setError('Hiba történt az adatok betöltésekor.');
     } finally {
       setLoading(false);
@@ -24,13 +25,13 @@ export default function TheatersPage() {
   };
 
   useEffect(() => {
-    fetchTheaters();
+    fetchCreators();
   }, []);
 
   if (loading) {
     return (
       <>
-        <ImageTitle title="Színházak" description="Színházak, akik a BreakThe4th partnerei!" />
+        <ImageTitle title="Alkotók" description="Alkotók, akik a BreakThe4th partnerei!" />
         <div className="min-h-screen flex flex-col items-center justify-center pt-32">
           <p className="text-white text-lg">Betöltés...</p>
         </div>
@@ -41,7 +42,7 @@ export default function TheatersPage() {
   if (error) {
     return (
       <>
-        <ImageTitle title="Színházak" description="Színházak, akik a BreakThe4th partnerei!" />
+        <ImageTitle title="Alkotók" description="Alkotók, akik a BreakThe4th partnerei!" />
         <div className="min-h-screen flex flex-col items-center justify-center pt-32">
           <p className="text-red-500 text-lg">{error}</p>
         </div>
@@ -51,9 +52,9 @@ export default function TheatersPage() {
 
   return (
     <>
-      <ImageTitle title="Színházak" description="Színházak, akik a BreakThe4th partnerei!" />
-      <div className="min-h-screen flex flex-col items-center justify-center pt-32">
-        <TheatersList theaters={theaters} />
+      <ImageTitle title="Alkotók" description="Alkotók, akik a BreakThe4th partnerei!" />
+      <div className="min-h-screen flex flex-col items-center justify-center ">
+        <CreatorsList creators={creators} />
       </div>
     </>
   );

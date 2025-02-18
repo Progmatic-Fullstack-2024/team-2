@@ -10,6 +10,7 @@ import { AuthProvider } from './contexts/AuthContext';
 // Pages
 import AskNewPasswordPage from './pages/AskNewPasswordPage.jsx';
 import BrowsingPage from './pages/BrowsingPage.jsx';
+import CreatorsPage from './pages/CreatorsPage.jsx';
 import EditPerformancePage from './pages/EditPerformancePage.jsx';
 import EditTheaterPage from './pages/EditTheaterPage.jsx';
 import LandingPage from './pages/LandingPage';
@@ -40,6 +41,7 @@ function App() {
               <Route path="/theater/:id" element={<SingleTheaterPage />} />
               <Route path="/theater-admin" element={<TheaterAdminPage />} />
               <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
+              <Route path="/creators" element={<CreatorsPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/new-future-performance" element={<NewFuturePerformancePage />} />
@@ -58,7 +60,6 @@ function App() {
           <Footer />
         </main>
         <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} />
-        {/* 🔥 ToastContainer itt */}
       </AuthProvider>
     </Router>
   );

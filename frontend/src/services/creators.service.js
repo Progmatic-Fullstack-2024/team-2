@@ -9,4 +9,13 @@ const getCreators = async () => {
   }
 };
 
-export default { getCreators };
+const getCreatorsAllData = async () => {
+  try {
+    const response = await axiosInstance.get('/api/creators/');
+    return response.data; // Successful answer
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
+export default { getCreators, getCreatorsAllData };

@@ -16,25 +16,26 @@ export default function CreatorsList({ creators }) {
     return null;
   }
 
+  console.log('CreatorsList creators: ', creators);
+
   return (
-    <div className="w-full max-w-desktop bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-5">
-      <h2 className="text-2xl font-bold mb-4">Alkotók</h2>
-      <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
+    <div className="w-full max-w-desktop shadow-lg rounded-lg overflow-hidden p-10 ">
+      <div className="grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 gap-4 mt-5 bg-cover bg-center bg-fixed bg-[url('/H1.png')]">
         {creators.map((creator) => (
           <div
             key={creator.id}
-            className={`p-4 border rounded-lg shadow ${isMobile ? 'flex flex-col items-center space-y-4' : 'flex items-center space-x-4'}`}
+            className={`p-4 border border-c-primary-dark bg-c-background bg-opacity-75 rounded-lg shadow ${isMobile ? 'flex flex-col items-center space-y-4' : 'flex items-center space-x-4'}`}
           >
             <img
               src={creator.imageURL || 'https://via.placeholder.com/100'}
               alt={creator.name}
-              className={`w-20 h-20 object-cover rounded-full ${isMobile ? '' : 'mr-4'}`}
+              className={`w-20 text-c-secondary-light h-20 object-cover rounded-full ${isMobile ? '' : 'mr-4'}`}
             />
             <div className={`${isMobile ? 'text-center' : ''}`}>
-              <h3 className="text-lg font-semibold">{creator.name}</h3>
-              <p className="text-sm text-gray-600">{creator.profession.join(', ')}</p>
-              <p className="text-sm text-gray-500 italic">{creator.awards}</p>
-              <p className="text-sm">{creator.introductions}</p>
+              <h3 className="text-lg text-c-secondary-light font-semibold">{creator.name}</h3>
+              <p className="text-sm text-c-secondary-dark">{creator.profession.join(', ')}</p>
+              <p className="text-sm text-c-secondary-light">{creator.awards}</p>
+              <p className="text-sm text-c-secondary-dark">{creator.introductions}</p>
             </div>
           </div>
         ))}
