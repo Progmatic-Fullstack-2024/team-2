@@ -9,7 +9,6 @@ import AuthContext from '../contexts/AuthContext';
 import DefaultButton from './misc/DefaultButton';
 import MenuLink from './misc/MenuLink';
 
-
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
   const [transparentHeader, setTransparentHeader] = useState(true);
