@@ -1,5 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useContext } from 'react';
+import { toast } from 'react-toastify';
 
 import AuthContext from '../contexts/AuthContext';
 import { userValidationSchemaForLogin } from '../schema/userValidationSchema';
@@ -25,8 +26,11 @@ export default function LoginForm({ onSwitch, onClose }) {
 
   const handleLogin = async (values) => {
     const success = await login(values);
-    if (success) {
+    if (success.ok) {
+      toast.success('Sikeres bejelentkezés');
       onClose();
+    } else {
+      toast.error('Sikertelen bejelentkezés');
     }
   };
 

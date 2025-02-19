@@ -20,7 +20,11 @@ const getTheaterIdName = async () => {
 };
 
 const listAll = async () => {
-  const allTheaters = await prisma.theater.findMany();
+  const allTheaters = await prisma.theater.findMany({
+    include: {
+      performances: true,
+    },
+  });
   return allTheaters;
 };
 

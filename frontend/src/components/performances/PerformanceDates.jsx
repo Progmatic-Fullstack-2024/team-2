@@ -2,7 +2,7 @@ export default function PerformanceDates({ events, selectedDates, onToggleDate }
   return (
     <div>
       <label className="block text-lg font-semibold mt-4">Következő előadás időpontok:</label>
-
+      <p className="italic">Kattints és foglalj!</p>
       {/* If no date available */}
       {events.length === 0 ? (
         <p className="mt-2 mb-2">Jelenleg nincs kiírva műsorra ez az előadás.</p>
@@ -15,7 +15,7 @@ export default function PerformanceDates({ events, selectedDates, onToggleDate }
               <button
                 key={event.id}
                 type="button"
-                className={`p-2 border rounded-md transition-all mb-4 ${
+                className={`p-2 hover:animate-wiggle border rounded-md transition-all mb-4 ${
                   isSelected ? 'text-xl font-bold border-c-primary' : 'border-gray-300'
                 }`}
                 onClick={() => onToggleDate(event)}
