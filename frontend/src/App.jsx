@@ -14,6 +14,7 @@ import BrowsingPage from './pages/BrowsingPage.jsx';
 import CreatorsPage from './pages/CreatorsPage.jsx';
 import EditPerformancePage from './pages/EditPerformancePage.jsx';
 import EditTheaterPage from './pages/EditTheaterPage.jsx';
+import GeneralUnderConstructionPage from './pages/GeneralUnderConstructionPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import NewFuturePerformancePage from './pages/NewFuturePerformancePage.jsx';
@@ -59,6 +60,7 @@ function App() {
               <Route path="/season-tickets" element={<SeasonTicketsPage />} />
               <Route path="/browse" element={<BrowsingPage />} />
               <Route path="/newpassword" element={<AskNewPasswordPage />} />
+              <Route path="/under-construction" element={<GeneralUnderConstructionPage />} />
             </Routes>
           </div>
           <Footer />

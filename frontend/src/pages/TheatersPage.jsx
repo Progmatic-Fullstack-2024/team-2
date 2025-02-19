@@ -52,7 +52,7 @@ export default function TheatersPage() {
   return (
     <>
       <ImageTitle title="Színházak" description="Színházak, akik a BreakThe4th partnerei!" />
-      <div className="min-h-screen flex flex-col items-center justify-center pt-32">
+      <div className="min-h-screen flex flex-col items-center justify-center pt-32 ">
         <TheatersList theaters={theaters} />
       </div>
     </>

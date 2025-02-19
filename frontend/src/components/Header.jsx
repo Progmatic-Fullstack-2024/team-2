@@ -147,7 +147,9 @@ export default function Header() {
                 }}
               >
                 <MenuItem onClick={() => navigate('/userlist')}>Felhasználók kezelése</MenuItem>
-                <MenuItem onClick={() => navigate('/')}>Színházak kezelése</MenuItem>
+                <MenuItem onClick={() => navigate('/under-construction')}>
+                  Színházak kezelése
+                </MenuItem>
               </Menu>
             </div>
             <div className="hidden laptop:flex gap-4">
@@ -186,13 +188,13 @@ export default function Header() {
               }}
             >
               <MenuItem onClick={() => navigate('/theater-admin')}>Színházam</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>Fizetési ügyek</MenuItem>
-              <MenuItem onClick={() => navigate('/')}>Egyéb</MenuItem>
+              <MenuItem onClick={() => navigate('/under-construction')}>Fizetési ügyek</MenuItem>
+              <MenuItem onClick={() => navigate('/under-construction')}>Egyéb</MenuItem>
             </Menu>
             <div className="hidden laptop:flex gap-4">
               <MenuLink text="Színházam" to="/theater-admin" />
-              <MenuLink text="Fizetési ügyek" to="/" />
-              <MenuLink text="Egyéb" to="/" />
+              <MenuLink text="Fizetési ügyek" to="/under-construction" />
+              <MenuLink text="Egyéb" to="/under-construction" />
             </div>
           </nav>
         </>

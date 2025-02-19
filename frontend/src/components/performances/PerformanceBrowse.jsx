@@ -75,37 +75,39 @@ export default function PerformancesBrowse({ params, title }) {
   };
 
   return (
-    <div className="w-full my-12 space-y-12">
-      <section className="relative mb-12">
-        <h2 className="text-2xl font-bold mb-5 text-c-text">{title}</h2>
-        <div className="relative">
-          <div className="flex items-center justify-between">
-            {performances.length > visibleCards && (
-              <div className="absolute z-20 left-9">
-                <DefaultButton onClick={() => scroll('left')} text="<" />
-              </div>
-            )}
-            <div
-              ref={containerRef}
-              className="flex overflow-hidden scroll-smooth w-full z-10 max-w-screen-desktop"
-            >
-              {performances.map((perf) => (
-                <div
-                  key={perf.id} // Add a unique key for each element
-                  className="w-full tablet:w-1/2 laptop:w-1/3 desktop:w-1/5 flex-shrink-0 transition-transform duration-700 hover:z-10 hover:scale-95"
-                >
-                  <PerformanceCard02 data={perf} />
+    <div className="w-full my-12 space-y-12 bg-cover bg-center bg-fixed bg-[url('/H1.png')] rounded-lg">
+      <div className="bg-c-background bg-opacity-40">
+        <section className="relative mx-4">
+          <h2 className="text-2xl font-bold mb-5 text-c-text">{title}</h2>
+          <div className="relative">
+            <div className="flex items-center justify-between">
+              {performances.length > visibleCards && (
+                <div className="absolute z-20 left-9">
+                  <DefaultButton onClick={() => scroll('left')} text="<" />
                 </div>
-              ))}
-            </div>
-            {performances.length > visibleCards && (
-              <div className="absolute z-20 right-1">
-                <DefaultButton onClick={() => scroll('right')} text=">" />
+              )}
+              <div
+                ref={containerRef}
+                className="flex overflow-hidden scroll-smooth w-full z-10 max-w-screen-desktop"
+              >
+                {performances.map((perf) => (
+                  <div
+                    key={perf.id} // Add a unique key for each element
+                    className="w-full tablet:w-1/2 laptop:w-1/3 desktop:w-1/5 flex-shrink-0 transition-transform duration-700 hover:z-10 hover:scale-95"
+                  >
+                    <PerformanceCard02 data={perf} />
+                  </div>
+                ))}
               </div>
-            )}
+              {performances.length > visibleCards && (
+                <div className="absolute z-20 right-1">
+                  <DefaultButton onClick={() => scroll('right')} text=">" />
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

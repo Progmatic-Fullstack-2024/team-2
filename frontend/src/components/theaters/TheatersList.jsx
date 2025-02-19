@@ -5,7 +5,7 @@ import TheaterCardEmpty from './TheaterCardEmpty'; // Placeholder ha nincs adat
 
 export default function TheatersList({ theaters }) {
   return (
-    <section className="w-full tablet:w-fit grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 py-10 gap-10 tablet:gap-10 border-y-2 border-gray-700">
+    <section className="w-full tablet:w-fit grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 py-14 px-6 tablet:py-16 tablet:px-10 gap-10 tablet:gap-10 bg-cover bg-center bg-fixed bg-[url('/H1.png')] rounded-lg mb-10">
       {theaters.length > 0 || (
         <span className="ms-4 text-white font-semibold text-xl italic">Nincs találat!</span>
       )}

@@ -57,8 +57,8 @@ export default function BrowsingPage() {
   return (
     <>
       <ImageTitle
-        title="Theatron"
-        description="Üdvözlünk a világ első színházi bérlet applikációjában! Válaszd ki a darabot, a helyed és már mehetsz is!"
+        title="BreakThe4th"
+        description="Üdvözlünk a világ első színházi bérlet applikációjában! Böngéssz bátran! És kattints!"
       />
 
       {/* Performances for the birth of the logged-in user */}
