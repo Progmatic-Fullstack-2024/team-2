@@ -31,9 +31,8 @@ async function fetchTheaters() {
   );
 }
 
-async function fetchCreators() {
+async function fetchCreatros() {
   const response = await creatorsService.getCreators();
-
   addFilterData(
     'Készítők',
     'creators',
@@ -43,7 +42,6 @@ async function fetchCreators() {
 }
 async function fetchGenres() {
   const response = await genresService.listAllGenre();
-
   addFilterData(
     'Műfaj',
     'genre',
@@ -52,17 +50,6 @@ async function fetchGenres() {
   );
 }
 
-addFilterData(
-  'Dátum',
-  'date',
-  ['2020', '2021', '2023', '2024', '2025'],
-  ['2020', '2021', '2023', '2024', '2025'],
-  'calendar',
-);
-fetchTheaters();
-fetchCreators();
-fetchGenres();
-
 export default function SideBar({ params, className }) {
   const { searchParams, setSearchParams } = params;
   const [fetchReady, setFetchReady] = useState(false);
@@ -70,9 +57,27 @@ export default function SideBar({ params, className }) {
 
   const menuOpenClass = `${menuOpen ? 'scale-100 ' : 'scale-0'} flex origin-top-left transition transition-scale duration-150 `;
 
+  async function createFilterData() {
+    addFilterData(
+      'Dátum',
+      'date',
+      ['2020', '2021', '2023', '2024', '2025'],
+      ['2020', '2021', '2023', '2024', '2025'],
+      'calendar',
+    );
+    await fetchTheaters();
+    await fetchCreatros();
+    await fetchGenres();
+    setFetchReady(true);
+  }
+
   useEffect(() => {
-    if (filterData.length === 4) setFetchReady(true);
-  }, [filterData]);
+    if (filterData.length === 0) {
+      createFilterData();
+    } else if (filterData.length === 4) {
+      setFetchReady(true);
+    }
+  }, []);
 
   const handleChange = ({ searchName, searchValue, type }) => {
     let query = searchParams.get(searchName);
@@ -108,7 +113,6 @@ export default function SideBar({ params, className }) {
         }
         break;
       case 'calendar':
-        console.log(searchValue);
         searchValue.startDate
           ? searchParams.set('startDate', searchValue.startDate)
           : searchParams.delete('startDate');
@@ -152,7 +156,7 @@ export default function SideBar({ params, className }) {
         <div
           className={`${
             menuOpenClass
-          }  bg-c-secondary-darkest laptop:flex laptop:scale-100 min-w-fit laptop:min-w-48 h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
+          }  bg-c-secondary-darkest laptop:flex laptop:scale-100 min-w-[250px] h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
         >
           {fetchReady ? (
             filterData.map((element) => (
