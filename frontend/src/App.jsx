@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Completion from './components/payment/Completion.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
+import AddCreatorPage from './pages/AddCreatorPage.jsx';
 import AskNewPasswordPage from './pages/AskNewPasswordPage.jsx';
 import BrowsingPage from './pages/BrowsingPage.jsx';
 import CreatorsPage from './pages/CreatorsPage.jsx';
@@ -43,6 +44,7 @@ function App() {
               <Route path="/theater-admin" element={<TheaterAdminPage />} />
               <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
               <Route path="/creators" element={<CreatorsPage />} />
+              <Route path="/add-creator" element={<AddCreatorPage />} />
               <Route path="/creators/:id" element={<SingleCreatorPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />

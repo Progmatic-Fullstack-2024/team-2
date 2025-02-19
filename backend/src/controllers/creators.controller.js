@@ -1,5 +1,5 @@
 import creatorsService from "../services/creators.service.js";
-import HttpError from "../utils/HttpError.js";
+
 
 const getCreatorsForDropdown = async (req, res, next) => {
   try {
@@ -35,10 +35,14 @@ const create = async (req, res, next) => {
   const image = req.files.image ? req.files.image[0] : null;
 
   try {
+    const professionArray = Array.isArray(profession)
+      ? profession
+      : profession.split(",").map((p) => p.trim());
+
     const newCreator = await creatorsService.create(
       {
         name,
-        profession: Array.isArray(profession) ? profession : [profession],
+        profession: professionArray,
         awards,
         introductions,
       },

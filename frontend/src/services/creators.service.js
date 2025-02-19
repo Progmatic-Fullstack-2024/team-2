@@ -27,4 +27,13 @@ const getCreatorById = async (id) => {
   }
 };
 
-export default { getCreators, getCreatorsAllData, getCreatorById };
+const create = async (creatorData) => {
+  try {
+    const response = await axiosInstance.post('/api/creators', creatorData);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { getCreators, getCreatorsAllData, getCreatorById, create };

@@ -51,11 +51,12 @@ export default function TheaterForTheaterAdmin({ theater }) {
         ) : (
           <p className="text-lg italic">Még nincs ehhez a színházhoz tartozó előadás.</p>
         )}
-        <div className="flex justify-center mt-5">
+        <div className="flex justify-around mt-5">
           <DefaultButton
             text="Új előadás hozzáadása"
             onClick={() => navigate(`/new-performance?theaterId=${id}`)}
           />
+          <DefaultButton text="Új alkotó felvétele" onClick={() => navigate(`/add-creator`)} />
         </div>
       </div>
     </div>

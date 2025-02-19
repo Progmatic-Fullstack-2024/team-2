@@ -17,6 +17,7 @@ export default function SingleCreatorPage() {
     const fetchCreator = async () => {
       try {
         const data = await creatorsService.getCreatorById(id); // 🔹 Service hívás az adatok betöltésére
+        console.log('Creator data:', data); // 🔹 Nézzük meg, mit kapunk vissza
         setCreator(data);
       } catch (err) {
         setError('Hiba történt az alkotó betöltése közben.');
