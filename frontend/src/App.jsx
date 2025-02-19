@@ -12,6 +12,7 @@ import AddCreatorPage from './pages/AddCreatorPage.jsx';
 import AskNewPasswordPage from './pages/AskNewPasswordPage.jsx';
 import BrowsingPage from './pages/BrowsingPage.jsx';
 import CreatorsPage from './pages/CreatorsPage.jsx';
+import EditCreatorPage from './pages/EditCreatorPage.jsx';
 import EditPerformancePage from './pages/EditPerformancePage.jsx';
 import EditTheaterPage from './pages/EditTheaterPage.jsx';
 import GeneralUnderConstructionPage from './pages/GeneralUnderConstructionPage.jsx';
@@ -46,6 +47,7 @@ function App() {
               <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
               <Route path="/creators" element={<CreatorsPage />} />
               <Route path="/add-creator" element={<AddCreatorPage />} />
+              <Route path="/edit-creator/:id" element={<EditCreatorPage />} />
               <Route path="/creators/:id" element={<SingleCreatorPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />

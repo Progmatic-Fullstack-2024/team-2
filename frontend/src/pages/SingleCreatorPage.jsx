@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import DefaultButton from '../components/misc/DefaultButton';
 import ImageTitle from '../components/misc/ImageTitle';
 import PerformanceCard from '../components/performances/PerformanceCard';
+import AuthContext from '../contexts/AuthContext';
 import creatorsService from '../services/creators.service';
 
 export default function SingleCreatorPage() {
-  const { id } = useParams(); // 🔹 Az URL-ből kinyerjük a creator ID-ját
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [creator, setCreator] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,8 +18,7 @@ export default function SingleCreatorPage() {
   useEffect(() => {
     const fetchCreator = async () => {
       try {
-        const data = await creatorsService.getCreatorById(id); // 🔹 Service hívás az adatok betöltésére
-        console.log('Creator data:', data); // 🔹 Nézzük meg, mit kapunk vissza
+        const data = await creatorsService.getCreatorById(id);
         setCreator(data);
       } catch (err) {
         setError('Hiba történt az alkotó betöltése közben.');
@@ -35,6 +36,10 @@ export default function SingleCreatorPage() {
     } else {
       navigate('/');
     }
+  };
+
+  const handleEdit = () => {
+    navigate(`/edit-creator/${creator.id}`); // Navigáció a szerkesztő oldalra
   };
 
   if (loading) return <div className="text-center text-lg">🔄 Betöltés...</div>;
@@ -74,8 +79,11 @@ export default function SingleCreatorPage() {
               </div>
             </div>
           )}
-          <div className="mt-10 flex justify-center">
+          <div className="mt-10 flex justify-around space-x-4">
             <DefaultButton onClick={handleBack} text="Vissza" />
+            {user?.role === 'theaterAdmin' && (
+              <DefaultButton onClick={handleEdit} text="Módosítás" />
+            )}
           </div>
         </div>
       </div>

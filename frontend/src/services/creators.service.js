@@ -36,4 +36,22 @@ const create = async (creatorData) => {
   }
 };
 
-export default { getCreators, getCreatorsAllData, getCreatorById, create };
+const update = async (id, creatorData) => {
+  try {
+    const response = await axiosInstance.put(`/api/creators/${id}`, creatorData);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+const deleteCreator = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/api/creators/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { getCreators, getCreatorsAllData, getCreatorById, create, update, deleteCreator };
