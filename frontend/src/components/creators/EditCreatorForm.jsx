@@ -1,9 +1,11 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
+import DeleteCreatorModal from './DeleteCreatorModal';
+import AuthContext from '../../contexts/AuthContext';
 import creatorsService from '../../services/creators.service';
 import DefaultButton from '../misc/DefaultButton';
 
@@ -11,8 +13,10 @@ const PROFESSIONS = ['actor', 'director', 'writer', 'stageDesigner']; // Enum é
 
 export default function EditCreatorForm({ creator }) {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // 🔹 Most már valóban használjuk a useContext-et
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [preview, setPreview] = useState(creator.imageURL || ''); // Kép előnézet
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // Modal állapot
 
   // 📌 Validációs séma
   const validationSchema = Yup.object({
@@ -49,6 +53,19 @@ export default function EditCreatorForm({ creator }) {
       toast.error('Hiba történt a frissítés során.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // 📌 Alkotó törlése
+  const handleDelete = async () => {
+    try {
+      await creatorsService.deleteCreator(creator.id);
+      toast.success(`"${creator.name}" sikeresen törölve.`);
+      navigate('/creators'); // 🔹 Törlés után visszanavigálás
+    } catch (error) {
+      toast.error('Hiba történt az alkotó törlése során.');
+    } finally {
+      setIsDeleteModalOpen(false); // Modal bezárása
     }
   };
 
@@ -197,9 +214,30 @@ export default function EditCreatorForm({ creator }) {
               <DefaultButton text="Mentés" type="submit" disabled={isSubmitting} />
               <DefaultButton text="Mégsem" type="button" onClick={() => navigate(-1)} />
             </div>
+
+            {/* 📌 Admin számára törlés gomb */}
+            {user &&
+              user.role === 'admin' && ( // 🔹 Itt használom a useContext-ből kapott user változót!
+                <div className="mt-6 flex justify-center">
+                  <button
+                    type="button"
+                    className="bg-red-600 text-white px-4 py-3 rounded font-bold hover:bg-red-500 transition duration-150"
+                    onClick={() => setIsDeleteModalOpen(true)}
+                  >
+                    Alkotó törlése
+                  </button>
+                </div>
+              )}
           </Form>
         )}
       </Formik>
+      {/* 📌 Törlési modal */}
+      <DeleteCreatorModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onDelete={handleDelete}
+        title={creator.name}
+      />
     </div>
   );
 }

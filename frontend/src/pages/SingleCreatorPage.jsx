@@ -81,7 +81,7 @@ export default function SingleCreatorPage() {
           )}
           <div className="mt-10 flex justify-around space-x-4">
             <DefaultButton onClick={handleBack} text="Vissza" />
-            {user?.role === 'theaterAdmin' && (
+            {(user?.role === 'theaterAdmin' || user?.role === 'admin') && (
               <DefaultButton onClick={handleEdit} text="Módosítás" />
             )}
           </div>
