@@ -149,7 +149,7 @@ const getUserById = async (id) => {
     deleteOldUserVisitedPerformance(user);
     delete user.password;
     for (let i = 0; i < user.UserVisitedPerformance.length; i += 1) {
-      // it need'nt from prisma 4.x
+      // it need because I can not use select
       delete user.UserVisitedPerformance[i].performanceEvents.performance.id;
       delete user.UserVisitedPerformance[i].performanceEvents.performance
         .description;
@@ -159,7 +159,6 @@ const getUserById = async (id) => {
         .imagesURL;
       delete user.UserVisitedPerformance[i].performanceEvents.performance
         .targetAudience;
-      delete user.UserVisitedPerformance[i].performanceEvents.qrImage;
       delete user.UserVisitedPerformance[i].performanceEvents.userId;
     }
     deleteOldUserSeasonTickets(user);
@@ -213,13 +212,13 @@ const updateUser = async (
 
 const deleteUser = async (id) => {
   let user = await getUserById(id);
-  if (user)
+  if (user && user.UserSeasonTicket.length === 0) {
     if (user.theaterAdmin != null)
       await theaterAdmin.deleteUserFromTheaterAdmin(id);
-  user = await prisma.user.delete({
-    where: { id },
-  });
-
+    user = await prisma.user.delete({
+      where: { id },
+    });
+  }
   return user;
 };
 

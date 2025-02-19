@@ -67,8 +67,9 @@ export default function PerformanceCard({ data }) {
             <span className={spanClass}>{data.theater.address}</span>
             <p>Időpont :</p>
             <span className={spanClass}>
-              {(data.performanceEvents[0] && data.performanceEvents[0].performanceDate) ||
-                'Adatbázis hiba'}
+              {(data.performanceEvents[0] &&
+                converDate(data.performanceEvents[0].performanceDate)) ||
+                'Készülőben...'}
             </span>
           </div>
         </div>

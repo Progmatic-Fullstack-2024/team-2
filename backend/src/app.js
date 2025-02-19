@@ -32,7 +32,7 @@ app.use("/api/performances", performancesRoutes);
 app.use("/api/performance-events", performanceEventsRoutes);
 app.use("/api/future-performances", futurePerformancesRoutes);
 app.use("/api/theater", theatersRoutes);
-app.use("/api/dropdown-data-creators", creatorsRoutes);
+app.use("/api/creators", creatorsRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/season-tickets", seasonTicketsRoutes);
 app.use("/theaterAdmin", theaterAdmin);

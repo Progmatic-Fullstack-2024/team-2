@@ -26,4 +26,14 @@ const buyTicket = async (ticketdata) => {
     throw error.response ? error.response.data : error;
   }
 };
-export default { getByUserId, getSoldTickets, buyTicket };
+
+const sendQrCodeMail = async (data) => {
+  try {
+    const response = await axiosInstance.put(`/api/booking/sendqrcodemail`, data);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export default { getByUserId, getSoldTickets, buyTicket, sendQrCodeMail };

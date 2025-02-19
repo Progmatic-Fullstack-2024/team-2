@@ -23,6 +23,15 @@ export default {
 
   theme: {
     extend: {
+      animation: {
+        wiggle: 'wiggle 0.2s ease-in-out infinite', // 🔥 Rezgés
+      },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-2deg)' },
+          '50%': { transform: 'rotate(2deg)' },
+        },
+      },
       width: {
         tablet: '640px',
         laptop: '1024px',

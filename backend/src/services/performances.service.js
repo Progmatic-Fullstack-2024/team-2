@@ -31,6 +31,8 @@ const getById = async (performanceId) => {
 		include: {
 			performanceEvents: true,
 			creators: true,
+			futurePerformance: true,
+			performanceFollowers: true,
 		},
 	});
 	if (!performance) throw new HttpError("Performance not found", 404);
@@ -267,14 +269,41 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
 	}
 };
 
+const addFollower = async (id, followerData) => {
+	const performanceAddedFollower = await prisma.performance.update({
+		where: { id }, // 🔹 Az azonosítás az id alapján történik
+		data: {
+			performanceFollowers: {
+				connect: { id: followerData.userId }, // 🔹 Felhasználó hozzákapcsolása
+			},
+		},
+	});
+	return performanceAddedFollower;
+};
+
+const removeFollower = async (id, followerData) => {
+	const performanceUnfollowed = await prisma.performance.update({
+		where: { id }, // 🔹 Az azonosítás az előadás ID alapján történik
+		data: {
+			performanceFollowers: {
+				disconnect: { id: followerData.userId }, // 🔹 Felhasználó eltávolítása a kapcsolatból
+			},
+		},
+	});
+	return performanceUnfollowed;
+};
+
 export default {
 	create,
 	update,
 	destroy,
 	list,
 	listAll,
+	isOwn,
 	getByName,
 	deleteSingleImage,
 	getById,
 	listAllGenres,
+	addFollower,
+	removeFollower,
 };
