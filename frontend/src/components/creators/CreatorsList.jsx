@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import DefaultButton from '../misc/DefaultButton';
-
 export default function CreatorsList({ creators }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const navigate = useNavigate(); // Navigációs hook
@@ -28,17 +26,9 @@ export default function CreatorsList({ creators }) {
     }
   };
 
-  const handleBack = () => {
-    if (window.history.length > 2) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
-  };
-
   return (
     <div className="w-full max-w-desktop shadow-lg rounded-lg overflow-hidden p-10">
-      <div className="grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-4 mt-5 bg-cover bg-center bg-fixed bg-[url('/H1.png')] rounded-lg">
+      <div className="grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-4 mt-3 bg-cover bg-center bg-fixed bg-[url('/H1.png')] rounded-lg">
         {creators.map((creator) => (
           <div
             key={creator.id}
@@ -63,9 +53,6 @@ export default function CreatorsList({ creators }) {
             </div>
           </div>
         ))}
-      </div>
-      <div className="mt-10 flex justify-center">
-        <DefaultButton onClick={handleBack} text="Vissza" />
       </div>
     </div>
   );

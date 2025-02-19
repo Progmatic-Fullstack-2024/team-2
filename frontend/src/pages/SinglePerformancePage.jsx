@@ -143,7 +143,7 @@ export default function DetailsPage() {
   return (
     <>
       <ImageTitle title={performance.title} />
-      <div className="min-h-screen flex flex-col items-center justify-center p-10 text-c-primary-dark">
+      <div className="min-h-screen flex flex-col items-center justify-center p-10 text-c-primary-dark bg-cover bg-center bg-fixed bg-[url('/H1.png')]">
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden flex items-center justify-center">
           <img
             src={performance.posterURL || 'https://via.placeholder.com/640x360?text=Nincs+plakát'}
@@ -176,6 +176,7 @@ export default function DetailsPage() {
 
           <p className="text-lg mb-2 whitespace-pre-line text-justify">{performance.description}</p>
 
+          <h1 className="text-lg font-bold text-center">Alkotók:</h1>
           <CreatorsList creators={performance.creators} />
 
           <PerformanceDates
