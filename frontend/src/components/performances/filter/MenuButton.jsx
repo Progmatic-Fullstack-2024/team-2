@@ -69,7 +69,7 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
             {options.map((value, index) => (
               <li
                 key={value + index}
-                className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-background/40 `}
+                className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-primary/15 `}
               >
                 <label
                   className="ms-2 w-full px-3 pt-2 h-full text-sm font-medium text-align-center inline-block hover:underline cursor-pointer"

@@ -54,11 +54,11 @@ export default function PerformancesSearch({ params }) {
   };
 
   return (
-    <div className="h-fit min-h-32 w-full mb-2 z-10 bg-c-secondary-darkest p-2 laptop:static sticky top-[97px] p-3 tablet:p-5  rounded-md">
+    <div className="h-fit min-h-32 w-full mb-2 z-10 bg-c-background border border-c-secondary/20 p-2 laptop:static sticky top-[97px] p-3 tablet:p-5  rounded-md">
       <SideBar params={{ searchParams, setSearchParams }} className="laptop:hidden" />
       <form
         id="inputForm"
-        className="w-full min-w-80 max-w-[600px] self-start mb-6"
+        className="w-full min-w-80 max-w-[600px] self-start "
         onSubmit={handleSubmit}
       >
         <div className="relative flex items-center p-1 ms-16 laptop:ms-0">
@@ -83,6 +83,43 @@ export default function PerformancesSearch({ params }) {
           </button>
         </div>
       </form>
+      <div className="mt-3 pe-4 mb-3  shadow-lg rounded-lg flex items-center gap-8 ">
+        {/* Csak jövőbeni előadások szűrő */}
+        <div className="flex items-center gap-2 ">
+          <input
+            type="checkbox"
+            id="futureOnly"
+            checked={futureOnly}
+            onChange={handleFutureOnlyChange}
+            className="me-1 text-white cursor-pointer accent-c-accent"
+          />
+          <label
+            htmlFor="futureOnly"
+            className="me-2 text-white cursor-pointer accent-c-accent hover:underline truncate select-none"
+          >
+            Csak tervezett előadások
+          </label>
+        </div>
+
+        {/* Csak követett előadások szűrő */}
+        {user && (
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="followingOnly"
+              checked={followingOnly}
+              onChange={handleFollowingOnlyChange}
+              className="me-1 text-white cursor-pointer accent-c-accent"
+            />
+            <label
+              htmlFor="followingOnly"
+              className="text-white cursor-pointer accent-c-accent hover:underline truncate select-none"
+            >
+              Követett előadások
+            </label>
+          </div>
+        )}
+      </div>
       <div className="flex justify-between text-c-text">
         <div>
           <span className="text-xl font-bold me-3">{maxSize}</span>
@@ -115,37 +152,6 @@ export default function PerformancesSearch({ params }) {
         </div>
       </div>
       {/* Szűrési opciók - checkboxok */}
-      <div className="mt-3 px-4 py-2 shadow-lg rounded-lg inline-flex items-center gap-8 flex-wrap">
-        {/* Csak jövőbeni előadások szűrő */}
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="futureOnly"
-            checked={futureOnly}
-            onChange={handleFutureOnlyChange}
-            className="cursor-pointer"
-          />
-          <label htmlFor="futureOnly" className="text-c-text cursor-pointer">
-            Csak a tervezett előadások megjelenítése
-          </label>
-        </div>
-
-        {/* Csak követett előadások szűrő */}
-        {user && (
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="followingOnly"
-              checked={followingOnly}
-              onChange={handleFollowingOnlyChange}
-              className="cursor-pointer"
-            />
-            <label htmlFor="followingOnly" className="text-c-text cursor-pointer">
-              Csak az általad követett előadások megjelenítése
-            </label>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

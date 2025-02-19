@@ -136,7 +136,7 @@ export default function SideBar({ params, className }) {
         ' mx-2 tablet:ms-0 laptop:mx-2 laptop:mt-0 laptop:static absolute pointer-events-none left-0 z-20 min-h-full '
       }
     >
-      <div className="sticky top-[115px] laptop:top-[140px] flex flex-cols">
+      <div className="sticky top-[115px] flex flex-cols">
         <div className="laptop:hidden me-3 tablet:ms-3 pointer-events-auto ">
           <div
             role="button"
@@ -156,7 +156,7 @@ export default function SideBar({ params, className }) {
         <div
           className={`${
             menuOpenClass
-          }  bg-c-secondary-darkest laptop:flex laptop:scale-100 min-w-[250px] h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
+          }  bg-c-background laptop:flex laptop:scale-100 min-w-[250px] h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
         >
           {fetchReady ? (
             filterData.map((element) => (

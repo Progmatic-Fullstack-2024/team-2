@@ -41,7 +41,7 @@ export default function CustomCalendar({ handleChange, searchName, searchParams 
   };
 
   return (
-    <div className="flex flex-col gap-2 items-center border border-c-text/50 bg-c-background/40 pb-2">
+    <div className="flex flex-col gap-2 items-center border border-c-text/50 bg-c-primary/10 pb-2">
       <Calendar
         value={calendarState}
         id="performance-filter-calendar"
