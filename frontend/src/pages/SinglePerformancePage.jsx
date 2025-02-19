@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -31,6 +32,7 @@ export default function DetailsPage() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const isLoggedIn = user !== null;
   const [isOwn, setIsOwn] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     async function fetchPerformanceById(performanceId) {
@@ -42,6 +44,13 @@ export default function DetailsPage() {
           const ownStatus = await performanceService.isOwn(performanceId, user.id);
           setIsOwn(ownStatus);
         }
+
+        if (user?.id) {
+          // Ellenőrizzük, hogy a felhasználó követi-e már az előadást
+          const followedPerformances = user.followedPerformances || [];
+          setIsFollowing(followedPerformances.includes(performanceId));
+        }
+
         if (fetchedPerformance?.theaterId) {
           const fetchedTheater = await theaterService.getById(fetchedPerformance.theaterId);
           setTheater(fetchedTheater);
@@ -53,6 +62,34 @@ export default function DetailsPage() {
 
     fetchPerformanceById(id);
   }, [id, user]);
+
+  const handleFollow = async () => {
+    if (!user) {
+      alert('Be kell jelentkezned a követéshez!');
+      return;
+    }
+
+    try {
+      await performanceService.follow(id, { userId: user.id });
+      setIsFollowing(true);
+    } catch (err) {
+      console.error('Hiba a követés közben:', err);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    if (!user) {
+      alert('Be kell jelentkezned a kikövetéshez!');
+      return;
+    }
+
+    try {
+      await performanceService.unFollow(id, { userId: user.id });
+      setIsFollowing(false);
+    } catch (err) {
+      console.error('Hiba a kikövetés közben:', err);
+    }
+  };
 
   const toggleDateSelection = (event) => {
     setSelectedDates([event.performanceDate]); // Csak az aktuálisan kiválasztott dátumot tároljuk
@@ -175,6 +212,41 @@ export default function DetailsPage() {
           />
 
           <p className="text-lg mb-2 whitespace-pre-line text-justify">{performance.description}</p>
+
+          {/* Követés / Kikövetés gomb */}
+          <div className="w-full flex flex-col tablet:flex-row justify-between items-center my-4 max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden p-5 mt-2 mb-8 text-center tablet:text-left">
+            {/* Szöveg */}
+            <h1 className="block text-lg font-semibold">
+              {isFollowing
+                ? 'Már követed ezt az előadást!'
+                : 'Kövesd be az előadást, hogy informálódhass!'}
+            </h1>
+
+            {/* Nyíl animáció – csak ha még nem követi és nem mobilon */}
+            {!isFollowing && (
+              <motion.div
+                initial={{ x: 0 }}
+                animate={{ x: [50, 150, 50] }} // Nyíl ide-oda mozgás
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                className="text-c-primary-dark text-2xl hidden tablet:block"
+              >
+                ➜
+              </motion.div>
+            )}
+
+            {/* Gombok */}
+            {isFollowing ? (
+              <DefaultButton text="Kikövetés" onClick={handleUnfollow} color="c-warning" />
+            ) : (
+              <button
+                type="button"
+                onClick={handleFollow}
+                className="hover:animate-wiggle hover:shadow-glow font-bold rounded p-3 px-7 bg-c-primary text-white transition-transform duration-300 ease-in-out hover:scale-110"
+              >
+                Követés
+              </button>
+            )}
+          </div>
 
           <h1 className="text-lg font-bold text-center">Alkotók:</h1>
           <CreatorsList creators={performance.creators} />
