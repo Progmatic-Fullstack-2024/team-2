@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import DefaultButton from '../components/misc/DefaultButton';
 import ImageTitle from '../components/misc/ImageTitle';
@@ -21,7 +22,7 @@ export default function SingleTheaterPage() {
         const data = await theatersService.getById(id); // Feltételezve, hogy van egy API hívás erre
         setTheater(data);
       } catch (err) {
-        console.error('Hiba a színház betöltésekor:', err);
+        toast.error('Hiba a színház betöltésekor:', err);
         setError('Nem található a színház.');
       } finally {
         setLoading(false);

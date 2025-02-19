@@ -91,7 +91,6 @@ export default function NewPerformanceForm({ lecture }) {
       setImagesPreview([]);
       navigate('/theater-admin');
     } catch (error) {
-      console.log('catch ág: ', error);
       toast.error(`Hiba történt az előadás létrehozásakor: ${error.message}`);
     }
   };

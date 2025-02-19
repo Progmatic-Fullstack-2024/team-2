@@ -18,8 +18,6 @@ export default function CreatorsList({ creators }) {
     return null;
   }
 
-  console.log('CreatorsList creators: ', creators);
-
   const handleKeyDown = (event, id) => {
     if (event.key === 'Enter' || event.key === ' ') {
       navigate(`/creator/${id}`);

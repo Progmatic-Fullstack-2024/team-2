@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import EditCreatorForm from '../components/creators/EditCreatorForm.jsx'; // 🔹 Hivatkozás az EditCreatorForm-ra
 import ImageTitle from '../components/misc/ImageTitle.jsx';
 import creatorsService from '../services/creators.service.js';
 
 export default function EditCreatorPage() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [creator, setCreator] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -16,14 +17,13 @@ export default function EditCreatorPage() {
         const fetchedCreator = await creatorsService.getCreatorById(id);
         setCreator(fetchedCreator);
       } catch (error) {
-        console.error('Hiba az alkotó betöltésekor:', error);
+        toast.error('Hiba az alkotó betöltésekor:', error);
       } finally {
         setLoading(false);
       }
     }
 
     fetchCreator();
-    console.log('Console log: ', creator);
   }, [id]);
 
   if (loading) {

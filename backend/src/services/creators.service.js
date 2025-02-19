@@ -14,7 +14,7 @@ const getCreatorsIdName = async () => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to load creators",
-      error.status || 500
+      error.status || 500,
     );
   }
 };
@@ -73,7 +73,7 @@ const update = async (id, creatorData, image) => {
   }
 
   const filteredData = Object.fromEntries(
-    Object.entries(creatorData).filter(([_, value]) => value !== undefined)
+    Object.entries(creatorData).filter(([value]) => value !== undefined),
   );
 
   // A profession mező biztosan tömb legyen

@@ -1,6 +1,5 @@
 import creatorsService from "../services/creators.service.js";
 
-
 const getCreatorsForDropdown = async (req, res, next) => {
   try {
     const creatorsData = await creatorsService.getCreatorsIdName();
@@ -46,7 +45,7 @@ const create = async (req, res, next) => {
         awards,
         introductions,
       },
-      image
+      image,
     );
     res.status(201).json(newCreator);
   } catch (error) {
@@ -69,7 +68,7 @@ const update = async (req, res, next) => {
         awards: awards || "", // Ha nem küldik, üres string marad
         introductions: introductions || "",
       },
-      image
+      image,
     );
 
     res.status(200).json(updatedCreator);

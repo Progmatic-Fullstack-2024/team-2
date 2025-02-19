@@ -39,18 +39,14 @@ export default function CreateCreatorForm({ creator }) {
     }
 
     try {
-      const response = await creatorService.create(formData);
-
-      console.log(response);
-
-      // if (!response.ok) throw new Error('Hiba történt az alkotó létrehozásakor.');
+      await creatorService.create(formData);
 
       toast.success('Alkotó sikeresen hozzáadva!');
       resetForm();
       setImagePreview(null);
       navigate('/theater-admin');
     } catch (error) {
-      toast.error(`Hiba történt: ${error.message}`);
+      toast.error(`Hiba történt az alkotó hozzáadásakor`);
     }
   };
 

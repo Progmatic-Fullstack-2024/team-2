@@ -32,7 +32,6 @@ export default function PerformanceCard({ data }) {
   }
 
   useEffect(() => {
-    console.log('PerformanceCard received data:', data);
     if (previousId !== data.id) {
       previousId = data.id;
       if (data.posterURL) {

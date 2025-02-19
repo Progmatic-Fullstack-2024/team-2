@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get(
   "/dropdown-data-creators",
-  creatorsController.getCreatorsForDropdown
+  creatorsController.getCreatorsForDropdown,
 );
 router.get("/", creatorsController.list);
 router.get("/:id", creatorsController.getById);
@@ -15,13 +15,13 @@ router.get("/:id", creatorsController.getById);
 router.put(
   "/:id",
   upload.fields([{ name: "image", maxCount: 1 }]),
-  creatorsController.update
+  creatorsController.update,
 );
 
 router.post(
   "/",
   upload.fields([{ name: "image", maxCount: 1 }]),
-  creatorsController.create
+  creatorsController.create,
 );
 
 router.delete("/:id", creatorsController.destroy);

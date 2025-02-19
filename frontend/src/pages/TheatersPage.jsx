@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import ImageTitle from '../components/misc/ImageTitle';
 import TheatersList from '../components/theaters/TheatersList';
@@ -16,7 +17,7 @@ export default function TheatersPage() {
       const data = await theatersService.getTheaters();
       setTheaters(data);
     } catch (err) {
-      console.error('Hiba történt a színházak lekérése közben:', err);
+      toast.error('Hiba történt a színházak lekérése közben:', err);
       setError('Hiba történt az adatok betöltésekor.');
     } finally {
       setLoading(false);
