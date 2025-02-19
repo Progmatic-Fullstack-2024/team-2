@@ -18,7 +18,7 @@ export default function MenuLink({
       {icon && (
         <SvgIcon
           icon={icon}
-          className="laptop:hidden scale-75 tablet:scale-100"
+          className="laptop:hidden scale-75 "
           size={iconSize}
           hoverColor={hoverColor}
         />

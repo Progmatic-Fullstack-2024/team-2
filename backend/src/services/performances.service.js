@@ -13,18 +13,6 @@ function converDate(date) {
 	});
 }
 
-// benchmark for performance testing
-// state : Boolean - true:stert benchmark, flase :stop benchmark
-// name : String - need to access starting time
-let benchmarks = {};
-function benchmark(state, name) {
-	if (state === true) {
-		benchmarks["name"] = performance.now() * 1000;
-	} else if (state === false) {
-		console.log(performance.now() * 1000 - benchmarks["name"], "µs");
-	}
-}
-
 const getById = async (performanceId) => {
 	const performance = await prisma.performance.findUnique({
 		where: { id: performanceId },
@@ -84,10 +72,13 @@ const list = async ({ filter, search }) => {
 		orderBy: Object.keys(orderBy)[0] === "performanceDate" ? undefined : orderBy,
 	});
 	if (!performances) throw new HttpError("Performances not found", 404);
-	// custom skip and take
-	// console.log(performances);
+
 	let expandedPerformances = [];
 	for (let perf of performances) {
+		if (!perf.performanceEvents.length) {
+			expandedPerformances.push(perf);
+			continue;
+		}
 		for (let event of perf.performanceEvents) {
 			let newPerf = perf;
 			newPerf.performanceEvents = [event];
@@ -106,24 +97,18 @@ const list = async ({ filter, search }) => {
 			);
 		}
 	}
-	// need for testing - lists dates of the array
-	function listPerf(title, perfArray) {
-		console.log(title);
-		const textArray = [];
-		for (let perf of perfArray) {
-			textArray.push(perf.performanceEvents[0].performanceDate);
-		}
-		console.log(textArray);
-	}
+
 	// apply custom SKIP and TAKE
 	const filteredPerformances = expandedPerformances.filter(
 		(item, index) => index >= filter.skip && index < filter.skip + filter.take
 	);
+
 	// convert dates in array
 	for (let perf of filteredPerformances) {
-		perf.performanceEvents[0].performanceDate = converDate(
-			perf.performanceEvents[0].performanceDate
-		);
+		if (perf.performanceEvents[0])
+			perf.performanceEvents[0].performanceDate = converDate(
+				perf.performanceEvents[0].performanceDate
+			);
 	}
 	return { data: filteredPerformances, maxSize: expandedPerformances.length };
 };
@@ -136,11 +121,19 @@ const listAll = async () => {
 				select: {
 					id: true,
 					name: true,
+					address: true,
 				},
 			},
 			genre: true,
 		},
 	});
+
+	for (let perf of allPerformances) {
+		if (perf.performanceEvents[0])
+			perf.performanceEvents[0].performanceDate = converDate(
+				perf.performanceEvents[0].performanceDate
+			);
+	}
 	return allPerformances;
 };
 
