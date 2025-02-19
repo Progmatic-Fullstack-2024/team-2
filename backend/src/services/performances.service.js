@@ -207,8 +207,25 @@ const update = async (performanceId, performanceData, poster, images, creatorsId
 const destroy = async (performanceId) => {
 	try {
 		const performanceToDelete = await getById(performanceId);
+
+		// Kapcsolódó performanceEvents ID-k kinyerése
+		const relatedEvents = await prisma.performanceEvents.findMany({
+			where: { performanceId },
+			select: { id: true },
+		});
+
+		const eventIds = relatedEvents.map((event) => event.id);
+
+		// Performance események törlése
+		if (eventIds.length > 0) {
+			await performanceEventsService.destroyMany(eventIds);
+		}
+
+		// Fájlok törlése (plakát és képek)
 		await deleteFiles([performanceToDelete.posterURL]);
 		await deleteFiles(performanceToDelete.imagesURL);
+
+		// Maga a performance törlése
 		return prisma.performance.delete({ where: { id: performanceId } });
 	} catch (error) {
 		throw new HttpError(error.message || "Failed to delete performance", error.status || 500);
