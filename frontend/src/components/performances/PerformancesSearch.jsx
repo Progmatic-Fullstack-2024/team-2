@@ -1,12 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 
+import AuthContext from '../../contexts/AuthContext';
 import DropdownButton from '../misc/DropdownButton';
 import SvgIcon from '../misc/SvgIcon';
 
 export default function PerformancesSearch({ params }) {
   const { searchParams, setSearchParams, maxSize } = params;
+  const { user } = useContext(AuthContext);
   const titleSearchRef = useRef(null);
+
   const [futureOnly, setFutureOnly] = useState(searchParams.get('futureOnly') === 'true');
+  const [followingOnly, setFollowingOnly] = useState(searchParams.get('followingOnly') === 'true');
 
   useEffect(() => {
     titleSearchRef.current.value = searchParams.get('search');
@@ -31,6 +35,19 @@ export default function PerformancesSearch({ params }) {
       searchParams.set('futureOnly', 'true');
     } else {
       searchParams.delete('futureOnly');
+    }
+    setSearchParams(searchParams);
+  };
+
+  const handleFollowingOnlyChange = (e) => {
+    const isChecked = e.target.checked;
+    setFollowingOnly(isChecked);
+    if (isChecked) {
+      searchParams.set('followingOnly', 'true');
+      searchParams.set('userId', user?.id || ''); // 🔹 Beállítjuk a userId-t a szűréshez
+    } else {
+      searchParams.delete('followingOnly');
+      searchParams.delete('userId');
     }
     setSearchParams(searchParams);
   };
@@ -97,17 +114,37 @@ export default function PerformancesSearch({ params }) {
           />
         </div>
       </div>
-      <div className="mt-3 px-4 py-2 shadow-lg rounded-lg inline-flex items-center gap-3">
-        <input
-          type="checkbox"
-          id="futureOnly"
-          checked={futureOnly}
-          onChange={handleFutureOnlyChange}
-          className="cursor-pointer"
-        />
-        <label htmlFor="futureOnly" className="text-c-text cursor-pointer">
-          Csak a tervezett előadások megjelenítése
-        </label>
+      {/* Szűrési opciók - checkboxok */}
+      <div className="mt-3 px-4 py-2 shadow-lg rounded-lg inline-flex items-center gap-8 flex-wrap">
+        {/* Csak jövőbeni előadások szűrő */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="futureOnly"
+            checked={futureOnly}
+            onChange={handleFutureOnlyChange}
+            className="cursor-pointer"
+          />
+          <label htmlFor="futureOnly" className="text-c-text cursor-pointer">
+            Csak a tervezett előadások megjelenítése
+          </label>
+        </div>
+
+        {/* Csak követett előadások szűrő */}
+        {user && (
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="followingOnly"
+              checked={followingOnly}
+              onChange={handleFollowingOnlyChange}
+              className="cursor-pointer"
+            />
+            <label htmlFor="followingOnly" className="text-c-text cursor-pointer">
+              Csak az általad követett előadások megjelenítése
+            </label>
+          </div>
+        )}
       </div>
     </div>
   );
