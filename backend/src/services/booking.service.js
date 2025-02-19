@@ -9,7 +9,7 @@ const getByUserId = async ({ userId }) => {
     where: { userId },
     include: {
       SeasonTicket: true,
-      UserVisitedPerformance: true,
+      userVisitedPerformance: true,
     },
   });
 
@@ -19,7 +19,7 @@ const getByUserId = async ({ userId }) => {
       expirationDate.getDate() + ticket.SeasonTicket.durationDay,
     );
 
-    const usedSeats = ticket.UserVisitedPerformance.reduce(
+    const usedSeats = ticket.userVisitedPerformance.reduce(
       (sum, visit) => sum + visit.seats,
       0,
     );
