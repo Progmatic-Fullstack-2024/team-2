@@ -212,13 +212,13 @@ const updateUser = async (
 
 const deleteUser = async (id) => {
   let user = await getUserById(id);
-  if (user)
+  if (user && user.UserSeasonTicket.length === 0) {
     if (user.theaterAdmin != null)
       await theaterAdmin.deleteUserFromTheaterAdmin(id);
-  user = await prisma.user.delete({
-    where: { id },
-  });
-
+    user = await prisma.user.delete({
+      where: { id },
+    });
+  }
   return user;
 };
 
