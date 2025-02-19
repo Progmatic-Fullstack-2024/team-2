@@ -232,6 +232,20 @@ const addFollowerToPerformance = async (req, res, next) => {
   }
 };
 
+const removeFollowerFromPerformance = async (req, res, next) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const performanceUnfollowed = await performancesService.removeFollower(id, {
+      userId,
+    });
+    res.status(200).json(performanceUnfollowed);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createPerformance,
   updatePerformance,
@@ -242,4 +256,5 @@ export default {
   isOwn,
   deleteImage,
   addFollowerToPerformance,
+  removeFollowerFromPerformance,
 };

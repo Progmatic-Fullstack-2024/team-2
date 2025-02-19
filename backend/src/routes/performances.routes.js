@@ -29,10 +29,13 @@ router.patch(
 );
 
 router.put("/follow/:id", performancesController.addFollowerToPerformance);
+router.put(
+  "/unfollow/:id",
+  performancesController.removeFollowerFromPerformance
+);
 
 router.delete("/:performanceId", performancesController.destroyPerformance);
 
 router.patch("/:performanceId/image", performancesController.deleteImage);
-
 
 export default router;
