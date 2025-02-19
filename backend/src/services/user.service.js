@@ -166,6 +166,23 @@ const getUserById = async (id) => {
   return user;
 };
 
+const getUserByIdWithIncudes = async (id) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+
+    include: {
+      theaterAdmin: true,
+      UserSeasonTicket: true,
+      UserVisitedPerformance:true,
+      followedPerformance:true,
+      followedTheater:true,
+      userSettings:true,
+    },
+  });
+  if (user) delete user.password;
+  return user;
+};
+
 const getOwnUserById = async (id) => {
   const user = await getUserById(id);
   if (!user) return null;
@@ -210,11 +227,18 @@ const updateUser = async (
   return user;
 };
 
+const deleteUserSettingByUserId=async(userId)=> {
+  const thema=await prisma.userSetting.delete({
+    where:{userId}
+  });
+}
+
 const deleteUser = async (id) => {
-  let user = await getUserById(id);
-  if (user && user.UserSeasonTicket.length === 0) {
+  let user = await getUserByIdWithIncudes(id);
+  if (user && user.UserSeasonTicket.length === 0 && user.UserVisitedPerformance.length===0) {
     if (user.theaterAdmin != null)
       await theaterAdmin.deleteUserFromTheaterAdmin(id);
+    if(user.userSettings) deleteUserSettingByUserId(id);
     user = await prisma.user.delete({
       where: { id },
     });
