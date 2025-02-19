@@ -8,10 +8,14 @@ import Header from './components/Header';
 import Completion from './components/payment/Completion.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 // Pages
+import AddCreatorPage from './pages/AddCreatorPage.jsx';
 import AskNewPasswordPage from './pages/AskNewPasswordPage.jsx';
 import BrowsingPage from './pages/BrowsingPage.jsx';
+import CreatorsPage from './pages/CreatorsPage.jsx';
+import EditCreatorPage from './pages/EditCreatorPage.jsx';
 import EditPerformancePage from './pages/EditPerformancePage.jsx';
 import EditTheaterPage from './pages/EditTheaterPage.jsx';
+import GeneralUnderConstructionPage from './pages/GeneralUnderConstructionPage.jsx';
 import LandingPage from './pages/LandingPage';
 import ListUsers from './pages/ListUsers';
 import NewFuturePerformancePage from './pages/NewFuturePerformancePage.jsx';
@@ -21,8 +25,11 @@ import PaymentPage from './pages/PaymentPage.jsx';
 import PerformancesPage from './pages/PerformancesPage';
 import SeasonTicketsPage from './pages/SeasonTicketsPage.jsx';
 import SelectedUser from './pages/SelectedUser.jsx';
+import SingleCreatorPage from './pages/SingleCreatorPage.jsx';
 import SinglePerformancePage from './pages/SinglePerformancePage';
+import SingleTheaterPage from './pages/SingleTheaterPage.jsx';
 import TheaterAdminPage from './pages/TheaterAdminPage.jsx';
+import TheatersPage from './pages/TheatersPage.jsx';
 
 function App() {
   return (
@@ -34,8 +41,14 @@ function App() {
           <div className="w-full min-h-screen">
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/theater" element={<TheatersPage />} />
+              <Route path="/theater/:id" element={<SingleTheaterPage />} />
               <Route path="/theater-admin" element={<TheaterAdminPage />} />
               <Route path="/edit-theater/:id" element={<EditTheaterPage />} />
+              <Route path="/creators" element={<CreatorsPage />} />
+              <Route path="/add-creator" element={<AddCreatorPage />} />
+              <Route path="/edit-creator/:id" element={<EditCreatorPage />} />
+              <Route path="/creators/:id" element={<SingleCreatorPage />} />
               <Route path="/userlist" element={<ListUsers />} />
               <Route path="/new-performance" element={<NewPerformancePage />} />
               <Route path="/new-future-performance" element={<NewFuturePerformancePage />} />
@@ -49,12 +62,12 @@ function App() {
               <Route path="/season-tickets" element={<SeasonTicketsPage />} />
               <Route path="/browse" element={<BrowsingPage />} />
               <Route path="/newpassword" element={<AskNewPasswordPage />} />
+              <Route path="/under-construction" element={<GeneralUnderConstructionPage />} />
             </Routes>
           </div>
           <Footer />
         </main>
         <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} />
-        {/* 🔥 ToastContainer itt */}
       </AuthProvider>
     </Router>
   );

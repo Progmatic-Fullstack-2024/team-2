@@ -9,6 +9,8 @@ export default function queryFilter(query) {
     targetAudience,
     theater,
     futureOnly,
+    followingOnly,
+    userId,
   } = query;
   let { genre, creators } = query;
 
@@ -50,6 +52,15 @@ export default function queryFilter(query) {
     where: filterWhere,
     orderBy: { [orderBy || "title"]: sort || "asc" },
   };
+
+  // Ha csak a követett előadásokat kérdezik le (followingOnly === "true")
+  if (followingOnly === "true" && userId) {
+    andFilters.push({
+      performanceFollowers: {
+        some: { id: userId }, // Felhasználó ID-jával szűrés a követők között
+      },
+    });
+  }
 
   // For filtering futurePerformances only
   if (futureOnly === "true") {

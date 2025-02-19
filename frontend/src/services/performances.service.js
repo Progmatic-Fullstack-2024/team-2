@@ -75,6 +75,24 @@ const deletePerformance = async (performanceId) => {
   }
 };
 
+const follow = async (id, userId) => {
+  try {
+    const response = await axiosInstance.put(`/api/performances/follow/${id}`, userId);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+const unFollow = async (id, userId) => {
+  try {
+    const response = await axiosInstance.put(`/api/performances/unfollow/${id}`, userId);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
 export default {
   getById,
   list,
@@ -84,4 +102,6 @@ export default {
   update,
   deletePoster,
   deletePerformance,
+  follow,
+  unFollow,
 };

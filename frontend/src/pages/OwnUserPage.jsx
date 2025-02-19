@@ -14,7 +14,7 @@ export default function OwnUser() {
   return (
     <>
       <ImageTitle title="Saját profil kezelése" description="Itt csak a saját profilod éred el." />
-      <div className="min-h-screen flex flex-col items-center">
+      <div className="min-h-screen flex flex-col items-center bg-cover bg-center bg-fixed bg-[url('/H1.png')]">
         {logined ? (
           <div className=" w-2/3">
             <OwnUserBlock />

@@ -22,7 +22,7 @@ export default function NewPerformanceForm({ lecture }) {
 
   const [posterPreview, setPosterPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
-  // const [theaterOptions, setTheaterOptions] = useState([]);
+
   const [creatorOptions, setCreatorOptions] = useState([]);
   const [setSelectedCreators] = useState(performance?.creators || []); // 🔥 Itt tároljuk az előadáshoz tartozó alkotókat
 
@@ -82,8 +82,9 @@ export default function NewPerformanceForm({ lecture }) {
 
     try {
       const response = await createPerformance.createPerformance(formData);
+      toast.success('Előadás sikeresen létrehozva!');
 
-      if (!response.ok) throw new Error('Hiba történt az előadás létrehozásakor.');
+      if (!response) throw new Error('Hiba történt az előadás létrehozásakor.');
 
       resetForm();
       setPosterPreview(null);
@@ -120,17 +121,6 @@ export default function NewPerformanceForm({ lecture }) {
     updatedPreviews.splice(index, 1);
     setImagesPreview(updatedPreviews);
   };
-
-  // const fetchCreators = async () => {
-  //   if (creatorOptions.length === 0) {
-  //     try {
-  //       const creators = await getCreators();
-  //       setCreatorOptions(creators);
-  //     } catch (error) {
-  //       toast.error('Hiba történt az alkotók betöltésekor.');
-  //     }
-  //   }
-  // };
 
   const handleBack = () => {
     if (window.history.length > 2) {
