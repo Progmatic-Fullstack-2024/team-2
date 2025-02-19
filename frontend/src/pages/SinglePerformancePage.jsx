@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import AuthModal from '../components/AuthModal';
 import BookingModal from '../components/BookingModal';
@@ -11,6 +12,7 @@ import ImageModal from '../components/misc/ImageModal';
 import ImageTitle from '../components/misc/ImageTitle';
 import FuturePerformanceDetails from '../components/performances/FuturePerformanceDetails';
 import PerformanceDates from '../components/performances/PerformanceDates';
+import PerformanceFollowersList from '../components/performances/PerformanceFollowerList';
 import AuthContext from '../contexts/AuthContext';
 import performanceService from '../services/performances.service';
 import theaterService from '../services/theaters.service';
@@ -43,12 +45,12 @@ export default function DetailsPage() {
         if (user?.id) {
           const ownStatus = await performanceService.isOwn(performanceId, user.id);
           setIsOwn(ownStatus);
-        }
 
-        if (user?.id) {
-          // Ellenőrizzük, hogy a felhasználó követi-e már az előadást
-          const followedPerformances = user.followedPerformances || [];
-          setIsFollowing(followedPerformances.includes(performanceId));
+          // 🔥 Ellenőrizzük, hogy a felhasználó követi-e az előadást
+          const isUserFollowing = fetchedPerformance.performanceFollowers?.some(
+            (follower) => follower.id === user.id,
+          );
+          setIsFollowing(isUserFollowing);
         }
 
         if (fetchedPerformance?.theaterId) {
@@ -65,29 +67,51 @@ export default function DetailsPage() {
 
   const handleFollow = async () => {
     if (!user) {
-      alert('Be kell jelentkezned a követéshez!');
+      toast.warning('Be kell jelentkezned a követéshez!');
       return;
     }
 
     try {
       await performanceService.follow(id, { userId: user.id });
-      setIsFollowing(true);
+
+      // 🔥 Lekérjük a legfrissebb adatokat a backendről
+      const updatedPerformance = await performanceService.getById(id);
+      setPerformance(updatedPerformance);
+
+      // 🔥 Megnézzük, hogy a user benne van-e a követők listájában
+      const isUserFollowing = updatedPerformance.performanceFollowers?.some(
+        (follower) => follower.id === user.id,
+      );
+      setIsFollowing(isUserFollowing);
+
+      toast.success('Sikeresen bekövetted az előadást');
     } catch (err) {
-      console.error('Hiba a követés közben:', err);
+      toast.error('Hiba a követés közben:', err);
     }
   };
 
   const handleUnfollow = async () => {
     if (!user) {
-      alert('Be kell jelentkezned a kikövetéshez!');
+      toast.warning('Be kell jelentkezned a kikövetéshez!');
       return;
     }
 
     try {
       await performanceService.unFollow(id, { userId: user.id });
-      setIsFollowing(false);
+
+      // 🔥 Lekérjük a legfrissebb adatokat a backendről
+      const updatedPerformance = await performanceService.getById(id);
+      setPerformance(updatedPerformance);
+
+      // 🔥 Megnézzük, hogy a user benne van-e a követők listájában
+      const isUserFollowing = updatedPerformance.performanceFollowers?.some(
+        (follower) => follower.id === user.id,
+      );
+      setIsFollowing(isUserFollowing);
+
+      toast.success('Kikövetted az előadást');
     } catch (err) {
-      console.error('Hiba a kikövetés közben:', err);
+      toast.error('Hiba a kikövetés közben:', err);
     }
   };
 
@@ -262,13 +286,12 @@ export default function DetailsPage() {
             <div>
               <DefaultButton onClick={handleBack} text="Vissza" />
             </div>
-
-            <div className="flex justify-around">
-              {isOwn && <DefaultButton onClick={handleEdit} text="Módosítás" />}
-              {!isOwn && performance.futurePerformance?.id && <DefaultButton text="Támogatom" />}
-              {/* {!isOwn && !performance.futurePerformance?.id && <DefaultButton text="Foglalás" />} */}
-            </div>
+            {isOwn && <DefaultButton onClick={handleEdit} text="Módosítás" />}
+            {!isOwn && performance.futurePerformance?.id && <DefaultButton text="Támogatom" />}
+            {/* {!isOwn && !performance.futurePerformance?.id && <DefaultButton text="Foglalás" />} */}
           </div>
+
+          {isOwn && <PerformanceFollowersList followers={performance.performanceFollowers} />}
         </div>
       </div>
 
