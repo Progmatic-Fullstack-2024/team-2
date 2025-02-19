@@ -10,6 +10,7 @@ const getById = async (performanceId) => {
       performanceEvents: true,
       creators: true,
       futurePerformance: true,
+      performanceFollowers: true,
     },
   });
   if (!performance) throw new HttpError("Performance not found", 404);
@@ -67,7 +68,7 @@ const list = async ({ filter, search }) => {
   // console.log(performances);
 
   const filteredPerformances = performances.filter(
-    (item, index) => index >= filter.skip && index < filter.skip + filter.take,
+    (item, index) => index >= filter.skip && index < filter.skip + filter.take
   );
   // console.log(filteredPerformances);
   return { data: filteredPerformances, maxSize: performances.length };
@@ -123,7 +124,7 @@ const create = async (performanceData, poster, images, creatorsIds) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to create performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -134,7 +135,7 @@ const update = async (
   poster,
   images,
   creatorsIds,
-  performanceEventIds,
+  performanceEventIds
 ) => {
   try {
     const performanceToUpdate = await getById(performanceId);
@@ -154,7 +155,7 @@ const update = async (
 
     // **Lekérjük a jelenlegi események ID-it**
     const existingEventIds = performanceToUpdate.performanceEvents.map(
-      (event) => event.id,
+      (event) => event.id
     );
 
     // **Megnézzük, mely eseményeket kell törölni**
@@ -201,7 +202,7 @@ const update = async (
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to update performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -232,7 +233,7 @@ const destroy = async (performanceId) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete performance",
-      error.status || 500,
+      error.status || 500
     );
   }
 };
@@ -294,7 +295,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
 
     if (isInImages) {
       updatedData.imagesURL = imagesURL.filter(
-        (url) => !imageUrls.includes(url),
+        (url) => !imageUrls.includes(url)
       );
     }
 
@@ -308,9 +309,21 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   } catch (error) {
     throw new HttpError(
       error.message || "Failed to delete image",
-      error.statusCode || 500,
+      error.statusCode || 500
     );
   }
+};
+
+const addFollower = async (id, followerData) => {
+  const performanceAddedFollower = await prisma.performance.update({
+    where: { id }, // 🔹 Az azonosítás az id alapján történik
+    data: {
+      performanceFollowers: {
+        connect: { id: followerData.userId }, // 🔹 Felhasználó hozzákapcsolása
+      },
+    },
+  });
+  return performanceAddedFollower;
 };
 
 export default {
@@ -324,4 +337,5 @@ export default {
   deleteSingleImage,
   getById,
   listAllGenres,
+  addFollower,
 };
