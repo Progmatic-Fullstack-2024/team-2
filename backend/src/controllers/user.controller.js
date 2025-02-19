@@ -89,7 +89,7 @@ const deleteUser = async (req, res, next) => {
   if (id) {
     const user = await userService.deleteUser(id);
     if (user) res.status(201).json({ message: "User deleted" });
-    else next(new HttpError("User is not Found", 404));
+    else next(new HttpError("User is not Found or not deletable", 404));
   } else next(new HttpError("User id is required", 401));
 };
 

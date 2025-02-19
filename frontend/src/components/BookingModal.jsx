@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import DefaultButton from './misc/DefaultButton';
 import AuthContext from '../contexts/AuthContext';
 import bookingService from '../services/booking.service';
+import theatersService from '../services/theaters.service';
 import handleDate from '../utils/handleDates';
 
 export default function BookingModal({
@@ -27,6 +28,8 @@ export default function BookingModal({
   const [seasonTickets, setSeasonTickets] = useState([]);
   const [soldTickets, setsoldTickets] = useState([]);
   const [qrCode, setQrCode] = useState(null);
+  const [isMailResult, setIsMailResult] = useState(false); // it needs for sending mail procedure
+  const [mailRsultMsg, setMailResultMsg] = useState(''); // it needs for sending mail procedure
   const userId = user.id;
   const performanceEventId = selectedEvent.id;
 
@@ -92,9 +95,42 @@ export default function BookingModal({
 
   const getLabel = (e) => <div className="whitespace-pre-wrap">{e.label}</div>;
 
+  const sendQrInMail = async () => {
+    const index = selectedEvent.performanceDate.indexOf('T');
+    const date = selectedEvent.performanceDate.substr(0, index);
+    const time = selectedEvent.performanceDate.substr(index + 1, 9);
+    let theater = {};
+    try {
+      theater = await theatersService.getById(performance.theaterId);
+    } catch (error) {
+      theater.name = 'n.a.';
+    }
+    const data = {
+      userId,
+      theater: theater.name,
+      title: performance.title,
+      date,
+      time,
+      qrimage: qrCode,
+    };
+    try {
+      const result = await bookingService.sendQrCodeMail(data);
+      if (result.result === 'ok') setMailResultMsg('E-mail küldés sikeres.');
+      else setMailResultMsg('E-mail küldés sikertelen!');
+    } catch (error) {
+      setMailResultMsg('E-mail küldés meghiúsult!');
+    }
+    setIsMailResult(true);
+  };
+
+  const cancelMailSendingResult = () => {
+    setIsMailResult(false);
+    setMailResultMsg('');
+  };
+
   return (
     <div className="mx-2 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-5 rounded-lg shadow-lg w-96">
+      <div className="bg-white p-2 rounded-lg shadow-lg w-96 ">
         <h2 className="text-xl font-bold mb-4">
           Foglalás {handleDate(selectedDates)} {performance.title}
         </h2>
@@ -144,16 +180,29 @@ export default function BookingModal({
         )}
         {qrCode && (
           <div className="text-center mt-4">
-            <img src={qrCode} alt="Jegy QR-kódja" className="mx-auto w-48 h-48" />
+            <img src={qrCode} alt="Jegy QR-kódja" className="mx-auto w-40 h-40" />
             <a href={qrCode} download="jegy_qr_kod.png">
               <button type="button" className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">
                 Letöltés 📥
               </button>
             </a>
-            <DefaultButton text="Vissza" onClick={() => navigate(-1)} />
+            <div className="flex tablet:flex-row justify-between mt-5">
+              <DefaultButton
+                text="QR kód küldése e-mail-ben"
+                onClick={sendQrInMail}
+                color="blue-600"
+              />
+              <DefaultButton text="Vissza" onClick={() => navigate(-1)} />
+            </div>
           </div>
         )}
       </div>
+      {isMailResult && (
+        <div className="bg-c-secondary absolute bottom-16 p-5 flex flex-col rounded">
+          <h2 className="mb-2">{mailRsultMsg}</h2>
+          <DefaultButton text="Vissza" onClick={cancelMailSendingResult} />
+        </div>
+      )}
     </div>
   );
 }

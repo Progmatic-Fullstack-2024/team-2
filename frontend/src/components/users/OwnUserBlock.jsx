@@ -14,7 +14,7 @@ export default function OwnUserBlock() {
   };
   return (
     <div className="w-full mx-auto my-40 bg-c-secondary-light  px-auto rounded-md">
-      <nav className="bg-c-primary-dark">
+      <nav className="bg-c-primary-dark flex flex-col tablet:flex-row">
         <button
           type="button"
           name="person"

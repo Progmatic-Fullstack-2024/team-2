@@ -394,6 +394,7 @@ export default function SelectedUserForm() {
                         text="Felhasználó törlése"
                         type="button"
                         onClick={deleteUser}
+                        disabled={handleuser.UserSeasonTicket.length > 0}
                       />
                     )}
                   </div>
