@@ -1,5 +1,8 @@
 import QRCode from "qrcode";
+
+import UserService from "./user.service.js";
 import prisma from "../models/prisma-client.js";
+import sendMail from "../utils/Mailing.service.js";
 
 const getByUserId = async ({ userId }) => {
   const response = await prisma.userSeasonTicket.findMany({
@@ -68,4 +71,42 @@ const buyTicket = async ({
   return ticketsBought;
 };
 
-export default { getByUserId, getPerformanceEventSoldSeats, buyTicket };
+const sendQrCodeMail = async (userId, theater, title, date, time, qrImage) => {
+  let result;
+  const user = await UserService.getUserById(userId);
+  const subject = "Helyfoglalás színházi előadásra";
+  const text = `Kedves ${user.lastName} ${user.firstName}!<br/><br/>
+  Az Ön helyfoglásának QR kódja
+  <ul>
+  <li>
+    a(z) ${theater} színház <br/>
+  </li>
+  <li>
+   ${title} című előadására a következő:
+  </li>
+  </ul>
+  <img src=${qrImage} alt="qr kód"/> <br/>
+  <br/>
+  Az előadás időpontja: ${date} ${time}<br/>
+  <br/>
+  Üdvözlettel<br/>
+  Theatron csapata`;
+  const attechment = [
+    {
+      filename: "qrcode.png",
+      content: qrImage.substr(qrImage.indexOf(",") + 1),
+      encoding: "base64",
+    },
+  ];
+  const answer = await sendMail(user.email, subject, text, attechment, true);
+  if (answer.accepted) result = "OK";
+  else result = "fail";
+  return result;
+};
+
+export default {
+  getByUserId,
+  getPerformanceEventSoldSeats,
+  buyTicket,
+  sendQrCodeMail,
+};

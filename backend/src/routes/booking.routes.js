@@ -9,5 +9,6 @@ router.get(
   bookingController.getPerformanceEventSoldSeats,
 );
 router.post("/buyticket", bookingController.buyTicket);
+router.put("/sendqrcodemail", bookingController.sendQrCodeMail);
 
 export default router;

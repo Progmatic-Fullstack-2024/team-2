@@ -56,7 +56,7 @@ export default function PerformancesBrowse({ params, title }) {
 
   useEffect(() => {
     getPerformances();
-  }, [getPerformances]);
+  }, []);
 
   if (
     (performances.length === 0 && params.startDate) ||
