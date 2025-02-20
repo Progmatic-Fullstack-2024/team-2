@@ -1,6 +1,4 @@
-import { Menu, MenuItem } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { FiMenu } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthModal from './AuthModal';
@@ -11,7 +9,6 @@ import MenuLink from './misc/MenuLink';
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
   const [transparentHeader, setTransparentHeader] = useState(true);
-  const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [modalForm, setModalForm] = useState('login');
   const [dropdownOpen, setDropdownOpen] = useState(false);
