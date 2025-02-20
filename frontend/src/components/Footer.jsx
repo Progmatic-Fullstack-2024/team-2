@@ -7,7 +7,7 @@ export default function Footer({ height = 64 }) {
   return (
     <section className={classFooter}>
       <img className={classImage} src="/theatron_01.jpg" alt="footer-bg" />
-      <div className="font-medium text-clip mx-auto my-5 w-2/3 flex justify-around gap-20 z-10 overflow-hidden">
+      <div className="font-medium text-clip mx-auto my-5 w-2/3 flex justify-around gap-20 z-5 overflow-hidden">
         <div className="">
           <SvgIcon icon="masks" size={50} />
           <p className="text-xl font-bold mb-4">Theatron Inc.</p>

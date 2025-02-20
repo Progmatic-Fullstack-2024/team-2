@@ -32,7 +32,7 @@ export default function Pagination({ params }) {
 
   return (
     <nav>
-      <ul className="flex items-center  my-1">
+      <ul className="flex items-center my-1 ms-2">
         <li>
           <button
             type="button"

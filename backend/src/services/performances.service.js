@@ -3,6 +3,16 @@ import { createFiles, deleteFiles, updateFiles } from "./file.service.js";
 import HttpError from "../utils/HttpError.js";
 import performanceEventsService from "./performanceEvents.service.js";
 
+function converDate(date) {
+  return new Date(date).toLocaleTimeString("hun", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 const getById = async (performanceId) => {
   const performance = await prisma.performance.findUnique({
     where: { id: performanceId },
@@ -53,7 +63,6 @@ const list = async ({ filter, search }) => {
       title: { contains: search, mode: "insensitive" },
     },
     include: {
-      // performanceEvents: orderBy === "performanceDate" ? orderBy : true,
       performanceEvents: true,
       theater: true,
       genre: !!filter.genre,
@@ -64,16 +73,66 @@ const list = async ({ filter, search }) => {
       Object.keys(orderBy)[0] === "performanceDate" ? undefined : orderBy,
   });
   if (!performances) throw new HttpError("Performances not found", 404);
-  // custom skip and take
 
-  const filteredPerformances = performances.filter(
+  // unpack EVENTS
+  const expandedPerformances = [];
+  performances.forEach((perf) => {
+    if (!perf.performanceEvents.length) {
+      expandedPerformances.push(perf);
+    } else {
+      perf.performanceEvents.forEach((event) => {
+        const newPerf = perf;
+        newPerf.performanceEvents = [event];
+        expandedPerformances.push(newPerf);
+      });
+    }
+  });
+
+  // sort by DATE
+  if ("performanceDate" in orderBy) {
+    if (orderBy.performanceDate === "asc") {
+      expandedPerformances.sort((a, b) => {
+        if (a.performanceEvents.length && b.performanceEvents.length) {
+          return (
+            a.performanceEvents[0].performanceDate -
+            b.performanceEvents[0].performanceDate
+          );
+        }
+        return null;
+      });
+    } else if (orderBy.performanceDate === "desc") {
+      expandedPerformances.sort((a, b) => {
+        if (a.performanceEvents.length && b.performanceEvents.length) {
+          return (
+            b.performanceEvents[0].performanceDate -
+            a.performanceEvents[0].performanceDate
+          );
+        }
+        return null;
+      });
+    }
+  }
+
+  // apply custom SKIP and TAKE
+  let filteredPerformances = expandedPerformances.filter(
     (item, index) => index >= filter.skip && index < filter.skip + filter.take,
   );
-  return { data: filteredPerformances, maxSize: performances.length };
+
+  // convert dates in array
+  filteredPerformances = filteredPerformances.map((perf) => {
+    const newPerf = perf;
+    if (newPerf.performanceEvents[0])
+      newPerf.performanceEvents[0].performanceDate = converDate(
+        newPerf.performanceEvents[0].performanceDate,
+      );
+    return newPerf;
+  });
+
+  return { data: filteredPerformances, maxSize: expandedPerformances.length };
 };
 
 const listAll = async () => {
-  const allPerformances = await prisma.performance.findMany({
+  let allPerformances = await prisma.performance.findMany({
     include: {
       performanceEvents: true,
       theater: {
@@ -84,9 +143,17 @@ const listAll = async () => {
         },
       },
       genre: true,
-      futurePerformance: true,
-      creators: true,
     },
+  });
+
+  // convert dates in array
+  allPerformances = allPerformances.map((perf) => {
+    const newPerf = perf;
+    if (newPerf.performanceEvents[0])
+      newPerf.performanceEvents[0].performanceDate = converDate(
+        newPerf.performanceEvents[0].performanceDate,
+      );
+    return newPerf;
   });
   return allPerformances;
 };
@@ -133,7 +200,6 @@ const update = async (
   poster,
   images,
   creatorsIds,
-  performanceEventIds,
 ) => {
   try {
     const performanceToUpdate = await getById(performanceId);
@@ -149,22 +215,7 @@ const update = async (
     }
 
     console.log("creatorsIds:", creatorsIds);
-    console.log("performanceEventIds (after delete):", performanceEventIds);
 
-    // **Lekérjük a jelenlegi események ID-it**
-    const existingEventIds = performanceToUpdate.performanceEvents.map(
-      (event) => event.id,
-    );
-
-    // **Megnézzük, mely eseményeket kell törölni**
-    const eventsToRemove =
-      Array.isArray(performanceEventIds) && performanceEventIds.length > 0
-        ? existingEventIds.filter((id) => !performanceEventIds.includes(id))
-        : [];
-
-    console.log("eventsToRemove:", eventsToRemove);
-
-    // Frissítsük a Performance rekordot
     const updatedPerformance = await prisma.performance.update({
       where: { id: performanceId },
       data: {
@@ -175,27 +226,8 @@ const update = async (
           set: [],
           connect: creatorsIds.map((creator) => ({ id: creator.id })),
         },
-        performanceEvents: {
-          ...(Array.isArray(eventsToRemove) &&
-            eventsToRemove.length > 0 && {
-              disconnect: eventsToRemove.map((eventId) => ({ id: eventId })),
-            }),
-          ...(Array.isArray(performanceEventIds) &&
-            performanceEventIds.filter((event) => event && event.id).length >
-              0 && {
-              connect: performanceEventIds
-                .filter((event) => event && event.id) // 🚀 Kiszűrjük az undefined értékeket
-                .map((performanceEvent) => ({
-                  id: performanceEvent.id,
-                })),
-            }),
-        },
-      },
-      include: {
-        performanceEvents: true,
       },
     });
-
     return updatedPerformance;
   } catch (error) {
     throw new HttpError(
@@ -239,18 +271,7 @@ const destroy = async (performanceId) => {
 const deleteSingleImage = async (performanceId, imageUrl) => {
   try {
     const performanceToUpdate = await getById(performanceId);
-
-    // eslint-disable-next-line prefer-const
-    let { imagesURL, posterURL } = performanceToUpdate;
-
-    // Ha az imagesURL null, akkor alakítsuk át üres tömbbé
-    if (!imagesURL) {
-      imagesURL = [];
-    }
-
-    if (!Array.isArray(imagesURL)) {
-      throw new HttpError("Invalid imagesURL format in database", 500);
-    }
+    const { imagesURL, posterURL } = performanceToUpdate;
 
     const imageUrls = Array.isArray(imageUrl) ? imageUrl : [imageUrl];
 
@@ -259,22 +280,7 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
     console.log("posterURL: ", posterURL);
     console.log("imageUrls: ", imageUrls);
 
-    console.log("🛠️ DEBUG: performanceId type:", typeof performanceId);
-    console.log("🛠️ DEBUG: performanceId value:", performanceId);
-
-    // **Ha nincs még kép az adatbázisban, az új képeket hozzáadjuk**
-    if (imagesURL.length === 0 && posterURL === null) {
-      console.log("📌 No images found in database. Adding new images...");
-
-      const updatedPerformance = await prisma.performance.update({
-        where: { id: performanceId },
-        data: { imagesURL: imageUrls }, // Az érkező képek hozzáadása
-      });
-
-      return updatedPerformance; // **Itt nem törlünk, csak hozzáadunk**
-    }
-
-    // Ellenőrizzük, hogy az adott képek léteznek-e az adatbázisban
+    // Check iamgeUrl is posterUrl or imageUrl
     const isPoster = imageUrls.includes(posterURL);
     const isInImages = imageUrls.some((url) => imagesURL.includes(url));
 
@@ -287,10 +293,12 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
 
     const updatedData = {};
 
+    // if posterUrl - delete
     if (isPoster) {
       updatedData.posterURL = null;
     }
 
+    // if imageUrl - array - delete
     if (isInImages) {
       updatedData.imagesURL = imagesURL.filter(
         (url) => !imageUrls.includes(url),

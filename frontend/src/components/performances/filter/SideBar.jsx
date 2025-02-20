@@ -6,6 +6,7 @@ import MenuButton from './MenuButton';
 import creatorsService from '../../../services/creators.service';
 import genresService from '../../../services/genres.service';
 import theatersService from '../../../services/theaters.service';
+import DefaultButton from '../../misc/DefaultButton';
 import Spinner from '../../misc/Spinner';
 
 function convertURL(url) {
@@ -30,9 +31,8 @@ async function fetchTheaters() {
   );
 }
 
-async function fetchCreators() {
+async function fetchCreatros() {
   const response = await creatorsService.getCreators();
-
   addFilterData(
     'Készítők',
     'creators',
@@ -42,7 +42,6 @@ async function fetchCreators() {
 }
 async function fetchGenres() {
   const response = await genresService.listAllGenre();
-
   addFilterData(
     'Műfaj',
     'genre',
@@ -51,24 +50,34 @@ async function fetchGenres() {
   );
 }
 
-addFilterData(
-  'Dátum',
-  'date',
-  ['2020', '2021', '2023', '2024', '2025'],
-  ['2020', '2021', '2023', '2024', '2025'],
-  'calendar',
-);
-fetchTheaters();
-fetchCreators();
-fetchGenres();
-
-export default function SideBar({ params }) {
+export default function SideBar({ params, className }) {
   const { searchParams, setSearchParams } = params;
-  const [fetchReady, setFetchReady] = useState(false);
+  const [fetchReady, setFetchReady] = useState(filterData.length === 4);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuOpenClass = `${menuOpen ? 'scale-100 ' : 'scale-0'} flex origin-top-left transition transition-scale duration-150 `;
+
+  async function createFilterData() {
+    addFilterData(
+      'Dátum',
+      'date',
+      ['2020', '2021', '2023', '2024', '2025'],
+      ['2020', '2021', '2023', '2024', '2025'],
+      'calendar',
+    );
+    await fetchTheaters();
+    await fetchCreatros();
+    await fetchGenres();
+    setFetchReady(true);
+  }
 
   useEffect(() => {
-    if (filterData.length === 4) setFetchReady(true);
-  }, [filterData]);
+    if (filterData.length === 0) {
+      createFilterData();
+    } else if (filterData.length === 4) {
+      setFetchReady(true);
+    }
+  }, []);
 
   const handleChange = ({ searchName, searchValue, type }) => {
     let query = searchParams.get(searchName);
@@ -104,8 +113,17 @@ export default function SideBar({ params }) {
         }
         break;
       case 'calendar':
-        searchParams.set('startDate', searchValue.startDate);
-        searchParams.set('endDate', searchValue.endDate);
+        if (searchValue.startDate) {
+          searchParams.set('startDate', searchValue.startDate);
+        } else {
+          searchParams.delete('startDate');
+        }
+        if (searchValue.endDate) {
+          searchParams.set('endDate', searchValue.endDate);
+        } else {
+          searchParams.delete('endDate');
+        }
+
         break;
       default:
         break;
@@ -115,21 +133,49 @@ export default function SideBar({ params }) {
   };
 
   return (
-    <div className="min-w-fit laptop:min-w-52 h-fit flex flex-col gap-1 bg-c-primary/30 text-c-text sticky top-24 rounded-lg overflow-hidden">
-      {fetchReady ? (
-        filterData.map((element) => (
-          <MenuButton
-            key={element.name}
-            data={element}
-            searchParams={searchParams}
-            handleChange={handleChange}
+    <div
+      className={`${
+        className
+      } mx-2 tablet:ms-0 laptop:mx-2 laptop:mt-0 laptop:static absolute pointer-events-none left-0 z-20 min-h-full `}
+    >
+      <div className="sticky top-[115px] flex flex-cols">
+        <div className="laptop:hidden me-3 tablet:ms-3 pointer-events-auto ">
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Hide dropdown"
+            className={`${menuOpen ? 'fixed' : 'hidden'} backdrop-blur-sm top-0 left-0 -z-10 w-full h-full cursor-default bg-black/20`}
+            onClick={() => setMenuOpen(false)}
+            onKeyDown={() => setMenuOpen(false)}
           />
-        ))
-      ) : (
-        <div className="h-10 flex justify-center items-center">
-          <Spinner size={5} />
+          <DefaultButton
+            text="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            icon={`${menuOpen ? 'double-left' : 'double-right'}`}
+            iconSize="40px"
+          />
         </div>
-      )}
+        <div
+          className={`${
+            menuOpenClass
+          }  bg-c-background laptop:flex laptop:scale-100 min-w-[250px] h-fit flex-col gap-1 text-c-text  rounded-lg overflow-hidden`}
+        >
+          {fetchReady ? (
+            filterData.map((element) => (
+              <MenuButton
+                key={element.name}
+                data={element}
+                searchParams={searchParams}
+                handleChange={handleChange}
+              />
+            ))
+          ) : (
+            <div className="h-10 flex justify-center items-center">
+              <Spinner size={5} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

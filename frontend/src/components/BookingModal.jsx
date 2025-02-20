@@ -8,7 +8,7 @@ import DefaultButton from './misc/DefaultButton';
 import AuthContext from '../contexts/AuthContext';
 import bookingService from '../services/booking.service';
 import theatersService from '../services/theaters.service';
-import handleDate from '../utils/handleDates';
+import formatDate from '../utils/formatDate';
 
 export default function BookingModal({
   isOpen,
@@ -58,6 +58,9 @@ export default function BookingModal({
     ? Math.min(selectedSeasonTicket.remainingSeats, availableSpots) // A kisebbik érték kerül be
     : 0;
 
+  const isSeasonTicketExpired = new Date() > new Date(selectedSeasonTicket?.expirationDate);
+
+
   useEffect(() => {
     getUserSeasonTickets();
     getSoldTickets();
@@ -89,7 +92,7 @@ export default function BookingModal({
   };
 
   const options = seasonTickets.map((ticket) => ({
-    label: `${ticket.SeasonTicket.name} \nExp.: ${handleDate(ticket.expirationDate)} \nMegvehető helyek: ${ticket.remainingSeats}`,
+    label: `${ticket.SeasonTicket.name} \nExp.: ${formatDate(ticket.expirationDate)} \nMegvehető helyek: ${ticket.remainingSeats}`,
     value: ticket.id,
   }));
 
@@ -134,7 +137,7 @@ export default function BookingModal({
     <div className="mx-2 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-2 rounded-lg shadow-lg w-96 ">
         <h2 className="text-xl font-bold mb-4">
-          Foglalás {handleDate(selectedDates)} {performance.title}
+          Foglalás {formatDate(selectedDates)} {performance.title}
         </h2>
         <h3> Szabad helyek: {availableSpots}</h3>
 
@@ -163,7 +166,7 @@ export default function BookingModal({
           <button
             type="button"
             className="px-3 py-1 border rounded"
-            disabled={ticketCount >= isSeasonTicketStillHasSeats}
+            disabled={(ticketCount >= isSeasonTicketStillHasSeats) || isSeasonTicketExpired}
             onClick={() => handleTicketCountChange(1)}
           >
             +

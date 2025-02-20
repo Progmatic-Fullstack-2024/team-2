@@ -50,8 +50,8 @@ export default function Header() {
 
   return (
     <header className={headerClass}>
-      <div className="flex w-full justify-between items-center">
-        <div className="flex gap-4 px-3 py-2 text-xl font-bold ">
+      <div className="flex w-full justify-end tablet:justify-between items-center">
+        <div className="hidden tablet:flex gap-10 px-3 text-xl font-bold ">
           <Link to="/" className="min-w-[55px] hidden tablet:block">
             <img
               src="Modified_Bt4th.svg"
@@ -63,14 +63,14 @@ export default function Header() {
           {user && (
             <Link
               to="/ownUser"
-              className="hidden laptop:block hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default mx-5 my-auto "
+              className="hidden laptop:block hover:text-white transform transition duration-700 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] cursor-default  my-auto "
             >
               {`${user.firstName}`}
             </Link>
           )}
         </div>
 
-        <nav className="flex sm: gap-0 tablet:gap-1 laptop:gap-2 items-center h-16">
+        <nav className="flex sm: gap-0 tablet:gap-1 tablet:gap-1 laptop:gap-2 items-center h-14">
           <MenuLink text="Home" to="/" icon="home" iconSize="50" />
           <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
           <MenuLink text="Előadások" to="/performances" icon="masks" iconSize="50px" />
@@ -113,7 +113,7 @@ export default function Header() {
       {user?.role === 'admin' && (
         <>
           <hr className="w-full border-t border-c-text/40" />
-          <nav className="flex gap-4 items-center w-full justify-start py-2">
+          <nav className="flex gap-4 items-center w-full justify-start py-2 pb-4">
             <div className="laptop:hidden relative flex items-center gap-2">
               <FiMenu className="text-2xl cursor-pointer" onClick={handleAdminMenuOpen} />
               <button
@@ -123,7 +123,7 @@ export default function Header() {
                 aria-label="Admin menü megnyitása"
               />
             </div>
-            <div className="my-2">
+            <div>
               <Menu
                 anchorEl={adminMenuAnchor}
                 open={Boolean(adminMenuAnchor)}
@@ -160,7 +160,7 @@ export default function Header() {
       {user?.role === 'theaterAdmin' && (
         <>
           <hr className="w-full border-t border-c-text/40 my-2" />
-          <nav className="flex gap-4 items-center w-full justify-center py-2">
+          <nav className="flex gap-4 items-center w-full justify-center py-2 pb-4">
             <div className="laptop:hidden relative flex items-center gap-2">
               <FiMenu
                 className="absolute -left-48 text-2xl cursor-pointer"
