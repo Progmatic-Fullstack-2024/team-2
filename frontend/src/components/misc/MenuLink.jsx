@@ -16,7 +16,7 @@ export default function MenuLink({
       to={to}
     >
       {icon && (
-        <SvgIcon icon={icon} className="laptop:hidden" size={iconSize} hoverColor={hoverColor} />
+        <SvgIcon icon={icon} className="scale-75 tablet:scale-100 laptop:hidden" size={iconSize} hoverColor={hoverColor} />
       )}
       <span className={`${icon && 'hidden'} laptop:inline-block`}>{`${text.toUpperCase()}`}</span>
     </Link>

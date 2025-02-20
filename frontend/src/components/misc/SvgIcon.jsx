@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 export default function SvgIcon({
   icon = 'login',
   size = '30',
@@ -7,30 +5,15 @@ export default function SvgIcon({
   hoverColor,
   className = '',
 }) {
-  const [iconSize, setIconSize] = useState(size);
 
-  useEffect(() => {
-    const updateSize = () => {
-      if (window.innerWidth < 640) {
-        setIconSize(size * 0.75);
-      } else {
-        setIconSize(size);
-      }
-    };
-
-    updateSize(); // Azonnal lefut, hogy a megfelelő mérettel induljon
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, [size]);
-
-  const svgClass = `stroke-${color} fill-${color} ${className} hover:stroke-${hoverColor || color}`;
+  const svgClass = `scale-75 tablet:scale-100 stroke-${color} fill-${color} ${className} hover:stroke-${hoverColor || color}`;
 
   switch (icon) {
     case 'creator':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 800 800"
@@ -42,8 +25,8 @@ export default function SvgIcon({
     case 'theater':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           version="1.1"
           id="Capa_1"
@@ -64,8 +47,8 @@ export default function SvgIcon({
     case 'masks':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 640 512"
           xmlns="http://www.w3.org/2000/svg"
@@ -79,8 +62,8 @@ export default function SvgIcon({
     case 'double-left':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -94,8 +77,8 @@ export default function SvgIcon({
     case 'arrow-left':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -114,8 +97,8 @@ export default function SvgIcon({
     case 'double-right':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -129,8 +112,8 @@ export default function SvgIcon({
     case 'arrow-right':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
@@ -149,8 +132,8 @@ export default function SvgIcon({
     case 'youtube':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -177,8 +160,8 @@ export default function SvgIcon({
     case 'rotate':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -192,8 +175,8 @@ export default function SvgIcon({
     case 'settings':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -219,8 +202,8 @@ export default function SvgIcon({
     case 'star':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -239,8 +222,8 @@ export default function SvgIcon({
     case 'trash':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -260,8 +243,8 @@ export default function SvgIcon({
     case 'user':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -289,8 +272,8 @@ export default function SvgIcon({
     case 'like':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -304,8 +287,8 @@ export default function SvgIcon({
     case 'heart':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -324,8 +307,8 @@ export default function SvgIcon({
     case 'download':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -339,8 +322,8 @@ export default function SvgIcon({
     case 'cart':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -381,8 +364,8 @@ export default function SvgIcon({
     case 'logout':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -404,8 +387,8 @@ export default function SvgIcon({
     case 'login':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -434,8 +417,8 @@ export default function SvgIcon({
     case 'camera':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -478,8 +461,8 @@ export default function SvgIcon({
     case 'browse':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 1024 1024"
           xmlns="http://www.w3.org/2000/svg"
@@ -501,8 +484,8 @@ export default function SvgIcon({
     case 'addNew':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -521,8 +504,8 @@ export default function SvgIcon({
     case 'magn-glass':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
@@ -541,8 +524,8 @@ export default function SvgIcon({
     case 'home-2':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={`${svgClass} hover:fill-${hoverColor}`}
           viewBox="0 -0.5 25 25"
           xmlns="http://www.w3.org/2000/svg"
@@ -553,8 +536,8 @@ export default function SvgIcon({
     case 'home':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={`${svgClass} hover:fill-${hoverColor}`}
           viewBox="0 -0.5 25 25"
           fill="none"
@@ -566,8 +549,8 @@ export default function SvgIcon({
     case 'ticket':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={className}
           viewBox="0 0 512 512"
           xmlns="http://www.w3.org/2000/svg"
@@ -619,8 +602,8 @@ export default function SvgIcon({
     case 'logo':
       return (
         <svg
-          width={iconSize}
-          height={iconSize}
+          width={size}
+          height={size}
           className={svgClass}
           viewBox="0 0 1024 1024"
           xmlns="http://www.w3.org/2000/svg"
