@@ -4,7 +4,7 @@ import SvgIcon from './SvgIcon';
 
 export default function DropdownButton({
   menuItems,
-  width = 24,
+  width = 32,
   props,
   initialValue,
   searchVariable,
@@ -19,8 +19,8 @@ export default function DropdownButton({
   );
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
 
-  const dropdownMenuClass = `absolute w-${width} z-20 bg-c-background justify-self-end  border border-gray-500/50`;
-  const buttonClass = `w-${width} text-${textColor} bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none font-semibold ${dropdownMenuOpen ? 'rounded-t-lg' : 'rounded-lg'} text-sm p-2 px-4 text-center inline-flex justify-between items-center`;
+  const dropdownMenuClass = `absolute w-full z-20 bg-c-background justify-self-end  border border-gray-500/50`;
+  const buttonClass = `min-w-${width} text-${textColor} bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none font-semibold ${dropdownMenuOpen ? 'rounded-t-lg' : 'rounded-lg'} text-sm p-2 px-4 text-center inline-flex justify-between items-center`;
 
   const toggleMenu = () => {
     setDropdownMenuOpen(!dropdownMenuOpen);
@@ -35,11 +35,11 @@ export default function DropdownButton({
   };
 
   return (
-    <div>
+    <div className={`max-w-${width} relative`}>
       <button className={buttonClass} type="button" onClick={toggleMenu}>
         <SvgIcon
           icon="arrow-left"
-          className={`w-2.5 h-2.5  ${dropdownMenuOpen ? 'rotate-90' : '-rotate-90'}`}
+          className={`w-2.5 h-2.5 me-2 ${dropdownMenuOpen ? 'rotate-90' : '-rotate-90'} `}
         />
         {currentItem.current}
       </button>

@@ -57,6 +57,7 @@ async function main() {
     "Mária Testamentuma",
   ];
 
+  // 4 legyen max
   const seasonTicketsNames = [
     { name: "Kismenü", price: 5000, durationDay: 30, seatQuantity: 1 },
     { name: "Happy Meal", price: 9000, durationDay: 30, seatQuantity: 2 },
@@ -64,21 +65,21 @@ async function main() {
     { name: "Családi", price: 22500, durationDay: 30, seatQuantity: 5 },
   ];
   // Generate random users for theater admins and followers
-  const users = await Promise.all(
-    Array.from({ length: 10 }).map((_, i) =>
-      prisma.user.create({
-        data: {
-          lastName: `UserLastName${i + 1}`,
-          firstName: `UserFirstName${i + 1}`,
-          email: `user${i + 1}@example.com`,
-          phone: `+123456789${i}`,
-          password: "password123",
-          role: i < 5 ? "admin" : "user", // First 5 users are admins
-          birthDate: new Date(`1990-01-${(i % 31) + 1}`),
-        },
-      }),
-    ),
-  );
+  // const users = await Promise.all(
+  //   Array.from({ length: 10 }).map((_, i) =>
+  //     prisma.user.create({
+  //       data: {
+  //         lastName: `UserLastName${i + 1}`,
+  //         firstName: `UserFirstName${i + 1}`,
+  //         email: `user${i + 1}@example.com`,
+  //         phone: `+123456789${i}`,
+  //         password: "password123",
+  //         role: i < 5 ? "admin" : "user", // First 5 users are admins
+  //         birthDate: new Date(`1990-01-${(i % 31) + 1}`),
+  //       },
+  //     }),
+  //   ),
+  // );
 
   // Create 4 unique theaters with pre-defined names
   const theaters = await Promise.all(
@@ -91,11 +92,11 @@ async function main() {
           imageURL: `/Theatron.jpg`,
           phone: `+123456789${i + 10}`,
           seatsAvailable: 200 + i * 50,
-          admins: {
-            create: {
-              user: { connect: { id: users[i].id } }, // Assign one admin per theater
-            },
-          },
+          // admins: {
+          //   create: {
+          //     user: { connect: { id: users[i].id } }, // Assign one admin per theater
+          //   },
+          // },
         },
       }),
     ),
@@ -109,13 +110,14 @@ async function main() {
           name,
           imageURL: `/Creator.jpg`,
           profession: ["actor", "director", "writer", "stageDesigner"], // Rotate professions
-          awards: i % 2 === 0 ? `Award ${i + 1}` : null,
+          // awards: i % 2 === 0 ? `Award ${i + 1}` : null,
           introductions: `Introduction of ${name}`,
         },
       }),
     ),
   );
 
+  // eslint-disable-next-line no-unused-vars
   const seasonTicketsPromise = await Promise.all(
     seasonTicketsNames.map((item, index) =>
       prisma.seasonTicket.create({
@@ -128,7 +130,9 @@ async function main() {
       }),
     ),
   );
+
   // Create performances for each theater with pre-defined titles
+  // eslint-disable-next-line no-restricted-syntax
   for (const [i, theater] of theaters.entries()) {
     for (let j = 0; j < 5; j++) {
       const randomGenre =
@@ -137,6 +141,7 @@ async function main() {
       const performanceTitle =
         performanceTitles[(i * 5 + j) % performanceTitles.length];
 
+      // eslint-disable-next-line no-await-in-loop
       const performance = await prisma.performance.create({
         data: {
           title: performanceTitle,
@@ -157,6 +162,7 @@ async function main() {
       });
 
       // Create performance events for the performance
+      // eslint-disable-next-line no-await-in-loop
       await prisma.performanceEvents.create({
         data: {
           performanceId: performance.id,

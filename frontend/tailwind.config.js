@@ -12,6 +12,7 @@ const COLORS = {
     SECONDARY: 'hsl(90, 65%, 72%)',
     SECONDARY_LIGHT: 'hsl(90, 65%, 77%)',
     SECONDARY_DARK: 'hsl(90, 65%, 67%)',
+    SECONDARY_DARKEST: 'hsl(90, 65%, 15%)',
 
     ACCENT: 'hsl(89, 89%, 55%)',
   },
@@ -56,6 +57,7 @@ export default {
         'c-primary-light': COLORS.DAY.PRIMARY_LIGHT,
         'c-secondary': COLORS.DAY.SECONDARY,
         'c-secondary-dark': COLORS.DAY.SECONDARY_DARK,
+        'c-secondary-darkest': COLORS.DAY.SECONDARY_DARKEST,
         'c-secondary-light': COLORS.DAY.SECONDARY_LIGHT,
         'c-accent': COLORS.DAY.ACCENT,
 
