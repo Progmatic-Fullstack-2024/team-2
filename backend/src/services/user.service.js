@@ -4,7 +4,6 @@ import HttpError from "../utils/HttpError.js";
 import theaterAdmin from "./theaterAdmin.service.js";
 import sendmail from "../utils/Mailing.service.js";
 import { getEmailExists } from "./auth.service.js";
-import Theater from "./theaters.service.js";
 
 const createFilterObject = (search, field, filter) => {
   const searchFilter = { OR: "" };
@@ -234,6 +233,17 @@ const deleteUserSettingByUserId = async (userId) => {
   });
 };
 
+const deleteAllFollowedPerformances = async (id) => {
+  const performanceUnfollowed = await prisma.user.update({
+    where: { id },
+    data: {
+      performanceFollowers: {
+        disconnect: { set: [] },
+      },
+    },
+  });
+  return performanceUnfollowed;
+};
 const deleteUser = async (id) => {
   let user = await getUserByIdWithIncudes(id);
   if (
@@ -243,16 +253,13 @@ const deleteUser = async (id) => {
   ) {
     if (user.theaterAdmin != null)
       await theaterAdmin.deleteUserFromTheaterAdmin(id);
-    if (user.userSettings) deleteUserSettingByUserId(id);
-    if (user.followedPerformance.length > 0) {
-      for (let i = 0; i < user.followedPerformance.length; i += 1) {
-        Theater.removeFollower(user.followedPerformance[i].id, { userId: id });
-      }
-    }
-    user = await prisma.user.delete({
-      where: { id },
-    });
+    if (user.userSettings) await deleteUserSettingByUserId(id);
+    if (user.followedPerformance.length > 0)
+      await deleteAllFollowedPerformances(id);
   }
+  user = await prisma.user.delete({
+    where: { id },
+  });
   return user;
 };
 
