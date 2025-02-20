@@ -1,5 +1,3 @@
-import SvgIcon from './misc/SvgIcon';
-
 export default function Footer({ height = 64 }) {
   const classFooter = `bot-0 w-full bg-c-secondary-dark/30 flex justify-between relative h-${height} text-white`;
   const classImage = `mix-blend-screen object-cover w-full  absolute h-${height}`;
@@ -14,7 +12,6 @@ export default function Footer({ height = 64 }) {
             alt="BreakThe4th Logo"
             className="w-[50px] h-[50px] sm:w-[25px] sm:h-[25px] cursor-pointer hover:scale-110 transition-transform duration-100"
           />
-          {/* <SvgIcon icon="masks" size={50} /> */}
           <p className="text-xl font-bold mb-4">BreatThe4th Inc.</p>
           <p>emailme@bt4th.hu.</p>
           <p> 6969 Valahol, Fiktív utca 10.</p>

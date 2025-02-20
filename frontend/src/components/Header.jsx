@@ -1,7 +1,7 @@
 import { Menu, MenuItem } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
+import { useNavigate, Link } from 'react-router-dom';
 
 import AuthModal from './AuthModal';
 import AuthContext from '../contexts/AuthContext';
@@ -28,17 +28,11 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+ 
 
   const handleAdminMenuOpen = (event) => setAdminMenuAnchor(event.currentTarget);
   const handleAdminMenuClose = () => setAdminMenuAnchor(null);
-  const openAuthModal = (formType) => {
-    setModalForm(formType);
-    setShowAuthModal(true);
-  };
+  
 
   return (
     <header className={headerClass}>
