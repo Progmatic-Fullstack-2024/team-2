@@ -52,7 +52,7 @@ async function fetchGenres() {
 
 export default function SideBar({ params, className }) {
   const { searchParams, setSearchParams } = params;
-  const [fetchReady, setFetchReady] = useState(false);
+  const [fetchReady, setFetchReady] = useState(filterData.length === 4);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const menuOpenClass = `${menuOpen ? 'scale-100 ' : 'scale-0'} flex origin-top-left transition transition-scale duration-150 `;
@@ -113,13 +113,16 @@ export default function SideBar({ params, className }) {
         }
         break;
       case 'calendar':
-        searchValue.startDate
-          ? searchParams.set('startDate', searchValue.startDate)
-          : searchParams.delete('startDate');
-
-        searchValue.endDate
-          ? searchParams.set('endDate', searchValue.endDate)
-          : searchParams.delete('endDate');
+        if (searchValue.startDate) {
+          searchParams.set('startDate', searchValue.startDate);
+        } else {
+          searchParams.delete('startDate');
+        }
+        if (searchValue.endDate) {
+          searchParams.set('endDate', searchValue.endDate);
+        } else {
+          searchParams.delete('endDate');
+        }
 
         break;
       default:
@@ -131,10 +134,9 @@ export default function SideBar({ params, className }) {
 
   return (
     <div
-      className={
-        className +
-        ' mx-2 tablet:ms-0 laptop:mx-2 laptop:mt-0 laptop:static absolute pointer-events-none left-0 z-20 min-h-full '
-      }
+      className={`${
+        className
+      } mx-2 tablet:ms-0 laptop:mx-2 laptop:mt-0 laptop:static absolute pointer-events-none left-0 z-20 min-h-full `}
     >
       <div className="sticky top-[115px] flex flex-cols">
         <div className="laptop:hidden me-3 tablet:ms-3 pointer-events-auto ">

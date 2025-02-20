@@ -1,8 +1,8 @@
 import './Calendar.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Calendar from 'react-calendar';
+
 import DefaultButton from '../../misc/DefaultButton';
-import Spinner from '../../misc/Spinner';
 
 function converDate(date) {
   return new Date(date).toLocaleTimeString('ENG', {
