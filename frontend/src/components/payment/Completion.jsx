@@ -15,7 +15,7 @@ export default function Completion() {
             text="Vissza"
             onClick={() => navigate('/season-tickets')}
           />
-          <DefaultButton width="[100px]" text="Homa" onClick={() => navigate('/')} />
+          <DefaultButton width="[100px]" text="Home" onClick={() => navigate('/')} />
         </div>
       </div>
     </div>
