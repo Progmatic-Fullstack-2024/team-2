@@ -1,5 +1,4 @@
 import { Menu, MenuItem } from '@mui/material';
-// import Bt4thLogo from '/Modified_Bt4th.svg';
 import { useContext, useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';

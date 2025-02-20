@@ -16,12 +16,12 @@ const getByUserId = async ({ userId }) => {
   return response.map((ticket) => {
     const expirationDate = new Date(ticket.created);
     expirationDate.setDate(
-      expirationDate.getDate() + ticket.SeasonTicket.durationDay,
+      expirationDate.getDate() + ticket.SeasonTicket.durationDay
     );
 
     const usedSeats = ticket.userVisitedPerformance.reduce(
       (sum, visit) => sum + visit.seats,
-      0,
+      0
     );
     const remainingSeats = ticket.SeasonTicket.seatQuantity - usedSeats;
 
@@ -40,7 +40,7 @@ const getPerformanceEventSoldSeats = async ({ performanceEventId }) => {
 
   const soldSeats = userVisitedPerformances.reduce(
     (sum, item) => sum + (item.seats || 0),
-    0,
+    0
   );
   return soldSeats;
 };

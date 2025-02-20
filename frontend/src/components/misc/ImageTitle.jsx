@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 
-export default function ImageTitle({ title, description, image = 'title_bg_3.jpg' }) {
+export default function ImageTitle({ title, description, image = 'B2.png' }) {
   const [transparentTitle, setTransparentTitle] = useState(false);
 
   const isYPositionInLimit = () => {
-    const screenYPos = window.pageYOffset;
-    if (screenYPos <= 30) return true;
-    return false;
+    return window.pageYOffset <= 30;
   };
 
   const handleScroll = () => {
@@ -23,18 +21,22 @@ export default function ImageTitle({ title, description, image = 'title_bg_3.jpg
   if (!title) return null;
 
   return (
-    <div className="w-full relative ">
+    <div className="relative w-full h-72 overflow-hidden">
+      {/* 🔹 Háttérkép (Ugyanolyan blending hatással, mint a Footerben) */}
       <img
-        className="object-cover z-1 h-72 w-full brightness-[55%] blur-[1px] saturate-[30%]"
-        alt={`${title}-image`}
+        className="absolute inset-0 w-full h-full object-cover mix-blend-screen"
         src={`/${image}`}
+        alt={`${title}-image`}
       />
 
+      {/* 🔹 Szöveg */}
       <div
-        className={`inset-0 absolute flex flex-col top-8 items-center gap-6 z-20 mt-24 mx-auto ${!transparentTitle ? 'opacity-100' : 'opacity-0'}`}
+        className={`relative flex flex-col items-center gap-4 top-24 mx-auto z-10 transition-opacity duration-300 ${
+          transparentTitle ? 'opacity-0' : 'opacity-100'
+        }`}
       >
-        <h1 className="text-white text-4xl font-bold mt-5 ">{title}</h1>
-        <p className="p-1 text-c-secondary-light text-center overflow-clip max-h-32 text-2xl font-medium tracking-wider mx-20 hidden tablet:inline-block ">
+        <h1 className="text-white text-4xl mt-14 font-bold">{title}</h1>
+        <p className="p-1 text-c-secondary-light text-center overflow-clip max-h-32 text-2xl font-medium tracking-wider mx-20 hidden tablet:inline-block">
           {description}
         </p>
       </div>
