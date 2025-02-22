@@ -101,7 +101,9 @@ export default function BookingModal({
   const sendQrInMail = async () => {
     const index = selectedEvent.performanceDate.indexOf('T');
     const date = selectedEvent.performanceDate.substr(0, index);
-    const time = selectedEvent.performanceDate.substr(index + 1, 9);
+    const dateTime = new Date(selectedEvent.performanceDate);
+    const dateTimeText = dateTime.toLocaleString('hu-HU');
+    const time = dateTimeText.substr(-8, 5);
     let theater = {};
     try {
       theater = await theatersService.getById(performance.theaterId);

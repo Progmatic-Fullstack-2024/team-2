@@ -1,3 +1,5 @@
+import formatDate from '../../utils/formatDate.js';
+
 export default function OwnSeatsTable({ data, qrHandler }) {
   const tableData = [];
 
@@ -8,7 +10,7 @@ export default function OwnSeatsTable({ data, qrHandler }) {
       const { seats, qrImage } = data[i];
       const theater = data[i].performanceEvents.performance.theater.name;
       const date = eventDate.toISOString().substring(0, 10);
-      const time = eventDate.toISOString().substring(11, 16);
+      const time = formatDate(eventDate).substring(13);
       tableData.push({
         date,
         time,

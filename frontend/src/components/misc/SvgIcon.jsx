@@ -5,7 +5,8 @@ export default function SvgIcon({
   hoverColor,
   className = '',
 }) {
-  const svgClass = ` stroke-${color} fill-${color} ${className} hover:stroke-${hoverColor || color}`;
+
+  const svgClass = `scale-75 tablet:scale-100 stroke-${color} fill-${color} ${className} hover:stroke-${hoverColor || color}`;
 
   switch (icon) {
     case 'creator':
