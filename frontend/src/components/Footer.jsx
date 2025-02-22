@@ -1,5 +1,3 @@
-import SvgIcon from './misc/SvgIcon';
-
 export default function Footer({ height = 64 }) {
   const classFooter = `bot-0 w-full bg-c-secondary-dark/30 flex justify-between relative h-${height} text-white`;
   const classImage = `mix-blend-screen object-cover w-full  absolute h-${height}`;
@@ -9,9 +7,13 @@ export default function Footer({ height = 64 }) {
       <img className={classImage} src="/theatron_01.jpg" alt="footer-bg" />
       <div className="font-medium text-clip mx-auto my-5 w-2/3 flex justify-around gap-20 z-5 overflow-hidden">
         <div className="">
-          <SvgIcon icon="masks" size={50} />
-          <p className="text-xl font-bold mb-4">Theatron Inc.</p>
-          <p>emailme@theatron.hu.</p>
+          <img
+            src="Modified_Bt4th.svg"
+            alt="BreakThe4th Logo"
+            className="w-[50px] h-[50px] sm:w-[25px] sm:h-[25px] cursor-pointer hover:scale-110 transition-transform duration-100"
+          />
+          <p className="text-xl font-bold mb-4">BreatThe4th Inc.</p>
+          <p>emailme@bt4th.hu.</p>
           <p> 6969 Valahol, Fiktív utca 10.</p>
           <p>+36 12 345 6789</p>
         </div>

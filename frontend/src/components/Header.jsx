@@ -1,5 +1,4 @@
 import { Menu, MenuItem } from '@mui/material';
-// import Bt4thLogo from '/Modified_Bt4th.svg';
 import { useContext, useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
@@ -12,9 +11,10 @@ import MenuLink from './misc/MenuLink';
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
   const [transparentHeader, setTransparentHeader] = useState(true);
-  const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
   const [modalForm, setModalForm] = useState('login');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -22,31 +22,17 @@ export default function Header() {
     transparentHeader ? 'transparent border-c-text/40' : 'c-background border-c-text/60'
   } transition-colors duration-200 text-white px-1 tablet:px-5 laptop:px-10 flex flex-col z-50`;
 
-  const isYPositionInLimit = () => {
-    const screenYPos = window.scrollY;
-    return screenYPos <= 30;
-  };
-
-  const handleScroll = () => setTransparentHeader(isYPositionInLimit());
-
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    const handleScroll = () => setTransparentHeader(window.scrollY <= 30);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+ 
 
   const handleAdminMenuOpen = (event) => setAdminMenuAnchor(event.currentTarget);
   const handleAdminMenuClose = () => setAdminMenuAnchor(null);
-  const openAuthModal = (formType) => {
-    setModalForm(formType);
-    setShowAuthModal(true);
-  };
+  
 
   return (
     <header className={headerClass}>
@@ -70,12 +56,31 @@ export default function Header() {
           )}
         </div>
 
-        <nav className="flex sm: gap-0 tablet:gap-1 tablet:gap-1 laptop:gap-2 items-center h-14">
+        <nav className="flex sm: gap-0 tablet:gap-1 laptop:gap-2 items-center h-14">
           <MenuLink text="Home" to="/" icon="home" iconSize="50" />
-          <MenuLink text="Böngészés" to="/browse" icon="browse" iconSize="50px" />
-          <MenuLink text="Előadások" to="/performances" icon="masks" iconSize="50px" />
-          <MenuLink text="Színházak" to="/theater" icon="theater" iconSize="50px" />
-          <MenuLink text="Alkotók" to="/creators" icon="creator" iconSize="50px" />
+          <MenuLink text="Böngészés" to="/browse" icon="theater" iconSize="50px" />
+
+          <div
+            className="relative"
+            onMouseEnter={() => setDropdownOpen(true)}
+            onMouseLeave={() => setDropdownOpen(false)}
+          >
+            <MenuLink text="Keresés" icon="browse" iconSize="50px" />
+            {dropdownOpen && (
+              <div className="absolute bg-c-background shadow-lg rounded-md py-2 w-40 mt-1">
+                <Link to="/performances" className="block px-4 py-2 hover:bg-c-text/10">
+                  Előadások
+                </Link>
+                <Link to="/theater" className="block px-4 py-2 hover:bg-c-text/10">
+                  Színházak
+                </Link>
+                <Link to="/creators" className="block px-4 py-2 hover:bg-c-text/10">
+                  Alkotók
+                </Link>
+              </div>
+            )}
+          </div>
+
           {user ? (
             <>
               <MenuLink text="Bérletvásárlás" to="/season-tickets" icon="cart" iconSize="50" />
@@ -85,7 +90,10 @@ export default function Header() {
                 color="c-warning"
                 buttonStyle="outline"
                 height="11"
-                onClick={handleLogout}
+                onClick={() => {
+                  logout();
+                  navigate('/');
+                }}
                 icon="logout"
               />
             </>
@@ -95,14 +103,20 @@ export default function Header() {
                 text="Bejelentkezés"
                 buttonStyle="outline"
                 height="11"
-                onClick={() => openAuthModal('login')}
+                onClick={() => {
+                  setModalForm('login');
+                  setShowAuthModal(true);
+                }}
                 icon="login"
               />
               <DefaultButton
                 text="Regisztráció"
                 buttonStyle="outline"
                 height="11"
-                onClick={() => openAuthModal('register')}
+                onClick={() => {
+                  setModalForm('register');
+                  setShowAuthModal(true);
+                }}
                 icon="user"
               />
             </>
