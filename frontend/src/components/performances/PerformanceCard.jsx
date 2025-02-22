@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import PerformanceCardEmpty from './PerformanceCardEmpty';
 
-let previousId = null;
 const spanClass = 'col-span-2 text-end truncate font-semibold hover:text-wrap hover:text-white ';
 
 export default function PerformanceCard({ data }) {
   const [imageReady, setImageReady] = useState(false);
+  const previousId = useRef(null);
 
   async function fetchImageAndCache(url) {
     try {
@@ -22,8 +22,8 @@ export default function PerformanceCard({ data }) {
   }
 
   useEffect(() => {
-    if (previousId !== data.id) {
-      previousId = data.id;
+    if (previousId.current !== data.id) {
+      previousId.current = data.id;
       if (data.posterURL) {
         try {
           fetchImageAndCache(data.posterURL);

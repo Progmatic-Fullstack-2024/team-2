@@ -1,45 +1,52 @@
 import { useEffect, useState } from 'react';
 
+import CheckboxLabel from './CheckboxLabel';
 import CustomCalendar from './CustomCalendar';
 import SvgIcon from '../../misc/SvgIcon';
 
 const LINE_HEIGHT = 35 + 1.2;
 
-export default function MenuButton({ data, textColor = 'c-text', handleChange, searchParams }) {
+export default function MenuButton({ data, handleChange, searchParams }) {
   const { name, searchName, options, searchOptions, type } = data;
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
-  // const activeCheckbox = useRef([]);
-  const [activeCheckbox, setActiveCheckbox] = useState([]);
+
   const optionHeight = `${type === 'calendar' ? '370' : Math.min(300, options.length * LINE_HEIGHT + 4)}px`;
 
-  const buttonClass = `pointer-events-auto w-full text-${textColor} font-bold text-xl laptop:text-sm bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none  p-2 px-4  inline-flex items-center text-end`;
+  const buttonClass = `pointer-events-auto w-full text-$s{textColor} font-bold text-xl laptop:text-sm bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none  p-2 px-4  inline-flex items-center text-end`;
 
+  let activeCheckboxes = [];
   const checkActiveCheckboxes = () => {
     if (searchParams.get(searchName)) {
-      setActiveCheckbox(searchParams.get(searchName).split(','));
+      activeCheckboxes = searchParams.get(searchName).split(',');
     } else {
-      setActiveCheckbox([]);
+      activeCheckboxes.length = 0;
     }
   };
 
+  checkActiveCheckboxes();
+
   useEffect(() => {
-    checkActiveCheckboxes();
-    if (activeCheckbox.length > 0 && !dropdownMenuOpen) setDropdownMenuOpen(true);
-  }, [searchParams]);
+    if (activeCheckboxes.length && !dropdownMenuOpen) {
+      setDropdownMenuOpen(true);
+    } else if (!activeCheckboxes.length && dropdownMenuOpen) {
+      setDropdownMenuOpen(false);
+    }
+  }, []);
 
   const toggleMenu = () => {
     setDropdownMenuOpen(!dropdownMenuOpen);
   };
 
-  const setChecked = ({ index }) => {
+  const setChecked = (index) => {
     let checked = false;
     if (type === 'checkbox') {
-      checked = activeCheckbox.includes(searchOptions[index]);
+      checked = activeCheckboxes.includes(searchOptions[index]);
     } else if (type === 'radio') {
-      checked = activeCheckbox.includes(searchOptions[index])
+      checked = activeCheckboxes.includes(searchOptions[index])
         ? true
-        : !activeCheckbox.lenght && index === 0;
+        : !activeCheckboxes && index === 0;
     }
+
     return checked && 'checked';
   };
 
@@ -67,36 +74,21 @@ export default function MenuButton({ data, textColor = 'c-text', handleChange, s
         ) : (
           <ul className="text-md overflow-x-clip overflow-y-auto max-h-[300px]">
             {options.map((value, index) => (
-              <li
-                key={value + index}
-                className={`mt-0.5 h-[35px] w-full select-none text-start text-white bg-c-primary/15 `}
-              >
-                <label
-                  className="ms-2 w-full px-3 pt-2 h-full text-sm font-medium text-align-center inline-block hover:underline cursor-pointer"
-                  htmlFor={value}
-                >
-                  <input
-                    key={value}
-                    id={value}
-                    type={type}
-                    name={name}
-                    checked={setChecked({ index })}
-                    onChange={() =>
-                      handleChange({
-                        searchName,
-                        searchValue: searchOptions[index],
-                        type,
-                      })
-                    }
-                    className="w-4 h-4 me-2 text-white cursor-pointer accent-c-accent"
-                    style={{
-                      iconStyle: { fill: 'black' },
-                      color: 'black',
-                      backgroundColor: 'black',
-                    }}
-                  />
-                  {value}
-                </label>
+              <li key={value + index} className={`mt-0.5 h-[35px] w-full  bg-c-primary/15 `}>
+                <CheckboxLabel
+                  id={value + index}
+                  name={value}
+                  text={value}
+                  type={type}
+                  newChecked={setChecked(index)}
+                  onChange={() =>
+                    handleChange({
+                      searchName,
+                      searchValue: searchOptions[index],
+                      type,
+                    })
+                  }
+                />
               </li>
             ))}
           </ul>

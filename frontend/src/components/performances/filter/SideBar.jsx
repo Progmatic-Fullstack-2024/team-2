@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // components
 import MenuButton from './MenuButton';
@@ -54,7 +54,6 @@ export default function SideBar({ params, className }) {
   const { searchParams, setSearchParams } = params;
   const [fetchReady, setFetchReady] = useState(filterData.length === 4);
   const [menuOpen, setMenuOpen] = useState(false);
-
   const menuOpenClass = `${menuOpen ? 'scale-100 ' : 'scale-0'} flex origin-top-left transition transition-scale duration-150 `;
 
   async function createFilterData() {
@@ -71,13 +70,11 @@ export default function SideBar({ params, className }) {
     setFetchReady(true);
   }
 
-  useEffect(() => {
-    if (filterData.length === 0) {
-      createFilterData();
-    } else if (filterData.length === 4) {
-      setFetchReady(true);
-    }
-  }, []);
+  if (filterData.length === 0) {
+    createFilterData();
+  } else if (filterData.length === 4 && !fetchReady) {
+    setFetchReady(true);
+  }
 
   const handleChange = ({ searchName, searchValue, type }) => {
     let query = searchParams.get(searchName);

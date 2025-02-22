@@ -1,54 +1,45 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useContext } from 'react';
 
 import AuthContext from '../../contexts/AuthContext';
 import DropdownButton from '../misc/DropdownButton';
 import SvgIcon from '../misc/SvgIcon';
+import CheckboxLabel from './filter/CheckboxLabel';
 import SideBar from './filter/SideBar';
 
 export default function PerformancesSearch({ params }) {
   const { searchParams, setSearchParams, maxSize } = params;
   const { user } = useContext(AuthContext);
-  const titleSearchRef = useRef(null);
-
-  const [futureOnly, setFutureOnly] = useState(searchParams.get('futureOnly') === 'true');
-  const [followingOnly, setFollowingOnly] = useState(searchParams.get('followingOnly') === 'true');
-
-  useEffect(() => {
-    titleSearchRef.current.value = searchParams.get('search');
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     searchParams.set('page', 1);
-    if (e.target.inputSearchTitle.value) {
-      searchParams.set('search', e.target.inputSearchTitle.value);
-    } else {
-      searchParams.delete('search');
-    }
-
-    setSearchParams(searchParams);
-  };
-
-  const handleFutureOnlyChange = (e) => {
-    const isChecked = e.target.checked;
-    setFutureOnly(isChecked);
-    if (isChecked) {
-      searchParams.set('futureOnly', 'true');
-    } else {
-      searchParams.delete('futureOnly');
-    }
-    setSearchParams(searchParams);
-  };
-
-  const handleFollowingOnlyChange = (e) => {
-    const isChecked = e.target.checked;
-    setFollowingOnly(isChecked);
-    if (isChecked) {
-      searchParams.set('followingOnly', 'true');
-      searchParams.set('userId', user?.id || ''); // 🔹 Beállítjuk a userId-t a szűréshez
-    } else {
-      searchParams.delete('followingOnly');
-      searchParams.delete('userId');
+    switch (e.target.id) {
+      case 'searchForm':
+        if (e.target.inputSearchTitle.value) {
+          searchParams.set('search', e.target.inputSearchTitle.value);
+        } else {
+          searchParams.delete('search');
+        }
+        break;
+      case 'futureOnly':
+        if (e.target.checked) {
+          searchParams.set('futureOnly', 'true');
+        } else {
+          searchParams.delete('futureOnly');
+        }
+        setSearchParams(searchParams);
+        break;
+      case 'followingOnly':
+        if (e.target.checked) {
+          searchParams.set('followingOnly', 'true');
+          searchParams.set('userId', user?.id || ''); // 🔹 Beállítjuk a userId-t a szűréshez
+        } else {
+          searchParams.delete('followingOnly');
+          searchParams.delete('userId');
+        }
+        break;
+      default:
+        break;
     }
     setSearchParams(searchParams);
   };
@@ -57,7 +48,7 @@ export default function PerformancesSearch({ params }) {
     <div className="h-fit min-h-32 w-full mb-2 z-10 bg-c-background border border-c-secondary/20 p-2 laptop:static sticky top-[97px] p-3 tablet:p-5  rounded-md">
       <SideBar params={{ searchParams, setSearchParams }} className="laptop:hidden" />
       <form
-        id="inputForm"
+        id="searchForm"
         className="w-full min-w-80 max-w-[600px] self-start "
         onSubmit={handleSubmit}
       >
@@ -73,7 +64,7 @@ export default function PerformancesSearch({ params }) {
             name="inputSearchTitle"
             className="outline-none block w-full h-9 ps-12 text-sm text-gray-900 border border-gray-400 rounded-s-xl outline:0 focus:ring-1 ring-c-primary  "
             placeholder="Előadás keresése..."
-            ref={titleSearchRef}
+            defaultValue={searchParams.get('search')}
           />
           <button
             type="submit"
@@ -83,41 +74,23 @@ export default function PerformancesSearch({ params }) {
           </button>
         </div>
       </form>
-      <div className="mt-3 pe-4 mb-3  shadow-lg rounded-lg flex items-center gap-8 ">
+      <div className="mt-2  mb-3 flex justify-start gap-8">
         {/* Csak jövőbeni előadások szűrő */}
-        <div className="flex items-center gap-2 ">
-          <input
-            type="checkbox"
-            id="futureOnly"
-            checked={futureOnly}
-            onChange={handleFutureOnlyChange}
-            className="me-1 text-white cursor-pointer accent-c-accent"
-          />
-          <label
-            htmlFor="futureOnly"
-            className="me-2 text-white cursor-pointer accent-c-accent hover:underline truncate select-none"
-          >
-            Csak tervezett előadások
-          </label>
-        </div>
-
+        <CheckboxLabel
+          id="futureOnly"
+          type="checkbox"
+          text="Csak tervezett előadások"
+          newChecked={(searchParams.get('futureOnly') && 'checked') || false}
+          onChange={handleSubmit}
+        />
         {/* Csak követett előadások szűrő */}
         {user && (
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="followingOnly"
-              checked={followingOnly}
-              onChange={handleFollowingOnlyChange}
-              className="me-1 text-white cursor-pointer accent-c-accent"
-            />
-            <label
-              htmlFor="followingOnly"
-              className="text-white cursor-pointer accent-c-accent hover:underline truncate select-none"
-            >
-              Követett előadások
-            </label>
-          </div>
+          <CheckboxLabel
+            id="followingOnly"
+            text="Csak követett előadások"
+            newChecked={(searchParams.get('followingOnly') && 'checked') || false}
+            onChange={handleSubmit}
+          />
         )}
       </div>
       <div className="flex justify-between text-c-text">
@@ -151,7 +124,6 @@ export default function PerformancesSearch({ params }) {
           />
         </div>
       </div>
-      {/* Szűrési opciók - checkboxok */}
     </div>
   );
 }
