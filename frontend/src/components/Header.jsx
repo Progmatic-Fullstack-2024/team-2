@@ -28,11 +28,8 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
- 
-
   const handleAdminMenuOpen = (event) => setAdminMenuAnchor(event.currentTarget);
   const handleAdminMenuClose = () => setAdminMenuAnchor(null);
-  
 
   return (
     <header className={headerClass}>
@@ -67,7 +64,7 @@ export default function Header() {
           >
             <MenuLink text="Keresés" icon="browse" iconSize="50px" />
             {dropdownOpen && (
-              <div className="absolute bg-c-background shadow-lg rounded-md py-2 w-40 mt-1">
+              <div className="absolute bg-c-background shadow-lg rounded-md py-2 w-40 z-50">
                 <Link to="/performances" className="block px-4 py-2 hover:bg-c-text/10">
                   Előadások
                 </Link>
