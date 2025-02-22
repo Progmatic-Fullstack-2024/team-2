@@ -30,7 +30,7 @@ export default function Footer({ height = 70 }) {
         <div className="hidden tablet:flex-1 space-y-2 tablet:block">
           <h3 className="text-xl font-semibold text-c-primary">Fejlesztők</h3>
           <ul className="space-y-1">
-            {['Nagy Mária Anita', 'Szebeni Attila', 'Viktor Balázs', 'László', 'Molnár Tamás'].map(
+            {['Nagy Mária Anita', 'Szebeni Attila', 'Viktor Balázs', 'Péterfi László', 'Molnár Tamás'].map(
               (dev, index) => (
                 <li
                   key={index}
