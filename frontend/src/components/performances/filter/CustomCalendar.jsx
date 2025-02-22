@@ -15,10 +15,12 @@ function converDate(date) {
 }
 
 export default function CustomCalendar({ handleChange, searchName, searchParams }) {
-  const [calendarState, setCalendarState] = useState([
-    searchParams.get('startDate'),
-    searchParams.get('endDate'),
-  ]);
+  const [calendarState, setCalendarState] = useState([null, null]);
+  if (
+    calendarState[0] !== searchParams.get('startDate') ||
+    calendarState[1] !== searchParams.get('endDate')
+  )
+    setCalendarState([searchParams.get('startDate'), searchParams.get('endDate')]);
 
   const handleClick = (value, event) => {
     event.preventDefault();
@@ -31,7 +33,7 @@ export default function CustomCalendar({ handleChange, searchName, searchParams 
   };
 
   const resetCalendar = () => {
-    setCalendarState(null);
+    setCalendarState([null, null]);
 
     handleChange({
       searchName,

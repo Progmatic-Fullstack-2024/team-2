@@ -11,7 +11,7 @@ const getTheaters = async () => {
 
 const createThreater = async (theater) => {
   try {
-    const response = await axiosInstance.post('/api/dropdown-data-theaters', theater);
+    const response = await axiosInstance.post('/api/theater', theater);
     return response.data; // Successful answer
   } catch (error) {
     throw error.response ? error.response.data : error; // In case of error
