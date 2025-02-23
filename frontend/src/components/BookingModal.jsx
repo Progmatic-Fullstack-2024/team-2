@@ -60,7 +60,6 @@ export default function BookingModal({
 
   const isSeasonTicketExpired = new Date() > new Date(selectedSeasonTicket?.expirationDate);
 
-
   useEffect(() => {
     getUserSeasonTickets();
     getSoldTickets();
@@ -166,7 +165,7 @@ export default function BookingModal({
           <button
             type="button"
             className="px-3 py-1 border rounded"
-            disabled={(ticketCount >= isSeasonTicketStillHasSeats) || isSeasonTicketExpired}
+            disabled={ticketCount >= isSeasonTicketStillHasSeats || isSeasonTicketExpired}
             onClick={() => handleTicketCountChange(1)}
           >
             +
