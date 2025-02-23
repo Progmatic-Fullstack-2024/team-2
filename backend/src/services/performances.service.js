@@ -81,7 +81,7 @@ const list = async ({ filter, search }) => {
       expandedPerformances.push(perf);
     } else {
       perf.performanceEvents.forEach((event) => {
-        const newPerf = perf;
+        const newPerf = { ...perf };
         newPerf.performanceEvents = [event];
         expandedPerformances.push(newPerf);
       });

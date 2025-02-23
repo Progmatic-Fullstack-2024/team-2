@@ -37,7 +37,6 @@ export default function PerformanceCard({ data }) {
   }, []);
 
   if (!imageReady) return <PerformanceCardEmpty />;
-
   return (
     <Link
       to={`/performances/${data.id}`}
