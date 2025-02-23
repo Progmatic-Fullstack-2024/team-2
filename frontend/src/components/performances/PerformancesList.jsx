@@ -8,7 +8,14 @@ export default function PerformancesList({ performances }) {
         <span className="ms-4 text-white font-semibold text-xl italic">Nincs találat!</span>
       )}
       {performances.length > 0
-        ? performances.map((perf) => (perf ? <PerformanceCard data={perf} key={perf.id} /> : null))
+        ? performances.map((perf) =>
+            perf ? (
+              <PerformanceCard
+                data={perf}
+                key={perf.performanceEvents.length > 0 ? perf.performanceEvents[0].id : perf.id}
+              />
+            ) : null,
+          )
         : [...Array(4)].map((v, index) => <PerformanceCardEmpty key={index} hidden />)}
     </section>
   );
