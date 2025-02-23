@@ -1,11 +1,11 @@
 import express from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { isAdmin } from "../middlewares/auth.middleware.js";
 import performancesController from "../controllers/performances.controller.js";
 
 const router = express.Router();
 
 router.get("/all", performancesController.listAllPerformances);
+router.get("/isOwn/:id/:userId", performancesController.isOwn);
 router.get("/:performanceId", performancesController.getPerformanceByID);
 router.get("/", performancesController.listPerformances);
 
@@ -19,12 +19,6 @@ router.post(
   performancesController.createPerformance,
 );
 
-router.delete(
-  "/:performanceId",
-  isAdmin,
-  performancesController.destroyPerformance,
-);
-
 router.patch(
   "/:performanceId",
   upload.fields([
@@ -33,6 +27,14 @@ router.patch(
   ]),
   performancesController.updatePerformance,
 );
+
+router.put("/follow/:id", performancesController.addFollowerToPerformance);
+router.put(
+  "/unfollow/:id",
+  performancesController.removeFollowerFromPerformance,
+);
+
+router.delete("/:performanceId", performancesController.destroyPerformance);
 
 router.patch("/:performanceId/image", performancesController.deleteImage);
 

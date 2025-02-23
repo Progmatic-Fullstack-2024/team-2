@@ -82,6 +82,15 @@ const countUsers = async (params) => {
   }
 };
 
+const getNewPassword = async (param) => {
+  try {
+    const response = await axiosInstance.put(`users/createnewpassword`, param);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error; // In case of error
+  }
+};
+
 export default {
   getAllUsers,
   getOwnUser,
@@ -92,4 +101,5 @@ export default {
   deleteTheaterAdmin,
   setTheaterAdmin,
   countUsers,
+  getNewPassword,
 };

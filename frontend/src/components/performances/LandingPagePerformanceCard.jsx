@@ -58,33 +58,16 @@ export default function LandingPagePerformanceCard({ data }) {
       <h1 className="z-10 mx-5 mt-3 text-2xl font-semibold">{data.title}</h1>
       <div className="z-10 mx-5 mb-5 flex flex-col bot-0">
         <div className="mb-3">
-          <span className="font-bold">Időpontok:</span>
-          <ul className="list-disc list-inside">
-            {data.performanceEvents.map((event) => {
-              const formattedDate = new Date(event.performanceDate).toLocaleDateString('hu-HU', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              });
-              const formattedTime = new Date(event.performanceDate).toLocaleTimeString('hu-HU', {
-                hour: '2-digit',
-                minute: '2-digit',
-              });
-              return (
-                <li key={event.performanceDate}>
-                  {formattedDate}, {formattedTime}
-                </li>
-              );
-            })}
-          </ul>
+          <span className="font-bold">Időpontok: </span>
+          <p>{data.performanceEvents[0]?.performanceDate}</p>
         </div>
         {isHovered && (
           <>
             <span className="self-end text-3xl text-c-secondary-light font-bold mb-2">
               {/* {data.price} <span className="text-white text-xl">Ft/fő</span> */}
             </span>
-            <span>Helyszín: {data.location || 'N/A'}</span>
-            <span>Közreműködők: {data.participants || 'N/A'}</span>
+            <span>Helyszín: {data.theater.name || 'N/A'}</span>
+            <span>Cím: {data.theater.address || 'N/A'}</span>
           </>
         )}
       </div>

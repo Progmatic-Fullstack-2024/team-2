@@ -14,6 +14,9 @@ import paymentRoutes from "./routes/payment.routes.js";
 import genresRoutes from "./routes/genres.routes.js";
 import seasonTicketsRoutes from "./routes/season-tickets.routes.js";
 import performanceEventsRoutes from "./routes/performanceEvents.routes.js";
+import userSeasonTicketRoutes from "./routes/user-season-ticket.routes.js";
+import bookingRoutes from "./routes/booking.routes.js";
+import futurePerformancesRoutes from "./routes/futurePerformances.routes.js";
 
 const app = express();
 
@@ -27,13 +30,16 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/api/performances", performancesRoutes);
 app.use("/api/performance-events", performanceEventsRoutes);
+app.use("/api/future-performances", futurePerformancesRoutes);
 app.use("/api/theater", theatersRoutes);
-app.use("/api/dropdown-data-creators", creatorsRoutes);
+app.use("/api/creators", creatorsRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/season-tickets", seasonTicketsRoutes);
 app.use("/theaterAdmin", theaterAdmin);
 app.use("/api/genres", genresRoutes);
 app.use("/api/theater", theatersRoutes);
+app.use("/api/user-season-ticket", userSeasonTicketRoutes);
+app.use("/api/booking", bookingRoutes);
 
 app.use(errorHandler);
 

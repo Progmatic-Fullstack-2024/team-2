@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
 
+import SvgIcon from './SvgIcon';
+
 export default function DropdownButton({
   menuItems,
-  width = 24,
+  width = 32,
   props,
   initialValue,
   searchVariable,
@@ -17,8 +19,8 @@ export default function DropdownButton({
   );
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
 
-  const dropdownMenuClass = `absolute w-${width} z-20 bg-c-background justify-self-end  border border-gray-500/50`;
-  const buttonClass = `w-${width} text-${textColor} bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none font-semibold ${dropdownMenuOpen ? 'rounded-t-lg' : 'rounded-lg'} text-sm p-2 px-4 text-center inline-flex items-center`;
+  const dropdownMenuClass = `absolute w-full z-20 bg-c-background justify-self-end  border border-gray-500/50`;
+  const buttonClass = `min-w-${width} text-${textColor} bg-c-primary hover:bg-c-primary-light active:bg-c-primary-dark outline-none font-semibold ${dropdownMenuOpen ? 'rounded-t-lg' : 'rounded-lg'} text-sm p-2 px-4 text-center inline-flex justify-between items-center`;
 
   const toggleMenu = () => {
     setDropdownMenuOpen(!dropdownMenuOpen);
@@ -33,42 +35,38 @@ export default function DropdownButton({
   };
 
   return (
-    <div>
+    <div className={`max-w-${width} relative`}>
       <button className={buttonClass} type="button" onClick={toggleMenu}>
-        <svg
-          className="w-2.5 h-2.5 me-3"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 10 6"
-        >
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="m1 1 4 4 4-4"
-          />
-        </svg>
+        <SvgIcon
+          icon="arrow-left"
+          className={`w-2.5 h-2.5 me-2 ${dropdownMenuOpen ? 'rotate-90' : '-rotate-90'} `}
+        />
         {currentItem.current}
       </button>
 
       <div className={dropdownMenuClass + (dropdownMenuOpen ? ' block' : ' hidden')}>
-        <ul className="text-sm text-gray-700 self-end">
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label="Hide dropdown"
+          className="fixed top-0 left-0 z-10 w-full h-full cursor-default"
+          onClick={() => setDropdownMenuOpen(false)}
+          onKeyDown={() => setDropdownMenuOpen(false)}
+        />
+        <div className="text-sm text-gray-700 self-end z-20 relative flex flex-col">
           {Object.keys(menuItems).map((value) =>
             value !== currentItem.current ? (
-              <li key={value}>
-                <button
-                  type="button"
-                  className="w-full mt-0.5 block px-4 py-1 select-none text-c-text hover:text-c-accent hover:underline cursor-pointer "
-                  onClick={() => handleClick(value)}
-                >
-                  {value}
-                </button>
-              </li>
+              <button
+                key={value}
+                type="button"
+                className=" w-full mt-0.5 block px-4 py-1 select-none text-c-text hover:text-c-accent hover:underline cursor-pointer "
+                onClick={() => handleClick(value)}
+              >
+                {value}
+              </button>
             ) : null,
           )}
-        </ul>
+        </div>
       </div>
     </div>
   );

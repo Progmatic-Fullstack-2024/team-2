@@ -1,6 +1,17 @@
 import prisma from "../models/prisma-client.js";
 import { createFiles, deleteFiles, updateFiles } from "./file.service.js";
 import HttpError from "../utils/HttpError.js";
+import performanceEventsService from "./performanceEvents.service.js";
+
+function converDate(date) {
+  return new Date(date).toLocaleTimeString("hun", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 const getById = async (performanceId) => {
   const performance = await prisma.performance.findUnique({
@@ -8,6 +19,8 @@ const getById = async (performanceId) => {
     include: {
       performanceEvents: true,
       creators: true,
+      futurePerformance: true,
+      performanceFollowers: true,
     },
   });
   if (!performance) throw new HttpError("Performance not found", 404);
@@ -20,6 +33,25 @@ const getByName = async (title) => {
   });
   if (!performance) throw new HttpError("Performance not found", 404);
   return performance.id;
+};
+
+const isOwn = async (id, userId) => {
+  const isOwnPerformance = await prisma.performance.findUnique({
+    where: {
+      id,
+      theater: {
+        admins: { some: { userId } },
+      },
+    },
+    include: {
+      theater: {
+        include: {
+          admins: true,
+        },
+      },
+    },
+  });
+  return isOwnPerformance;
 };
 
 const list = async ({ filter, search }) => {
@@ -36,30 +68,92 @@ const list = async ({ filter, search }) => {
       genre: !!filter.genre,
       creators: !!filter.creators,
     },
-    orderBy,
+
+    orderBy:
+      Object.keys(orderBy)[0] === "performanceDate" ? undefined : orderBy,
   });
   if (!performances) throw new HttpError("Performances not found", 404);
-  // custom skip and take
-  // console.log(performances);
-  const filteredPerformances = performances.filter(
+
+  // unpack EVENTS
+  const expandedPerformances = [];
+  performances.forEach((perf) => {
+    if (!perf.performanceEvents.length) {
+      expandedPerformances.push(perf);
+    } else {
+      perf.performanceEvents.forEach((event) => {
+        const newPerf = { ...perf };
+        newPerf.performanceEvents = [event];
+        expandedPerformances.push(newPerf);
+      });
+    }
+  });
+
+  // sort by DATE
+  if ("performanceDate" in orderBy) {
+    if (orderBy.performanceDate === "asc") {
+      expandedPerformances.sort((a, b) => {
+        if (a.performanceEvents.length && b.performanceEvents.length) {
+          return (
+            a.performanceEvents[0].performanceDate -
+            b.performanceEvents[0].performanceDate
+          );
+        }
+        return null;
+      });
+    } else if (orderBy.performanceDate === "desc") {
+      expandedPerformances.sort((a, b) => {
+        if (a.performanceEvents.length && b.performanceEvents.length) {
+          return (
+            b.performanceEvents[0].performanceDate -
+            a.performanceEvents[0].performanceDate
+          );
+        }
+        return null;
+      });
+    }
+  }
+
+  // apply custom SKIP and TAKE
+  let filteredPerformances = expandedPerformances.filter(
     (item, index) => index >= filter.skip && index < filter.skip + filter.take,
   );
 
-  return { data: filteredPerformances, maxSize: performances.length };
+  // convert dates in array
+  filteredPerformances = filteredPerformances.map((perf) => {
+    const newPerf = perf;
+    if (newPerf.performanceEvents[0])
+      newPerf.performanceEvents[0].performanceDate = converDate(
+        newPerf.performanceEvents[0].performanceDate,
+      );
+    return newPerf;
+  });
+
+  return { data: filteredPerformances, maxSize: expandedPerformances.length };
 };
 
 const listAll = async () => {
-  const allPerformances = await prisma.performance.findMany({
+  let allPerformances = await prisma.performance.findMany({
     include: {
       performanceEvents: true,
       theater: {
         select: {
           id: true,
           name: true,
+          address: true,
         },
       },
       genre: true,
     },
+  });
+
+  // convert dates in array
+  allPerformances = allPerformances.map((perf) => {
+    const newPerf = perf;
+    if (newPerf.performanceEvents[0])
+      newPerf.performanceEvents[0].performanceDate = converDate(
+        newPerf.performanceEvents[0].performanceDate,
+      );
+    return newPerf;
   });
   return allPerformances;
 };
@@ -146,8 +240,25 @@ const update = async (
 const destroy = async (performanceId) => {
   try {
     const performanceToDelete = await getById(performanceId);
+
+    // Kapcsolódó performanceEvents ID-k kinyerése
+    const relatedEvents = await prisma.performanceEvents.findMany({
+      where: { performanceId },
+      select: { id: true },
+    });
+
+    const eventIds = relatedEvents.map((event) => event.id);
+
+    // Performance események törlése
+    if (eventIds.length > 0) {
+      await performanceEventsService.destroyMany(eventIds);
+    }
+
+    // Fájlok törlése (plakát és képek)
     await deleteFiles([performanceToDelete.posterURL]);
     await deleteFiles(performanceToDelete.imagesURL);
+
+    // Maga a performance törlése
     return prisma.performance.delete({ where: { id: performanceId } });
   } catch (error) {
     throw new HttpError(
@@ -209,14 +320,41 @@ const deleteSingleImage = async (performanceId, imageUrl) => {
   }
 };
 
+const addFollower = async (id, followerData) => {
+  const performanceAddedFollower = await prisma.performance.update({
+    where: { id }, // 🔹 Az azonosítás az id alapján történik
+    data: {
+      performanceFollowers: {
+        connect: { id: followerData.userId }, // 🔹 Felhasználó hozzákapcsolása
+      },
+    },
+  });
+  return performanceAddedFollower;
+};
+
+const removeFollower = async (id, followerData) => {
+  const performanceUnfollowed = await prisma.performance.update({
+    where: { id }, // 🔹 Az azonosítás az előadás ID alapján történik
+    data: {
+      performanceFollowers: {
+        disconnect: { id: followerData.userId }, // 🔹 Felhasználó eltávolítása a kapcsolatból
+      },
+    },
+  });
+  return performanceUnfollowed;
+};
+
 export default {
   create,
   update,
   destroy,
   list,
   listAll,
+  isOwn,
   getByName,
   deleteSingleImage,
   getById,
   listAllGenres,
+  addFollower,
+  removeFollower,
 };

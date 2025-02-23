@@ -40,4 +40,5 @@ const getById = async (req, res, next) => {
     next(error);
   }
 };
+
 export default { list, create, getById };
